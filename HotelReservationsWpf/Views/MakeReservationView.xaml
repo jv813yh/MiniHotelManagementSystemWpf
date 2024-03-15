@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              
              HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-             d:DesignHeight="800" d:DesignWidth="800">
+             d:DesignHeight="790" d:DesignWidth="700">
 
     <UserControl.Resources>
 
@@ -39,79 +39,23 @@
 
         <!-- Style for RadioButtons -->
         <Style x:Key="RoomPreferenceRadioButton" TargetType="RadioButton">
-            <Setter Property="FontSize" Value="30"/>
+            <Setter Property="FontSize" Value="26"/>
             <Setter Property="FontFamily" Value="Helvetica"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="FontStyle" Value="Italic"/>
-            <Setter Property="Margin" Value="100,20,0,0"/>
+            <Setter Property="Margin" Value="85,5,0,0"/>
             <Setter Property="Foreground" Value="OrangeRed"/>
         </Style>
 
+        <!-- Style for DatePicker -->
         <Style x:Key="CustomDatePickerStyle" TargetType="{x:Type DatePicker}">
-            <Setter Property="FontSize" Value="30"/>
-            <Setter Property="Width" Value="300"/>
-            <Setter Property="Height" Value="55"/>
+            <Setter Property="FontSize" Value="18"/>
             <Setter Property="Background" Value="White"/>
             <Setter Property="Foreground" Value="Black"/>
             <Setter Property="BorderThickness" Value="4"/>
             <Setter Property="BorderBrush" Value="OrangeRed"/>
             <Setter Property="Padding" Value="5"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type DatePicker}">
-                        <Border Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="20">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <DatePickerTextBox x:Name="PART_TextBox"
-                                           Grid.Column="0"
-                                           Text="{Binding Path=SelectedDate, StringFormat='{}{0:dd/MM/yyyy}', RelativeSource={RelativeSource TemplatedParent}}"
-                                           Padding="{TemplateBinding Padding}"
-                                           FontSize="{TemplateBinding FontSize}"
-                                           Background="{TemplateBinding Background}"
-                                           Foreground="{TemplateBinding Foreground}"
-                                           BorderThickness="0"
-                                           Focusable="True"
-                                           HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                           VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                                <ToggleButton Grid.Column="1"
-                                      Content="▼"
-                                      Background="{TemplateBinding Background}"
-                                      BorderBrush="{TemplateBinding BorderBrush}"
-                                      BorderThickness="{TemplateBinding BorderThickness}">
-                                    <ToggleButton.Style>
-                                        <Style TargetType="ToggleButton">
-                                            <Setter Property="Template">
-                                                <Setter.Value>
-                                                    <ControlTemplate TargetType="ToggleButton">
-                                                        <Grid>
-                                                            <Grid.RowDefinitions>
-                                                                <RowDefinition Height="Auto"/>
-                                                                <RowDefinition Height="*"/>
-                                                            </Grid.RowDefinitions>
-                                                            <ContentPresenter Grid.Row="0"/>
-                                                            <Popup IsOpen="{Binding IsChecked, RelativeSource={RelativeSource TemplatedParent}}" Placement="Bottom" StaysOpen="False">
-                                                                <Calendar SelectedDate="{Binding Path=SelectedDate, RelativeSource={RelativeSource TemplatedParent}}" DisplayDate="{Binding Path=SelectedDate, RelativeSource={RelativeSource TemplatedParent}}"/>
-                                                            </Popup>
-                                                        </Grid>
-                                                    </ControlTemplate>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Style>
-                                    </ToggleButton.Style>
-                                </ToggleButton>
-                            </Grid>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
         </Style>
-
 
     </UserControl.Resources>
     <Grid>
@@ -270,9 +214,13 @@
                                Margin="10,30,0,10"/>
                 </StackPanel>
 
+
                 <DatePicker Grid.Row="1"
+                            Width="270"
+                            Height="40"
                             Style="{StaticResource CustomDatePickerStyle}"
                             SelectedDate="{Binding CheckInDate, UpdateSourceTrigger=PropertyChanged}"/>
+                        
 
                 <StackPanel Orientation="Horizontal"
                             Grid.Column="1">
@@ -290,6 +238,8 @@
 
                 <DatePicker Grid.Row="1"
                             Grid.Column="1"
+                            Width="270"
+                            Height="40"
                             Style="{StaticResource CustomDatePickerStyle}"
                             SelectedDate="{Binding CheckOutDate, UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>
@@ -314,34 +264,73 @@
                                 Margin="10,30,0,10"/>
                 </StackPanel>
 
-                <StackPanel Grid.Row="1" 
+                <StackPanel Grid.Row="1"
                             Orientation="Horizontal">
-                    
-                    <RadioButton Command=""
-                         Name="StandardRadioButton"
-                         CommandParameter="Standard"
-                         Style="{StaticResource RoomPreferenceRadioButton}">Standard</RadioButton>
 
-                    <RadioButton Command=""
-                        Name="DeluxeRadioButton"
-                        CommandParameter="Deluxe"
-                        Style="{StaticResource RoomPreferenceRadioButton}">Deluxe</RadioButton>
+                    <StackPanel Orientation="Vertical">
+                        <RadioButton Command=""
+                                     Name="StandardRadioButton"
+                                     CommandParameter="Standard"
+                                     Style="{StaticResource RoomPreferenceRadioButton}">Standard</RadioButton>
 
-                    <RadioButton Command=""
-                        Name="SuiteButton"
-                        CommandParameter="Suite"
-                        Style="{StaticResource RoomPreferenceRadioButton}">Suite</RadioButton>
+                        <TextBlock Text="{Binding GetStatusStandardRoomsProperty}"
+                                   FontSize="13"
+                                   FontWeight="Medium"
+                                   Margin="100,0,0,0"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Vertical">
+                        <RadioButton Command=""
+                                     Name="DeluxeRadioButton"
+                                     CommandParameter="Deluxe"
+                                    Style="{StaticResource RoomPreferenceRadioButton}">Deluxe</RadioButton>
+
+                        <TextBlock Text="{Binding GetStatusDeluxeRoomsProperty}"
+                                   FontSize="13"
+                                   FontWeight="Medium"
+                                   Margin="100,0,0,0"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Vertical">
+                        <RadioButton Command=""
+                                   Name="SuiteButton"
+                                   CommandParameter="Suite"
+                                   Style="{StaticResource RoomPreferenceRadioButton}">Suite</RadioButton>
+
+                        <TextBlock Text="{Binding GetStatusSuiteRoomsProperty}"
+                                   FontSize="13"
+                                   FontWeight="Medium"
+                                   Margin="100,0,0,0"/>
+                    </StackPanel>
+
                 </StackPanel>
 
             </Grid>
 
+            <StackPanel Grid.Row="4"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center">
+                
+                <Button Content="Submit"
+                        Command="{Binding SubmitCommand}"
+                        FontSize="40"
+                        Width="190"
+                        Height="80"
+                        Margin="0,0,20,0"
+                        Style="{StaticResource ModernButton}"/>
 
-            <Button Grid.Row="4"
-                    Content="Submit"
-                    FontSize="50"
-                    Width="210"
-                    Height="70"
-                    Style="{StaticResource ModernButton}"/>
+                <Rectangle Width="10"
+                           Height="70"
+                           Fill="Red"/>
+
+                <Button Content="Overview"
+                        FontSize="40"
+                        Width="190"
+                        Height="80"
+                        Margin="20,0,0,0"
+                        Style="{StaticResource ModernButton}"/>
+
+            </StackPanel>
 
         </Grid>
 

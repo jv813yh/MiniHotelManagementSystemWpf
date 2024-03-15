@@ -1,5 +1,8 @@
 ﻿namespace HotelReservationsWpf.Models
 {
+    // 1-12 - Standard
+    // 13-20 - Deluxe
+    // 21-25 - Suite
     // RoomType and RoomStatus are enums that define the type and status of a room
     public enum RoomType
     {

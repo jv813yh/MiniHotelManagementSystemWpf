@@ -10,9 +10,9 @@ namespace HotelReservationsWpf.Commands
         public virtual void OnCanExecuteChanged()
             => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
 
-        public virtual bool CanExecute(object parameter)
+        public virtual bool CanExecute(object? parameter)
             => true;
 
-        public abstract void Execute(object parameter);
+        public abstract void Execute(object? parameter);
     }
 }

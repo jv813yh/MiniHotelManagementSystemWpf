@@ -1,4 +1,5 @@
-﻿using HotelReservationsWpf.Models;
+﻿using HotelReservationsWpf.Commands;
+using HotelReservationsWpf.Models;
 using System.Windows.Input;
 
 namespace HotelReservationsWpf.ViewModels
@@ -6,15 +7,14 @@ namespace HotelReservationsWpf.ViewModels
     public class MakeReservationViewModel : ViewModelBase
     {
         private readonly Hotel _hotel;
+        private RoomType _roomType;
+
         private string _firstName = string.Empty;
         private string _lastName = string.Empty;
-        private string _address = string.Empty;
-        private string _city = string.Empty;
         private string _phoneNumber = string.Empty;
         private string _emailAddress = string.Empty;
-        private DateTime _checkInDate = DateTime.MinValue;
-        private DateTime _checkOutDate = DateTime.MinValue;
-        private RoomType _roomType;
+        private DateTime _checkInDate = DateTime.Now;
+        private DateTime _checkOutDate = DateTime.Now;
 
         public Hotel Hotel
         {
@@ -70,16 +70,6 @@ namespace HotelReservationsWpf.ViewModels
             }
         }
 
-        public string City
-        {
-            get { return _city; }
-            set
-            {
-                _city = value;
-                OnPropertyChanged(nameof(City));
-            }
-        }
-
         public string PhomeNumber
         {
             get { return _phoneNumber; }
@@ -100,21 +90,42 @@ namespace HotelReservationsWpf.ViewModels
             }
         }
 
-        public string Address
+        public string GetStatusStandardRoomsProperty
         {
-            get { return _address; }
-            set
+            get
             {
-                _address = value;
-                OnPropertyChanged(nameof(Address));
+                var (available, occupied) = _hotel.GetStatusStandardRooms();
+                return $"Occupied: {occupied} Available: {available}";
+            }
+        }
+
+        public string GetStatusDeluxeRoomsProperty
+        {
+            get
+            {
+                var (available, occupied) = _hotel.GetStatusDeluxeRooms();
+                return $"Occupied: {occupied} Available: {available}";
+            }
+        }
+
+        public string GetStatusSuiteRoomsProperty
+        {
+            get
+            {
+                var (available, occupied) = _hotel.GetStatusSuiteRooms();
+                return $"Occupied: {occupied} Available: {available}";
             }
         }
 
         public ICommand SubmitCommand { get; }
+        public ICommand NavigateCommand { get; }
 
         public MakeReservationViewModel(Hotel hotel)
         {
             _hotel = hotel;
+
+            SubmitCommand = new MakeReservationCommand(hotel, this, new NavigateCommand());
+            NavigateCommand = new NavigateCommand();
         }
     }
 }

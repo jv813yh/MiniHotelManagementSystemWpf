@@ -11,7 +11,11 @@ namespace HotelReservationsWpf.Models
             Reservations = new List<Reservation>();
         }
 
-        // Method to add a new reservation 
+        /// <summary>
+        /// Method to create a new reservation and check for conflicts
+        /// </summary>
+        /// <param name="newReservation"></param>
+        /// <exception cref="ConflictReservationsException"></exception>
         public void MakeReservation(Reservation newReservation)
         {
             // Check if there is a conflict with the new reservation
@@ -26,7 +30,10 @@ namespace HotelReservationsWpf.Models
             Reservations.Add(newReservation);
         }
 
-        // Method to get all reservations 
+        /// <summary>
+        /// Method to get all reservations 
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<Reservation> GetAllReservations()
             => Reservations;
 
