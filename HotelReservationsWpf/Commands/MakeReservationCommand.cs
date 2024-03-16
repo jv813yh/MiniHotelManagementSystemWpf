@@ -1,6 +1,7 @@
 ﻿using HotelReservationsWpf.Models;
 using HotelReservationsWpf.ViewModels;
 using System.ComponentModel;
+using System.Windows;
 
 namespace HotelReservationsWpf.Commands
 {
@@ -33,19 +34,20 @@ namespace HotelReservationsWpf.Commands
         // Verification of input values for the correct creation of a reservation
         public override bool CanExecute(object? parameter)
         {
-            bool isAvailable = false;
+            bool isAvailablePreferenceRoom = false;
 
             // Check if the first name, last name, phone number, and email address are not empty
             if (string.IsNullOrEmpty(_viewModel.FirstName) || string.IsNullOrEmpty(_viewModel.LastName) 
-                || string.IsNullOrEmpty(_viewModel.PhomeNumber) || string.IsNullOrEmpty(_viewModel.EmailAddress))
+                    || string.IsNullOrEmpty(_viewModel.PhomeNumber) || string.IsNullOrEmpty(_viewModel.EmailAddress))
             {
                 return false;
             }
 
             // Check if the check-in date is not greater than the check-out date
             // Check if the check-in date and check-out date are not in the past
-            if(_viewModel.CheckInDate >= _viewModel.CheckOutDate ||
-                _viewModel.CheckInDate < DateTime.Now || _viewModel.CheckOutDate < DateTime.Now)
+            if(_viewModel.CheckInDate.DayOfYear >= _viewModel.CheckOutDate.DayOfYear
+                || _viewModel.CheckInDate.DayOfYear < DateTime.Now.DayOfYear
+                    || _viewModel.CheckOutDate.DayOfYear < DateTime.Now.DayOfYear)
             {
                 return false;
             }
@@ -53,11 +55,11 @@ namespace HotelReservationsWpf.Commands
             // Check if the selected room type is available
             if (_viewModel.Hotel.IsAvailablePreferenceRoom(_viewModel.RoomTypeProperty))
             {
-                isAvailable = true;
+                isAvailablePreferenceRoom = true;
             }
             
 
-            return base.CanExecute(parameter) && isAvailable;
+            return base.CanExecute(parameter) && isAvailablePreferenceRoom;
         }
 
         // After verification of input data, reservation will be make

@@ -15,24 +15,24 @@ namespace HotelReservationsWpf.Models
         public GuestPerson GuestName { get; set; }
 
         [Required]
-        public DateTime CheckInDate { get; set; }
+        public DateOnly CheckInDate { get; set; }
 
         [Required]
-        public DateTime CheckOutDate { get; set; }
+        public DateOnly CheckOutDate { get; set; }
 
         [Required]
         public decimal TotalCost { get; set; }
 
-        public TimeSpan NumberOfDaysRemaining 
-            => CheckOutDate.Subtract(CheckInDate);
+        public int NumberOfDaysRemaining 
+            => CheckOutDate.DayOfYear - CheckInDate.DayOfYear;
 
-        public Reservation(Room room, GuestPerson guestName, DateTime startDate, DateTime endDate, int numberOfDays)
+        public Reservation(Room room, GuestPerson guestName, DateOnly startDate, DateOnly endDate, int numberOfDays)
         {
             CurrentRoom = room;
             GuestName = guestName;
             CheckInDate = startDate;
             CheckOutDate = endDate;
-            TotalCost = room.CostPerNight * numberOfDays;
+            TotalCost = CurrentRoom.CostPerNight * NumberOfDaysRemaining;
         }
 
         public bool IsConflict(Reservation newReservation)

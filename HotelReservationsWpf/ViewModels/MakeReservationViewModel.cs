@@ -16,6 +16,7 @@ namespace HotelReservationsWpf.ViewModels
         private string _emailAddress = string.Empty;
         private DateTime _checkInDate = DateTime.Now;
         private DateTime _checkOutDate = DateTime.Now;
+        private string _expectedPriceString = string.Empty;
 
         public Hotel Hotel
         {
@@ -57,6 +58,12 @@ namespace HotelReservationsWpf.ViewModels
             set
             {
                 _checkOutDate = value;
+
+                if(RoomTypeProperty != null && CheckOutDate.DayOfYear > DateTime.Now.DayOfYear)
+                {
+                    CalculateExpectedPrice(RoomTypeProperty);
+                }
+
                 OnPropertyChanged(nameof(CheckOutDate));
             }
         }
@@ -81,11 +88,39 @@ namespace HotelReservationsWpf.ViewModels
             }
         }
 
+        public RoomType? RoomTypeProperty
+        {
+            get { return _roomType; }
+            set
+            {
+                _roomType = value;
+
+                if (CheckOutDate.Day != DateTime.Now.Day)
+                {
+                    CalculateExpectedPrice(RoomTypeProperty);
+                }
+
+                OnPropertyChanged(nameof(RoomTypeProperty));
+            }
+        }
+
+        public string ExpectedPriceString
+        {
+            get { return _expectedPriceString; }
+
+            set
+            {
+                _expectedPriceString = value;
+                OnPropertyChanged(nameof(ExpectedPriceString));
+            }
+        }
+
+
         public string GetStatusStandardRoomsProperty
         {
             get
             {
-                var (available, occupied) = _hotel.GetStatusStandardRooms();
+                (int available, int occupied) = _hotel.GetStatusStandardRooms();
                 return $"Occupied: {occupied} Available: {available}";
             }
         }
@@ -94,7 +129,7 @@ namespace HotelReservationsWpf.ViewModels
         {
             get
             {
-                var (available, occupied) = _hotel.GetStatusDeluxeRooms();
+                (int available, int occupied) = _hotel.GetStatusDeluxeRooms();
                 return $"Occupied: {occupied} Available: {available}";
             }
         }
@@ -103,21 +138,8 @@ namespace HotelReservationsWpf.ViewModels
         {
             get
             {
-                var (available, occupied) = _hotel.GetStatusSuiteRooms();
+                (int available, int occupied) = _hotel.GetStatusSuiteRooms();
                 return $"Occupied: {occupied} Available: {available}";
-            }
-        }
-
-        public RoomType? RoomTypeProperty
-        {
-            get { return _roomType; }
-            set
-            {
-                _roomType = value;
-                OnPropertyChanged(nameof(RoomTypeProperty));
-
-                MessageBox.Show($"Room type: {value}", "Room type",
-                                       MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -139,6 +161,7 @@ namespace HotelReservationsWpf.ViewModels
             NavigateCommand = new NavigateCommand();
         }
 
+        // Set the room type for the reservation 
         private void ExecuteRoomType(string type)
         {
             switch (type)
@@ -155,6 +178,35 @@ namespace HotelReservationsWpf.ViewModels
                 default:
                     MessageBox.Show("Invalid room type", "Wrong room type",
                         MessageBoxButton.OK, MessageBoxImage.Information);
+                    break;
+            }
+        }
+
+        // Calculate the expected price for the reservation
+        private void CalculateExpectedPrice(RoomType? roomType)
+        {
+            if (roomType == null)
+            {
+                ExpectedPriceString = "0.00 €";
+
+            }
+
+            switch (RoomTypeProperty)
+            {
+                case RoomType.Standard:
+                    ExpectedPriceString = (_hotel.GetPriceForStandardRoom() * 
+                                                (CheckOutDate.DayOfYear - CheckInDate.DayOfYear)).ToString("0.00") + " €";
+                    break;
+                case RoomType.Deluxe:
+                    ExpectedPriceString = (_hotel.GetPriceForDeluxeRoom() *
+                                                (CheckOutDate.DayOfYear - CheckInDate.DayOfYear)).ToString("0.00") + " €";
+                    break;
+                case RoomType.Suite:
+                    ExpectedPriceString = (_hotel.GetPriceForSuiteRoom() *
+                                                (CheckOutDate.DayOfYear - CheckInDate.DayOfYear)).ToString("0.00") + " €";
+                    break;
+                default:
+                    ExpectedPriceString = "0.00 €";
                     break;
             }
         }

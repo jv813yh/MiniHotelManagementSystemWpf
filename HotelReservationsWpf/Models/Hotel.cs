@@ -4,65 +4,48 @@ namespace HotelReservationsWpf.Models
 {
     public class Hotel
     {
+        // 
         public string Name { get; }
 
-        private readonly ReservationsBook _reservationBooks;
+        // Business logic of the hotel is handled by ManagementHotel
+        private readonly ManagementHotel _managementHotel; 
 
-        private readonly List<Room> _rooms;
 
-
-        public Hotel(string name) 
+        public Hotel(string name, decimal pricePerNightStandardRoom,
+                    decimal pricePerNightDexlureRoom, decimal pricePerNightSuiteRoom) 
         {
             Name = name;
 
-            IInitializationRooms initializationRooms = new InitializationRooms(40,65,90);
-            _rooms = initializationRooms.GetRooms();
-
-            _reservationBooks = new ReservationsBook();
+            _managementHotel = new ManagementHotel(pricePerNightStandardRoom, 
+                        pricePerNightDexlureRoom, pricePerNightSuiteRoom);
         }
 
-        public void AddReservation(Reservation reservation)
+        public void CreateReservation(Reservation reservation)
         {
-            _reservationBooks.MakeReservation(reservation);
+            _managementHotel.AddReservation(reservation);
         }
 
         public IEnumerable<Reservation> GetAllReservations()
-         => _reservationBooks.GetAllReservations();
+         => _managementHotel.GetAllReservations();
 
         public (int, int) GetStatusStandardRooms()
-        {
-            int available = _rooms.Count(r => r.RoomType == RoomType.Standard && r.RoomStatus == RoomStatus.Available);
-            int occupied = _rooms.Count(r => r.RoomType == RoomType.Standard && r.RoomStatus == RoomStatus.Occupied);
-
-
-            return (available,occupied);
-        }
+            => _managementHotel.GetStatusStandardRooms();
 
         public (int, int) GetStatusDeluxeRooms()
-        {
-            int available = _rooms.Count(r => r.RoomType == RoomType.Deluxe && r.RoomStatus == RoomStatus.Available);
-            int occupied = _rooms.Count(r => r.RoomType == RoomType.Deluxe && r.RoomStatus == RoomStatus.Occupied);
-
-            return (available, occupied);
-        }
+            => _managementHotel.GetStatusDeluxeRooms();
 
         public (int, int) GetStatusSuiteRooms()
-        {
-            int available = _rooms.Count(r => r.RoomType == RoomType.Suite && r.RoomStatus == RoomStatus.Available);
-            int occupied = _rooms.Count(r => r.RoomType == RoomType.Suite && r.RoomStatus == RoomStatus.Occupied);
-
-            return (available, occupied);
-        }
+            => _managementHotel.GetStatusSuiteRooms();
 
         public bool IsAvailablePreferenceRoom(RoomType? roomType)
-        {
-            if(roomType == null)
-            {
-                return false;
-            }
+            => _managementHotel.IsAvailablePreferenceRoom(roomType);
 
-            return _rooms.Any(r => r.RoomType == roomType && r.RoomStatus == RoomStatus.Available);
-        }
-
+        // Prices for individual rooms per night according to room type
+        public decimal GetPriceForStandardRoom()
+            => _managementHotel.PricePerNightStandardRoom;
+        public decimal GetPriceForDeluxeRoom()
+            => _managementHotel.PricePerNightDeluxeRoom;
+        public decimal GetPriceForSuiteRoom()
+            => _managementHotel.PricePerNightSuiteRoom;
     }
 }

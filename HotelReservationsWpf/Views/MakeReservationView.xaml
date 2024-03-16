@@ -43,7 +43,7 @@
             <Setter Property="FontFamily" Value="Helvetica"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="FontStyle" Value="Italic"/>
-            <Setter Property="Margin" Value="85,5,0,0"/>
+            <Setter Property="Margin" Value="45,5,0,0"/>
             <Setter Property="Foreground" Value="OrangeRed"/>
         </Style>
 
@@ -186,7 +186,8 @@
 
                 <TextBox Grid.Row="1"
                          Grid.Column="1"
-                         Text="{Binding EmailAddress, UpdateSourceTrigger=PropertyChanged}"
+                         Text="{Binding EmailAddress,
+                            UpdateSourceTrigger=PropertyChanged}"
                          Style="{StaticResource CustomTextBoxStyle}"/>
 
             </Grid>
@@ -249,58 +250,77 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
 
+                <TextBlock Text="Total Price"
+                            FontSize="25"
+                            Grid.Column="1"
+                            FontWeight="Bold"
+                            Margin="10,20,0,0"/>
+
+                <TextBlock Text="{Binding Path=ExpectedPriceString,Mode=OneWay,
+                            UpdateSourceTrigger=PropertyChanged}"
+                           FontSize="25"
+                           Foreground="Red"
+                           FontWeight="Bold"
+                           Grid.Column="1"
+                           Grid.Row="1"
+                           Margin="15,0,0,0"/>
 
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Room Preference"
-                               FontSize="25"
-                               Margin="300,30,0,0"
-                               FontWeight="Bold"/>
+                        <TextBlock Text="Room Preference"
+                                   FontSize="25"
+                                   Margin="75,20,0,0"
+                                   FontWeight="Bold"/>
 
-                    <TextBlock Text="*"
-                                FontSize="25"
-                                Foreground="Red"
-                                FontWeight="Bold"
-                                Margin="10,30,0,10"/>
-                </StackPanel>
-
-                <StackPanel Grid.Row="1"
-                            Orientation="Horizontal">
-
-                    <StackPanel Orientation="Vertical">
-                        <RadioButton Command="{Binding RoomPreferenceCommand}"
-                                     Name="StandardRadioButton"
-                                     CommandParameter="Standard"
-                                     Style="{StaticResource RoomPreferenceRadioButton}">Standard</RadioButton>
-
-                        <TextBlock Text="{Binding GetStatusStandardRoomsProperty}"
-                                   FontSize="13"
-                                   FontWeight="Medium"
-                                   Margin="100,0,0,0"/>
+                        <TextBlock Text="*"
+                                    FontSize="25"
+                                    Foreground="Red"
+                                    FontWeight="Bold"
+                                    Margin="10,20,0,10"/>
                     </StackPanel>
 
+                    <StackPanel Grid.Row="1"
+                                Grid.Column="0"
+                                Orientation="Horizontal">
+
+                        <StackPanel Orientation="Vertical">
+                            <RadioButton Command="{Binding RoomPreferenceCommand}"
+                                         Name="StandardRadioButton"
+                                         CommandParameter="Standard"
+                                         Style="{StaticResource RoomPreferenceRadioButton}">Standard</RadioButton>
+
+                            <TextBlock Text="{Binding GetStatusStandardRoomsProperty}"
+                                       FontSize="13"
+                                       FontWeight="Medium"
+                                       Margin="70,0,0,0"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Vertical">
+                            <RadioButton Command="{Binding RoomPreferenceCommand}"
+                                         Name="DeluxeRadioButton"
+                                         CommandParameter="Deluxe"
+                                         Style="{StaticResource RoomPreferenceRadioButton}">Deluxe</RadioButton>
+
+                            <TextBlock Text="{Binding GetStatusDeluxeRoomsProperty}"
+                                       FontSize="13"
+                                       FontWeight="Medium"
+                                       Margin="70,0,0,0"/>
+                        </StackPanel>
+
                     <StackPanel Orientation="Vertical">
                         <RadioButton Command="{Binding RoomPreferenceCommand}"
-                                     Name="DeluxeRadioButton"
-                                     CommandParameter="Deluxe"
-                                     Style="{StaticResource RoomPreferenceRadioButton}">Deluxe</RadioButton>
-
-                        <TextBlock Text="{Binding GetStatusDeluxeRoomsProperty}"
-                                   FontSize="13"
-                                   FontWeight="Medium"
-                                   Margin="100,0,0,0"/>
-                    </StackPanel>
-
-                    <StackPanel Orientation="Vertical">
-                        <RadioButton Command="{Binding RoomPreferenceCommand}"
-                                   Name="SuiteButton"
-                                   CommandParameter="Suite"
-                                   Style="{StaticResource RoomPreferenceRadioButton}">Suite</RadioButton>
+                                       Name="SuiteButton"
+                                       CommandParameter="Suite"
+                                       Style="{StaticResource RoomPreferenceRadioButton}">Suite</RadioButton>
 
                         <TextBlock Text="{Binding GetStatusSuiteRoomsProperty}"
-                                   FontSize="13"
-                                   FontWeight="Medium"
-                                   Margin="100,0,0,0"/>
+                                       FontSize="13"
+                                       FontWeight="Medium"
+                                       Margin="70,0,0,0"/>
                     </StackPanel>
 
                 </StackPanel>

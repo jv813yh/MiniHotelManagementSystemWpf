@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\HotelIcon.png" />
     <None Remove="Images\roomImage.JPG" />
     <None Remove="Images\welcomeImage.JPG" />
   </ItemGroup>
@@ -22,6 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\HotelIcon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Images\roomImage.JPG">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>

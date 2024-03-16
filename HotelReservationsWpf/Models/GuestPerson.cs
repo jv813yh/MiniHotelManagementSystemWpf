@@ -1,11 +1,24 @@
-﻿namespace HotelReservationsWpf.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+
+namespace HotelReservationsWpf.Models
 {
     public class GuestPerson
     {
-        public string FirstName { get; }
-        public string LastName { get; }
-        public string Email { get; }
-        public string PhoneNumber { get; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity), Key]
+        public Guid GuestId { get; set; }
+
+        [Required]
+        public string FirstName { get; set; }
+
+        [Required]
+        public string LastName { get; set; }
+
+        [Required]
+        public string Email { get; set; }
+
+        [Required]
+        public string PhoneNumber { get; set; }
 
         public GuestPerson(string firstName, string lastName, string email, string phoneNumber)
         {
