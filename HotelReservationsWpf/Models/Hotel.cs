@@ -21,6 +21,14 @@ namespace HotelReservationsWpf.Models
             _reservationBooks = new ReservationsBook();
         }
 
+        public void AddReservation(Reservation reservation)
+        {
+            _reservationBooks.MakeReservation(reservation);
+        }
+
+        public IEnumerable<Reservation> GetAllReservations()
+         => _reservationBooks.GetAllReservations();
+
         public (int, int) GetStatusStandardRooms()
         {
             int available = _rooms.Count(r => r.RoomType == RoomType.Standard && r.RoomStatus == RoomStatus.Available);
@@ -46,12 +54,8 @@ namespace HotelReservationsWpf.Models
             return (available, occupied);
         }
 
-        public void AddReservation(Reservation reservation)
-        {
-            _reservationBooks.MakeReservation(reservation);
-        }
+        public bool IsAvailablePreferenceRoom(RoomType roomType)
+            =>_rooms.Any(r => r.RoomType == roomType && r.RoomStatus == RoomStatus.Available);
 
-        public IEnumerable<Reservation> GetAllReservations()
-         => _reservationBooks.GetAllReservations();
     }
 }

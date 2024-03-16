@@ -24,7 +24,8 @@ namespace HotelReservationsWpf.Commands
         {
             if(e.PropertyName == nameof(_viewModel.FirstName) || e.PropertyName == nameof(_viewModel.LastName) 
                     || e.PropertyName == nameof(_viewModel.PhomeNumber) || e.PropertyName == nameof(_viewModel.EmailAddress) 
-                        || e.PropertyName == nameof(_viewModel.CheckInDate) || e.PropertyName == nameof(_viewModel.CheckOutDate))
+                        || e.PropertyName == nameof(_viewModel.CheckInDate) || e.PropertyName == nameof(_viewModel.CheckOutDate)
+                            || e.PropertyName == nameof(_viewModel.RoomTypeProperty))
             {
                 OnCanExecuteChanged();
             }
@@ -45,6 +46,12 @@ namespace HotelReservationsWpf.Commands
                 || string.IsNullOrEmpty(_viewModel.PhomeNumber) || string.IsNullOrEmpty(_viewModel.EmailAddress))
             {
                 return false;
+            }
+
+            // Check if the selected room type is available
+            if (_viewModel.Hotel.IsAvailablePreferenceRoom(_viewModel.RoomTypeProperty))
+            {
+                return true;
             }
 
             return base.CanExecute(parameter);

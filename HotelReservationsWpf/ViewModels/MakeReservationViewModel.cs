@@ -1,5 +1,6 @@
 ﻿using HotelReservationsWpf.Commands;
 using HotelReservationsWpf.Models;
+using System.Windows;
 using System.Windows.Input;
 
 namespace HotelReservationsWpf.ViewModels
@@ -60,16 +61,6 @@ namespace HotelReservationsWpf.ViewModels
             }
         }
 
-        public RoomType RoomType
-        {
-            get { return _roomType; }
-            set
-            {
-                _roomType = value;
-                OnPropertyChanged(nameof(RoomType));
-            }
-        }
-
         public string PhomeNumber
         {
             get { return _phoneNumber; }
@@ -117,6 +108,20 @@ namespace HotelReservationsWpf.ViewModels
             }
         }
 
+        public RoomType RoomTypeProperty
+        {
+            get { return _roomType; }
+            set
+            {
+                _roomType = value;
+                OnPropertyChanged(nameof(RoomTypeProperty));
+
+                MessageBox.Show($"Room type: {value}", "Room type",
+                                       MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        public ICommand RoomPreferenceCommand { get; }
         public ICommand SubmitCommand { get; }
         public ICommand NavigateCommand { get; }
 
@@ -124,8 +129,29 @@ namespace HotelReservationsWpf.ViewModels
         {
             _hotel = hotel;
 
+            RoomPreferenceCommand = new RelayCommand<string>(ExecuteRoomType);
             SubmitCommand = new MakeReservationCommand(hotel, this, new NavigateCommand());
             NavigateCommand = new NavigateCommand();
+        }
+
+        private void ExecuteRoomType(string type)
+        {
+            switch (type)
+            {
+                case "Standard":
+                    RoomTypeProperty = RoomType.Standard;
+                    break;
+                case "Deluxe":
+                    RoomTypeProperty = RoomType.Deluxe;
+                    break;
+                case "Suite":
+                    RoomTypeProperty = RoomType.Suite;
+                    break;
+                default:
+                    MessageBox.Show("Invalid room type", "Wrong room type",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                    break;
+            }
         }
     }
 }

@@ -187,7 +187,7 @@
                 <TextBox Grid.Row="1"
                          Grid.Column="1"
                          Text="{Binding EmailAddress, UpdateSourceTrigger=PropertyChanged}"
-                        Style="{StaticResource CustomTextBoxStyle}"/>
+                         Style="{StaticResource CustomTextBoxStyle}"/>
 
             </Grid>
 
@@ -268,7 +268,7 @@
                             Orientation="Horizontal">
 
                     <StackPanel Orientation="Vertical">
-                        <RadioButton Command=""
+                        <RadioButton Command="{Binding RoomPreferenceCommand}"
                                      Name="StandardRadioButton"
                                      CommandParameter="Standard"
                                      Style="{StaticResource RoomPreferenceRadioButton}">Standard</RadioButton>
@@ -280,10 +280,10 @@
                     </StackPanel>
 
                     <StackPanel Orientation="Vertical">
-                        <RadioButton Command=""
+                        <RadioButton Command="{Binding RoomPreferenceCommand}"
                                      Name="DeluxeRadioButton"
                                      CommandParameter="Deluxe"
-                                    Style="{StaticResource RoomPreferenceRadioButton}">Deluxe</RadioButton>
+                                     Style="{StaticResource RoomPreferenceRadioButton}">Deluxe</RadioButton>
 
                         <TextBlock Text="{Binding GetStatusDeluxeRoomsProperty}"
                                    FontSize="13"
@@ -292,7 +292,7 @@
                     </StackPanel>
 
                     <StackPanel Orientation="Vertical">
-                        <RadioButton Command=""
+                        <RadioButton Command="{Binding RoomPreferenceCommand}"
                                    Name="SuiteButton"
                                    CommandParameter="Suite"
                                    Style="{StaticResource RoomPreferenceRadioButton}">Suite</RadioButton>
