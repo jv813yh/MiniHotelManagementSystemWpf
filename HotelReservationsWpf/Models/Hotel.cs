@@ -54,8 +54,15 @@ namespace HotelReservationsWpf.Models
             return (available, occupied);
         }
 
-        public bool IsAvailablePreferenceRoom(RoomType roomType)
-            =>_rooms.Any(r => r.RoomType == roomType && r.RoomStatus == RoomStatus.Available);
+        public bool IsAvailablePreferenceRoom(RoomType? roomType)
+        {
+            if(roomType == null)
+            {
+                return false;
+            }
+
+            return _rooms.Any(r => r.RoomType == roomType && r.RoomStatus == RoomStatus.Available);
+        }
 
     }
 }

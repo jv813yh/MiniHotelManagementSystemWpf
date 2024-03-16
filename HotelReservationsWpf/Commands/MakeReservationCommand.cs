@@ -33,13 +33,7 @@ namespace HotelReservationsWpf.Commands
         // Verification of input values for the correct creation of a reservation
         public override bool CanExecute(object? parameter)
         {
-            // Check if the check-in date is not greater than the check-out date
-            // Check if the check-in date and check-out date are not in the past
-            if(_viewModel.CheckInDate >= _viewModel.CheckOutDate ||
-                _viewModel.CheckInDate < DateTime.Now || _viewModel.CheckOutDate < DateTime.Now)
-            {
-                return false;
-            }
+            bool isAvailable = false;
 
             // Check if the first name, last name, phone number, and email address are not empty
             if (string.IsNullOrEmpty(_viewModel.FirstName) || string.IsNullOrEmpty(_viewModel.LastName) 
@@ -48,13 +42,22 @@ namespace HotelReservationsWpf.Commands
                 return false;
             }
 
+            // Check if the check-in date is not greater than the check-out date
+            // Check if the check-in date and check-out date are not in the past
+            if(_viewModel.CheckInDate >= _viewModel.CheckOutDate ||
+                _viewModel.CheckInDate < DateTime.Now || _viewModel.CheckOutDate < DateTime.Now)
+            {
+                return false;
+            }
+
             // Check if the selected room type is available
             if (_viewModel.Hotel.IsAvailablePreferenceRoom(_viewModel.RoomTypeProperty))
             {
-                return true;
+                isAvailable = true;
             }
+            
 
-            return base.CanExecute(parameter);
+            return base.CanExecute(parameter) && isAvailable;
         }
 
         // After verification of input data, reservation will be make

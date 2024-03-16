@@ -14,7 +14,7 @@
         <!-- Style for TextBox -->
         <Style x:Key="CustomTextBoxStyle" TargetType="{x:Type TextBox}">
             <Setter Property="FontSize" Value="30"/>
-            <Setter Property="Width" Value="300"/>
+            <Setter Property="Width" Value="260"/>
             <Setter Property="Height" Value="55"/>
             <Setter Property="Margin" Value="0,0,0,0"/>
             <Setter Property="Background" Value="White"/>
@@ -152,7 +152,7 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Phone"
+                    <TextBlock Text="Phone Number"
                         FontSize="25"
                         FontWeight="Bold"
                         Margin="70,30,0,10"/>
@@ -216,7 +216,7 @@
 
 
                 <DatePicker Grid.Row="1"
-                            Width="270"
+                            Width="240"
                             Height="40"
                             Style="{StaticResource CustomDatePickerStyle}"
                             SelectedDate="{Binding CheckInDate, UpdateSourceTrigger=PropertyChanged}"/>
@@ -238,7 +238,7 @@
 
                 <DatePicker Grid.Row="1"
                             Grid.Column="1"
-                            Width="270"
+                            Width="240"
                             Height="40"
                             Style="{StaticResource CustomDatePickerStyle}"
                             SelectedDate="{Binding CheckOutDate, UpdateSourceTrigger=PropertyChanged}"/>

@@ -8,7 +8,7 @@ namespace HotelReservationsWpf.ViewModels
     public class MakeReservationViewModel : ViewModelBase
     {
         private readonly Hotel _hotel;
-        private RoomType _roomType;
+        private RoomType? _roomType = null;
 
         private string _firstName = string.Empty;
         private string _lastName = string.Empty;
@@ -108,7 +108,7 @@ namespace HotelReservationsWpf.ViewModels
             }
         }
 
-        public RoomType RoomTypeProperty
+        public RoomType? RoomTypeProperty
         {
             get { return _roomType; }
             set
@@ -121,16 +121,21 @@ namespace HotelReservationsWpf.ViewModels
             }
         }
 
+        //
         public ICommand RoomPreferenceCommand { get; }
+
+        //
         public ICommand SubmitCommand { get; }
+
+        //
         public ICommand NavigateCommand { get; }
 
         public MakeReservationViewModel(Hotel hotel)
         {
             _hotel = hotel;
 
-            RoomPreferenceCommand = new RelayCommand<string>(ExecuteRoomType);
             SubmitCommand = new MakeReservationCommand(hotel, this, new NavigateCommand());
+            RoomPreferenceCommand = new RelayCommand<string>(ExecuteRoomType);
             NavigateCommand = new NavigateCommand();
         }
 
