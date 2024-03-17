@@ -26,7 +26,7 @@ namespace HotelReservationsWpf.Models
         public int NumberOfDaysRemaining 
             => CheckOutDate.DayOfYear - CheckInDate.DayOfYear;
 
-        public Reservation(Room room, GuestPerson guestName, DateOnly startDate, DateOnly endDate, int numberOfDays)
+        public Reservation(Room room, GuestPerson guestName, DateOnly startDate, DateOnly endDate)
         {
             CurrentRoom = room;
             GuestName = guestName;

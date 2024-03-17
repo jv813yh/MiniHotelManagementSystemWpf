@@ -30,7 +30,14 @@ namespace HotelReservationsWpf.Models
 
         public override string ToString()
         {
+            return $"{FirstName} {LastName}";
+        }
+
+        /*
+        public override string ToString()
+        {
             return $"Guest: {FirstName} {LastName}.\nPhone number: {PhoneNumber} and email: {Email}";
         }
+        */
     }
 }

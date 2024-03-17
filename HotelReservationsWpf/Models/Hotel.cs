@@ -11,13 +11,10 @@ namespace HotelReservationsWpf.Models
         private readonly ManagementHotel _managementHotel; 
 
 
-        public Hotel(string name, decimal pricePerNightStandardRoom,
-                    decimal pricePerNightDexlureRoom, decimal pricePerNightSuiteRoom) 
+        public Hotel(string name, int[] countOfRooms, decimal[] pricesPerNight) 
         {
             Name = name;
-
-            _managementHotel = new ManagementHotel(pricePerNightStandardRoom, 
-                        pricePerNightDexlureRoom, pricePerNightSuiteRoom);
+            _managementHotel = new ManagementHotel(countOfRooms, pricesPerNight);
         }
 
         public void CreateReservation(Reservation reservation)
@@ -39,6 +36,8 @@ namespace HotelReservationsWpf.Models
 
         public bool IsAvailablePreferenceRoom(RoomType? roomType)
             => _managementHotel.IsAvailablePreferenceRoom(roomType);
+
+
 
         // Prices for individual rooms per night according to room type
         public decimal GetPriceForStandardRoom()

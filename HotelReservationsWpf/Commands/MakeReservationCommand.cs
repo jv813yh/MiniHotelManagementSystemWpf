@@ -1,4 +1,5 @@
-﻿using HotelReservationsWpf.Models;
+﻿using HotelReservationsWpf.Exceptions;
+using HotelReservationsWpf.Models;
 using HotelReservationsWpf.ViewModels;
 using System.ComponentModel;
 using System.Windows;
@@ -17,11 +18,11 @@ namespace HotelReservationsWpf.Commands
             _viewModel = makeReservationViewModel;
             _navigateCommand = navigateCommand;
 
-            _viewModel.PropertyChanged += OnPropertyChanged;
+            _viewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
 
         // Responding to changes in the UI to verify whether a reservation can be made
-        private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if(e.PropertyName == nameof(_viewModel.FirstName) || e.PropertyName == nameof(_viewModel.LastName) 
                     || e.PropertyName == nameof(_viewModel.PhomeNumber) || e.PropertyName == nameof(_viewModel.EmailAddress) 
@@ -65,7 +66,25 @@ namespace HotelReservationsWpf.Commands
         // After verification of input data, reservation will be make
         public override void Execute(object? parameter)
         {
-            throw new NotImplementedException();
+            try
+            {
+                /*
+                Reservation newReservation = new Reservation(new Room(
+               _viewModel.RoomTypeProperty, _viewModel.FirstName, _viewModel.LastName,
+                                                     _viewModel.PhomeNumber, _viewModel.EmailAddress, _viewModel.CheckInDate, _viewModel.CheckOutDate);
+                */
+               // _hotel.CreateReservation(newReservation);
+            }
+            catch(ConflictReservationsException)
+            {
+                MessageBox.Show("The selected room type is not available for the selected dates.\n" +
+                    "Please select another room type or change the dates.", "Conflict reservations error", 
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while making the reservation", ex);
+            }
         }
     }
 }

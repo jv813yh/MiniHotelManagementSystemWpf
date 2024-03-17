@@ -3,7 +3,8 @@
 namespace HotelReservationsWpf.Services.InitializationRoomsProvider
 {
     public interface IInitializationRooms
-    { 
-        List<Room> GetRooms();
+    {
+        void ExecuteInitializeRoom(string connectionString, List<Room> roomsList,
+                RoomType roomType, int countOfRooms, decimal pricePerNight);
     }
 }

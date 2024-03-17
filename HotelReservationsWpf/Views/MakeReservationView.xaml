@@ -264,7 +264,7 @@
                 <TextBlock Text="{Binding Path=ExpectedPriceString,Mode=OneWay,
                             UpdateSourceTrigger=PropertyChanged}"
                            FontSize="25"
-                           Foreground="Red"
+                           Foreground="OrangeRed"
                            FontWeight="Bold"
                            Grid.Column="1"
                            Grid.Row="1"
