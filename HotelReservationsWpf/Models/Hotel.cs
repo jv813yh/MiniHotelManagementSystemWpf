@@ -37,7 +37,8 @@ namespace HotelReservationsWpf.Models
         public bool IsAvailablePreferenceRoom(RoomType? roomType)
             => _managementHotel.IsAvailablePreferenceRoom(roomType);
 
-
+        public Room? GetRoomRandomHotel(RoomType? roomType)
+            => _managementHotel.GetRoomRandom(roomType);
 
         // Prices for individual rooms per night according to room type
         public decimal GetPriceForStandardRoom()

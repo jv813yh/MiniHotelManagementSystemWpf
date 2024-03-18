@@ -68,12 +68,29 @@ namespace HotelReservationsWpf.Commands
         {
             try
             {
-                /*
-                Reservation newReservation = new Reservation(new Room(
-               _viewModel.RoomTypeProperty, _viewModel.FirstName, _viewModel.LastName,
-                                                     _viewModel.PhomeNumber, _viewModel.EmailAddress, _viewModel.CheckInDate, _viewModel.CheckOutDate);
-                */
-               // _hotel.CreateReservation(newReservation);
+                // Get a random room of the selected type from the hotel 
+                Room? getRoomRandom = _hotel.GetRoomRandomHotel(_viewModel.RoomTypeProperty);
+
+                if (getRoomRandom == null)
+                {
+                    throw new Exception("The selected room type is not available for the selected dates.");
+                }
+                else
+                {
+                    // Create a new reservation
+                    Reservation newReservation = new Reservation(getRoomRandom, new GuestPerson(_viewModel.FirstName, _viewModel.LastName, _viewModel.PhomeNumber, 
+                        _viewModel.EmailAddress), DateOnly.FromDateTime(_viewModel.CheckInDate), DateOnly.FromDateTime(_viewModel.CheckOutDate));
+
+                    // Add the reservation to the hotel
+                    _hotel.CreateReservation(newReservation);
+
+                    // Inform the user that the reservation was successfully created
+                    MessageBox.Show("The reservation was successfully created.", "Reservation created", 
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+
+                    // Navigate to the ReservationsView
+
+                }
             }
             catch(ConflictReservationsException)
             {

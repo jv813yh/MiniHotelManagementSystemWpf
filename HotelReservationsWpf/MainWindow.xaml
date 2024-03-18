@@ -13,13 +13,13 @@
         WindowStyle="None"
         MouseDown="MainWindowMouseDown"
         WindowStartupLocation="CenterScreen"
-        Height="800" Width="800"
-        Icon="/Images/HotelIcon.png">
+        Height="790" Width="800"
+        Icon="/Images/hotelIcon.png">
 
 
     <Grid>
 
-        <views:MakeReservationView DataContext="{Binding CurrentViewModel}"/>
+        <views:WelcomeView DataContext="{Binding CurrentViewModel}"/>
 
     </Grid>
 </Window>

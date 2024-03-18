@@ -142,5 +142,25 @@ namespace HotelReservationsWpf.Models
                     return false;
             }
         }
+
+        public Room? GetRoomRandom(RoomType? roomType)
+        {
+            if (roomType == null)
+            {
+                return null;
+            }
+
+            switch (roomType)
+            {
+                case RoomType.Standard:
+                    return _standardRooms.FirstOrDefault(r => r.RoomStatus == RoomStatus.Available);
+                case RoomType.Deluxe:
+                    return _deluxeRooms.FirstOrDefault(r => r.RoomStatus == RoomStatus.Available);
+                case RoomType.Suite:
+                    return _suiteRooms.FirstOrDefault(r => r.RoomStatus == RoomStatus.Available);
+                default:
+                    return null;
+            }
+        }
     }
 }

@@ -18,7 +18,7 @@ namespace HotelReservationsWpf
 
         public App()
         {
-            _hotel = new Hotel("Hotel Your Paradise", _countOfRooms, _pricesPerNightRoom);
+            _hotel = new Hotel("Your Paradise", _countOfRooms, _pricesPerNightRoom);
         }
 
         protected override void OnStartup(StartupEventArgs e)

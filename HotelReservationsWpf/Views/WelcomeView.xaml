@@ -7,20 +7,31 @@
              mc:Ignorable="d" 
              
              HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-             d:DesignHeight="1400" d:DesignWidth="1200">
+             d:DesignHeight="790" d:DesignWidth="800">
     <Grid>
         <Grid.Background>
             <ImageBrush ImageSource="/HotelReservationsWpf;component/Images/welcomeImage.jpg"/>
         </Grid.Background>
 
+        <TextBlock Text="{Binding HotelName}"
+                   FontSize="60"
+                   FontWeight="Bold"
+                   Foreground="#B5651D"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"
+                   Margin="0,0,330,330"/>
+
         <Button Content="Enter"
-                Margin="210,770,900,580"
-                Width="90"
-                Height="50"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Right"
+                Margin="0,0,130,120"
+                Style="{StaticResource ModernButton}"
                 FontSize="20"
                 FontWeight="Bold"
                 Background="Black"
                 Foreground="White"
+                Width="100"
+                Height="60"
                 Command=""/>
 
     </Grid>
