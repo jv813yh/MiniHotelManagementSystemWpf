@@ -8,40 +8,116 @@
              
              HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
              d:DesignHeight="790" d:DesignWidth="650">
+
+    <UserControl.Resources>
+
+        <Style x:Key="OrderByRadioButton" TargetType="RadioButton">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontFamily" Value="Helvetica"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="#7e8b5e"/>
+        </Style>
+        
+    </UserControl.Resources>
     
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="120"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="110"/>
         </Grid.RowDefinitions>
 
-        <!-- Inner border for table -->
-        <Border BorderBrush="#B5651D"  
-                BorderThickness="3"
-                Margin="2">
-            <ListView Margin="2">
-                
-            </ListView>
-        </Border>
+        <Image Source="/HotelReservationsWpf;component/Images/hotelIcon.png"
+                    Stretch="Fill"/>
 
 
-        <!-- Inner border for table -->
+        <!-- Inner border for table and orderBy -->
         <Border Grid.Row="1"
                 BorderBrush="#B5651D" 
                 BorderThickness="3"
                 Margin="2">
-            
-            <ListView Margin="2">
 
-            </ListView>
-            
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="170"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Order by"
+                           Grid.RowSpan="2"
+                           Margin="30,35,0,0"
+                           FontStyle="Italic"
+                           FontWeight="DemiBold"
+                           FontSize="26"/>
+
+                <StackPanel Orientation="Horizontal"
+                            Grid.RowSpan="2"
+                            Grid.Column="1">
+
+
+                    <StackPanel Orientation="Vertical"
+                                Grid.RowSpan="2"
+                                Grid.Column="1">
+
+                        <RadioButton Command=""
+                                Name="DateAscendingRadioButton"
+                                CommandParameter="DateAscending"
+                                Margin="15,25,0,0"
+                                Style="{StaticResource OrderByRadioButton}">Date Ascending
+                        </RadioButton>
+
+                        <RadioButton Command=""
+                                Name="DateDescendingRadioButton"
+                                CommandParameter="DateDescending"
+                                Margin="15,20,0,0"
+                                Style="{StaticResource OrderByRadioButton}">Date Descending</RadioButton>
+
+                    </StackPanel>
+
+                    <StackPanel Orientation="Vertical"
+                                Grid.RowSpan="2"
+                                Grid.Column="1">
+
+                        <RadioButton Command=""
+                                     Name="PriceAscendingRadioButton"
+                                     CommandParameter="PriceAscending"
+                                     Margin="25,25,0,0"
+                                     Style="{StaticResource OrderByRadioButton}">Price Ascending
+                        </RadioButton>
+
+                        <RadioButton Command=""
+                                     Name="PriceDescendingRadioButton"
+                                     CommandParameter="PriceDescending"
+                                     Margin="25,20,0,0"
+                                     Style="{StaticResource OrderByRadioButton}">Price Descending</RadioButton>
+
+                    </StackPanel>
+
+                </StackPanel>
+
+                <Border Grid.Row="3"
+                        Grid.ColumnSpan="2"
+                        BorderBrush="#B5651D" 
+                        BorderThickness="3"
+                        Margin="4"/>
+                
+                <!-- list view of guest -->
+
+            </Grid>
+
         </Border>
 
         <Border Grid.Row="2"
                 BorderBrush="#B5651D"  
-                BorderThickness="5"
-                Margin="8">
+                BorderThickness="6"
+                Margin="10">
             
             <!-- Buttons for navigate to make resetvation or overview -->
             <StackPanel Grid.Row="2"
