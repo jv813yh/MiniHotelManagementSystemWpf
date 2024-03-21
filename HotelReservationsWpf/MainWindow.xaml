@@ -19,7 +19,7 @@
 
     <Grid>
 
-        <views:WelcomeView DataContext="{Binding CurrentViewModel}"/>
+        <views:ReservationsView DataContext="{Binding CurrentViewModel}"/>
 
     </Grid>
 </Window>

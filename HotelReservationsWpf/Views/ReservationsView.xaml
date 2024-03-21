@@ -24,12 +24,12 @@
     
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="120"/>
+            <RowDefinition Height="170"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="110"/>
+            <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
 
-        <Image Source="/HotelReservationsWpf;component/Images/hotelIcon.png"
+        <Image Source="/HotelReservationsWpf;component/Images/hotelHallway.jpg"
                     Stretch="Fill"/>
 
 
@@ -39,20 +39,20 @@
                 BorderThickness="3"
                 Margin="2">
 
-            <Grid>
+            <Grid Background="#f0efde">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="170"/>
+                    <ColumnDefinition Width="190"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="45"/>
+                    <RowDefinition Height="45"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
                 <TextBlock Text="Order by"
                            Grid.RowSpan="2"
-                           Margin="30,35,0,0"
+                           Margin="30,25,0,0"
                            FontStyle="Italic"
                            FontWeight="DemiBold"
                            FontSize="26"/>
@@ -69,14 +69,14 @@
                         <RadioButton Command=""
                                 Name="DateAscendingRadioButton"
                                 CommandParameter="DateAscending"
-                                Margin="15,25,0,0"
+                                Margin="15,15,0,0"
                                 Style="{StaticResource OrderByRadioButton}">Date Ascending
                         </RadioButton>
 
                         <RadioButton Command=""
                                 Name="DateDescendingRadioButton"
                                 CommandParameter="DateDescending"
-                                Margin="15,20,0,0"
+                                Margin="15,15,0,0"
                                 Style="{StaticResource OrderByRadioButton}">Date Descending</RadioButton>
 
                     </StackPanel>
@@ -88,14 +88,14 @@
                         <RadioButton Command=""
                                      Name="PriceAscendingRadioButton"
                                      CommandParameter="PriceAscending"
-                                     Margin="25,25,0,0"
+                                     Margin="25,15,0,0"
                                      Style="{StaticResource OrderByRadioButton}">Price Ascending
                         </RadioButton>
 
                         <RadioButton Command=""
                                      Name="PriceDescendingRadioButton"
                                      CommandParameter="PriceDescending"
-                                     Margin="25,20,0,0"
+                                     Margin="25,15,0,0"
                                      Style="{StaticResource OrderByRadioButton}">Price Descending</RadioButton>
 
                     </StackPanel>
@@ -107,8 +107,110 @@
                         BorderBrush="#B5651D" 
                         BorderThickness="3"
                         Margin="4"/>
-                
-                <!-- list view of guest -->
+
+                <!-- Table of accommodated guests-->
+                <ListView  Background="#f0efde"
+                           Grid.Row="3"
+                           Grid.ColumnSpan="2"
+                           Margin="2"
+                           BorderBrush="Black"
+                           BorderThickness="3"
+                           ItemsSource="{Binding GetAllReservations}">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+
+                    <ListView.View>
+                        <GridView>
+
+                            <!-- Modified ColumnHeaderContainerStyle -->
+                            <GridView.ColumnHeaderContainerStyle>
+                                <Style TargetType="{x:Type GridViewColumnHeader}">
+                                    <Setter Property="Background" Value="#d6d096"/>
+                                    <Setter Property="BorderThickness" Value="2"/>
+                                    <Setter Property="BorderBrush" Value="Black"/>
+                                    <Setter Property="Height" Value="30"/>
+                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                </Style>
+                            </GridView.ColumnHeaderContainerStyle>
+
+                            
+                            <!-- Modified styles for individual data columns -->
+                            
+                            <!-- Room Number data column -->
+                            <GridViewColumn Header="Room Number"
+                                            Width="100">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding RoomNumber}"
+                                           Padding="0,0,20,0"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <!-- Room Type data column -->
+                            <GridViewColumn Header="Room Type"
+                                            Width="100">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding RoomType}"
+                                           Padding="0,0,20,0"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <!-- Guest Name data column -->
+                            <GridViewColumn Header="Guest Name"
+                                            Width="200">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding GuestName}"
+                                           Padding="0,0,20,0"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <!-- Start Date data column -->
+                            <GridViewColumn Header="Start Date"
+                                            Width="150">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding CheckInDate}"
+                                           Padding="0,0,20,0"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <!-- End Date data column -->
+                            <GridViewColumn Header="End Date"
+                                            Width="150">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding CheckOutDate}"
+                                           Padding="0,0,20,0"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <!-- Total Price data column -->
+                            <GridViewColumn Header="Total Price"
+                                            Width="80">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding TotalCost}"
+                                           Padding="0,0,20,0"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            
+                        </GridView>
+                    </ListView.View>
+
+                </ListView>
 
             </Grid>
 
@@ -117,7 +219,8 @@
         <Border Grid.Row="2"
                 BorderBrush="#B5651D"  
                 BorderThickness="6"
-                Margin="10">
+                Margin="6"
+                Background="#f0efde">
             
             <!-- Buttons for navigate to make resetvation or overview -->
             <StackPanel Grid.Row="2"

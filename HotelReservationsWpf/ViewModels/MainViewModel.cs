@@ -13,8 +13,8 @@ namespace HotelReservationsWpf.ViewModels
 
         public MainViewModel(Hotel hotel)
         {
-            // Set the current view model to the welcome view model
-            CurrentViewModel = new EntranceToHotelViewModel(hotel);
+            // Set the current view model 
+            CurrentViewModel = ReservationsListingViewModel.CreateReservationsListingViewModel(hotel);
         }
     }
 }
