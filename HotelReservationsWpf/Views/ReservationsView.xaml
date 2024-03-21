@@ -41,7 +41,7 @@
 
             <Grid Background="#f0efde">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="190"/>
+                    <ColumnDefinition Width="200"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -70,14 +70,33 @@
                                 Name="DateAscendingRadioButton"
                                 CommandParameter="DateAscending"
                                 Margin="15,15,0,0"
-                                Style="{StaticResource OrderByRadioButton}">Date Ascending
+                                Style="{StaticResource OrderByRadioButton}">Start Date Asc
                         </RadioButton>
 
                         <RadioButton Command=""
                                 Name="DateDescendingRadioButton"
                                 CommandParameter="DateDescending"
                                 Margin="15,15,0,0"
-                                Style="{StaticResource OrderByRadioButton}">Date Descending</RadioButton>
+                                Style="{StaticResource OrderByRadioButton}">Start Date Desc</RadioButton>
+
+                    </StackPanel>
+
+                    <StackPanel Orientation="Vertical"
+               Grid.RowSpan="2"
+               Grid.Column="1">
+
+                        <RadioButton Command=""
+               Name="EndDateAscendingRadioButton"
+               CommandParameter="DateAscending"
+               Margin="15,15,0,0"
+               Style="{StaticResource OrderByRadioButton}">End Date Asc
+                        </RadioButton>
+
+                        <RadioButton Command=""
+               Name="EndDateDescendingRadioButton"
+               CommandParameter="DateDescending"
+               Margin="15,15,0,0"
+               Style="{StaticResource OrderByRadioButton}">End Date Desc</RadioButton>
 
                     </StackPanel>
 
@@ -89,14 +108,14 @@
                                      Name="PriceAscendingRadioButton"
                                      CommandParameter="PriceAscending"
                                      Margin="25,15,0,0"
-                                     Style="{StaticResource OrderByRadioButton}">Price Ascending
+                                     Style="{StaticResource OrderByRadioButton}">Price Asc
                         </RadioButton>
 
                         <RadioButton Command=""
                                      Name="PriceDescendingRadioButton"
                                      CommandParameter="PriceDescending"
                                      Margin="25,15,0,0"
-                                     Style="{StaticResource OrderByRadioButton}">Price Descending</RadioButton>
+                                     Style="{StaticResource OrderByRadioButton}">Price Desc</RadioButton>
 
                     </StackPanel>
 
