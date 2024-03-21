@@ -8,6 +8,7 @@ namespace HotelReservationsWpf.ViewModels
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        // Method that triggers the PropertyChanged event
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
