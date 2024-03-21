@@ -247,12 +247,12 @@
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center">
 
-                <Button Content="Make Reservation"
+                <Button Content="Navigate to Make Resv"
                     FontSize="18"
                     Width="220"
                     Height="55"
                     Style="{StaticResource ModernButton}"
-                    Command=""/>
+                    Command="{Binding NavigateMakeReservationCommand}"/>
 
                 <Button Content="Navigate to Overview"
                     FontSize="18"

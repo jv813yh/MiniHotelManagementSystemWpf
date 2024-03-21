@@ -1,20 +1,24 @@
 ﻿using HotelReservationsWpf.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using HotelReservationsWpf.Stores;
 
 namespace HotelReservationsWpf.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
-        public ViewModelBase CurrentViewModel { get; private set; }
+        private readonly NavigationStore _navigationStore;
+        public ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;
 
-        public MainViewModel(Hotel hotel)
+        public MainViewModel(Hotel hotel, NavigationStore navigationStore)
         {
             // Set the current view model 
-            CurrentViewModel = ReservationsListingViewModel.CreateReservationsListingViewModel(hotel);
+            _navigationStore = navigationStore;
+
+            _navigationStore.CurrentViewModelChanged += OnViewModelChanged;
+        }
+
+        private void OnViewModelChanged()
+        {
+            OnPropertyChanged(nameof(CurrentViewModel));
         }
     }
 }

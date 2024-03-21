@@ -32,7 +32,7 @@
                 Foreground="White"
                 Width="100"
                 Height="60"
-                Command=""/>
+                Command="{Binding EntranceToHotelCommand}"/>
 
     </Grid>
 </UserControl>

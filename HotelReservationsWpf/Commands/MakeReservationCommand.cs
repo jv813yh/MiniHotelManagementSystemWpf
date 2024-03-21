@@ -19,7 +19,7 @@ namespace HotelReservationsWpf.Commands
             _navigateCommand = navigateCommand;
 
             _viewModel.PropertyChanged += OnViewModelPropertyChanged;
-        }
+        }   
 
         // Responding to changes in the UI to verify whether a reservation can be made
         private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -88,8 +88,8 @@ namespace HotelReservationsWpf.Commands
                     MessageBox.Show("The reservation was successfully created.", "Reservation created", 
                         MessageBoxButton.OK, MessageBoxImage.Information);
 
-                    // Navigate to the ReservationsView
-
+                    // Navigate to the ReservationsListingViewModel
+                    _navigateCommand.Execute(null);
                 }
             }
             catch(ConflictReservationsException)

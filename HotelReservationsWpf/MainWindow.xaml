@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HotelReservationsWpf"
         xmlns:views="clr-namespace:HotelReservationsWpf.Views"
+        xmlns:viewModels="clr-namespace:HotelReservationsWpf.ViewModels"
         mc:Ignorable="d"
         
         AllowsTransparency="True"
@@ -18,8 +19,42 @@
 
 
     <Grid>
+        <Grid.Resources>
 
-        <views:ReservationsView DataContext="{Binding CurrentViewModel}"/>
+            <!-- 
+                DataTemplate for EntranceToHotelViewModel:
+                View that will be displayed for WelcomeView 
+                when application uses EntranceToHotelViewModel
+            -->
+            <DataTemplate DataType="{x:Type viewModels:EntranceToHotelViewModel}">
+                <views:WelcomeView/>
+            </DataTemplate>
+
+            <!-- 
+                DataTemplate for MakeReservationViewModel:
+                View that will be displayed for MakeReservationView 
+                when using MakeReservationViewModel
+            -->
+            <DataTemplate DataType="{x:Type viewModels:MakeReservationViewModel}">
+                <views:MakeReservationView/>
+            </DataTemplate>
+
+            <!-- 
+                DataTemplate for ReservationsListingViewModel:
+                View that will be displayed for ReservationsView 
+                when using ReservationsListingViewModel
+            -->
+            <DataTemplate DataType="{x:Type viewModels:ReservationsListingViewModel}">
+                <views:ReservationsView/>
+            </DataTemplate>
+
+        </Grid.Resources>
+
+        <!-- 
+            ContentControl that will display the current view model
+            based on the CurrentViewModel property in the MainWindowViewModel
+        -->
+        <ContentControl Content="{Binding CurrentViewModel}"/>
 
     </Grid>
 </Window>

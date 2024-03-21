@@ -1,5 +1,6 @@
 ﻿using HotelReservationsWpf.Commands;
 using HotelReservationsWpf.Models;
+using HotelReservationsWpf.Services;
 using System.Windows;
 using System.Windows.Input;
 
@@ -152,13 +153,15 @@ namespace HotelReservationsWpf.ViewModels
         //
         public ICommand NavigateCommand { get; }
 
-        public MakeReservationViewModel(Hotel hotel)
+        public MakeReservationViewModel(Hotel hotel, NavigationServiceWpf navigationServiceToReservationsListingViewModel)
         {
             _hotel = hotel;
 
-            SubmitCommand = new MakeReservationCommand(hotel, this, new NavigateCommand());
+            SubmitCommand = new MakeReservationCommand(hotel, this, 
+                new NavigateCommand(navigationServiceToReservationsListingViewModel));
+
             RoomPreferenceCommand = new RelayCommand<string>(ExecuteRoomType);
-            NavigateCommand = new NavigateCommand();
+           // NavigateCommand = new NavigateCommand();
         }
 
         // Set the room type for the reservation 
