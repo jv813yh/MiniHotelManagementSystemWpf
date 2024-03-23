@@ -78,7 +78,7 @@ namespace HotelReservationsWpf.Commands
                 else
                 {
                     // Create a new reservation
-                    Reservation newReservation = new Reservation(getRoomRandom, new GuestPerson(_viewModel.FirstName, _viewModel.LastName, _viewModel.PhomeNumber, 
+                    Reservation newReservation = new Reservation(getRoomRandom, new GuestPerson(_viewModel.FirstName + " " + _viewModel.LastName, _viewModel.PhomeNumber, 
                         _viewModel.EmailAddress), DateOnly.FromDateTime(_viewModel.CheckInDate), DateOnly.FromDateTime(_viewModel.CheckOutDate));
 
                     // Add the reservation to the hotel

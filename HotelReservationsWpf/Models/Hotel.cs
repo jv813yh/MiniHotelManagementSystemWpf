@@ -1,10 +1,8 @@
-﻿using HotelReservationsWpf.Services.InitializationRoomsProvider;
-
-namespace HotelReservationsWpf.Models
+﻿namespace HotelReservationsWpf.Models
 {
     public class Hotel
     {
-        // 
+        // Name of the hotel
         public string Name { get; }
 
         // Business logic of the hotel is handled by ManagementHotel

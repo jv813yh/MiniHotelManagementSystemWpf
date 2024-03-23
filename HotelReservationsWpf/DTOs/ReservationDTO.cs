@@ -1,0 +1,41 @@
+﻿using HotelReservationsWpf.Models;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace HotelReservationsWpf.DTOs
+{
+    public class ReservationDTO
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity), Key]
+        public Guid Id { get; set; }
+
+        [Required]
+        public int RoomNumber { get; set; }
+
+        [Required]
+        public RoomType RoomType { get; set; }
+
+        [Required]
+        public string GuestName { get; set; }
+
+        [Required]
+        public string GuestEmail { get; set; }
+
+        [Required]
+        public string PhoneNumber { get; set; }
+
+        [Required]
+        public DateOnly CheckInDate { get; set; }
+
+        [Required]
+        public DateOnly CheckOutDate { get; set; }
+
+        [Required]
+        public decimal TotalCost { get; set; }
+    }
+}

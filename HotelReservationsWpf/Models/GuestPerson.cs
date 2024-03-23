@@ -1,36 +1,25 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-
-namespace HotelReservationsWpf.Models
+﻿namespace HotelReservationsWpf.Models
 {
     public class GuestPerson
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity), Key]
-        public Guid GuestId { get; set; }
+        public string GuestName { get; }
 
-        [Required]
-        public string FirstName { get; set; }
+        public string LastName { get; }
 
-        [Required]
-        public string LastName { get; set; }
+        public string Email { get; }
 
-        [Required]
-        public string Email { get; set; }
+        public string PhoneNumber { get; }
 
-        [Required]
-        public string PhoneNumber { get; set; }
-
-        public GuestPerson(string firstName, string lastName, string email, string phoneNumber)
+        public GuestPerson(string guestName, string email, string phoneNumber)
         {
-            FirstName = firstName;
-            LastName = lastName;
+            GuestName = guestName;
             Email = email;
             PhoneNumber = phoneNumber;
         }
 
         public override string ToString()
         {
-            return $"{FirstName} {LastName}";
+            return $"{GuestName}";
         }
 
         /*

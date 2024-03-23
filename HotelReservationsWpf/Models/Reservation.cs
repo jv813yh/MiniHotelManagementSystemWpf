@@ -1,27 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace HotelReservationsWpf.Models
+﻿namespace HotelReservationsWpf.Models
 {
     public class Reservation
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity), Key]
-        public Guid ReservationId { get; set; }
+        public Room CurrentRoom { get; }
 
-        [Required]
-        public Room CurrentRoom { get; set; }
+        public GuestPerson GuestName { get; }
 
-        [Required]
-        public GuestPerson GuestName { get; set; }
+        public DateOnly CheckInDate { get; }
 
-        [Required]
-        public DateOnly CheckInDate { get; set; }
+        public DateOnly CheckOutDate { get; }
 
-        [Required]
-        public DateOnly CheckOutDate { get; set; }
-
-        [Required]
-        public decimal TotalCost { get; set; }
+        public decimal TotalCost { get; }
 
         public int NumberOfDaysRemaining 
             => CheckOutDate.DayOfYear - CheckInDate.DayOfYear;

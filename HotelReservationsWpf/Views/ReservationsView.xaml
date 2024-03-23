@@ -82,21 +82,21 @@
                     </StackPanel>
 
                     <StackPanel Orientation="Vertical"
-               Grid.RowSpan="2"
-               Grid.Column="1">
+                                Grid.RowSpan="2"
+                                Grid.Column="1">
 
                         <RadioButton Command=""
-               Name="EndDateAscendingRadioButton"
-               CommandParameter="DateAscending"
-               Margin="15,15,0,0"
-               Style="{StaticResource OrderByRadioButton}">End Date Asc
+                                Name="EndDateAscendingRadioButton"
+                                CommandParameter="DateAscending"
+                                Margin="15,15,0,0"
+                                Style="{StaticResource OrderByRadioButton}">End Date Asc
                         </RadioButton>
 
                         <RadioButton Command=""
-               Name="EndDateDescendingRadioButton"
-               CommandParameter="DateDescending"
-               Margin="15,15,0,0"
-               Style="{StaticResource OrderByRadioButton}">End Date Desc</RadioButton>
+                                Name="EndDateDescendingRadioButton"
+                                CommandParameter="DateDescending"
+                                Margin="15,15,0,0"
+                                Style="{StaticResource OrderByRadioButton}">End Date Desc</RadioButton>
 
                     </StackPanel>
 

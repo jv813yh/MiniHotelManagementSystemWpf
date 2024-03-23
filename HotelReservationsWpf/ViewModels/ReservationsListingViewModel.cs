@@ -35,8 +35,9 @@ namespace HotelReservationsWpf.ViewModels
 
         private void LoadReservations()
         {
+            _reservations.Clear();
 
-            foreach(Reservation reservation in _hotel.GetAllReservations())
+            foreach (Reservation reservation in _hotel.GetAllReservations())
             {
                 ReservationViewModel reservationViewModel = new ReservationViewModel(reservation);
                 _reservations.Add(reservationViewModel);

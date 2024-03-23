@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace HotelReservationsWpf.Models
+﻿namespace HotelReservationsWpf.Models
 {
     // RoomType and RoomStatus are enums that define the type and status of a room
     public enum RoomType
@@ -18,20 +15,13 @@ namespace HotelReservationsWpf.Models
     // Room class defines the properties of a room.
     public class Room
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity), Key]
-        public Guid RoomId { get; set; }
+        public int RoomNumber { get; }
 
-        [Required]
-        public int RoomNumber { get; set; }
+        public RoomType RoomType { get; }
 
-        [Required]
-        public RoomType RoomType { get; set; }
-
-        [Required]
         public RoomStatus RoomStatus { get; set; }
 
         // Price for one night stay in the room
-        [Required]
         public decimal CostPerNight { get; set; }
 
         public Room(int roomNumber, RoomType roomType, RoomStatus roomStatus, decimal price)
