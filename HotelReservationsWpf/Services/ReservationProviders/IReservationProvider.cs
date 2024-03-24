@@ -5,5 +5,6 @@ namespace HotelReservationsWpf.Services.ReservationProviders
     public interface IReservationProvider
     {
         Task<IEnumerable<Reservation>> GetAllReservationsAsync();
+        void CheckSettings();
     }
 }

@@ -1,4 +1,7 @@
-﻿namespace HotelReservationsWpf.Models
+﻿using HotelReservationsWpf.Services.ReservationCreators;
+using HotelReservationsWpf.Services.ReservationProviders;
+
+namespace HotelReservationsWpf.Models
 {
     public class Hotel
     {
@@ -8,33 +11,46 @@
         // Business logic of the hotel is handled by ManagementHotel
         private readonly ManagementHotel _managementHotel; 
 
+        private readonly IReservationCreator _reservationCreator;
+        private readonly IReservationProvider _reservationProvider;
 
-        public Hotel(string name, int[] countOfRooms, decimal[] pricesPerNight) 
+
+        public Hotel(string name, int[] countOfRooms, decimal[] pricesPerNight,
+                            IReservationCreator reservation, IReservationProvider reservationProvider) 
         {
             Name = name;
-            _managementHotel = new ManagementHotel(countOfRooms, pricesPerNight);
+
+            _reservationCreator = reservation;
+            _reservationProvider = reservationProvider;
+
+            _managementHotel = new ManagementHotel(countOfRooms, pricesPerNight, 
+                                                        _reservationCreator, _reservationProvider);
         }
 
-        public void CreateReservation(Reservation reservation)
+        // Create a new reservation async and check for conflicts
+        public async Task CreateReservationAsync(Reservation reservation)
         {
-            _managementHotel.AddReservation(reservation);
+           await _managementHotel.CreateReservationAsync(reservation);
         }
 
-        public IEnumerable<Reservation> GetAllReservations()
-         => _managementHotel.GetAllReservations();
+        // Get all reservations async
+        public async Task<IEnumerable<Reservation>> GetAllReservationsAsync()
+         => await _managementHotel.GetAllReservationsAsync();
 
+        // Get the statuses of rooms in the hotel
         public (int, int) GetStatusStandardRooms()
             => _managementHotel.GetStatusStandardRooms();
 
         public (int, int) GetStatusDeluxeRooms()
             => _managementHotel.GetStatusDeluxeRooms();
-
         public (int, int) GetStatusSuiteRooms()
             => _managementHotel.GetStatusSuiteRooms();
 
+        // Check if there is a room available in the hotel for the selected room type
         public bool IsAvailablePreferenceRoom(RoomType? roomType)
             => _managementHotel.IsAvailablePreferenceRoom(roomType);
 
+        // Get a room randomly from the hotel for the selected room type
         public Room? GetRoomRandomHotel(RoomType? roomType)
             => _managementHotel.GetRoomRandom(roomType);
 

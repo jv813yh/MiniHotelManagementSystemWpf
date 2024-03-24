@@ -6,7 +6,7 @@ using System.Windows;
 
 namespace HotelReservationsWpf.Commands
 {
-    public class MakeReservationCommand : CommandBase
+    public class MakeReservationCommand : AsyncCommandBase
     {
         private readonly Hotel _hotel;
         private readonly MakeReservationViewModel _viewModel;
@@ -64,7 +64,7 @@ namespace HotelReservationsWpf.Commands
         }
 
         // After verification of input data, reservation will be make
-        public override void Execute(object? parameter)
+        public override async Task ExecuteAsync(object? parameter)
         {
             try
             {
@@ -82,7 +82,7 @@ namespace HotelReservationsWpf.Commands
                         _viewModel.EmailAddress), DateOnly.FromDateTime(_viewModel.CheckInDate), DateOnly.FromDateTime(_viewModel.CheckOutDate));
 
                     // Add the reservation to the hotel
-                    _hotel.CreateReservation(newReservation);
+                    await _hotel.CreateReservationAsync(newReservation);  
 
                     // Inform the user that the reservation was successfully created
                     MessageBox.Show("The reservation was successfully created.", "Reservation created", 

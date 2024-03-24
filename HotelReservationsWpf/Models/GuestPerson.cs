@@ -1,5 +1,6 @@
 ﻿namespace HotelReservationsWpf.Models
 {
+    // This class is used to represent a guest person in the hotel
     public class GuestPerson
     {
         public string GuestName { get; }

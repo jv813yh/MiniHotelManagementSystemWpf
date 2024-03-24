@@ -12,6 +12,7 @@
         Available,
         Occupied,
     }
+
     // Room class defines the properties of a room.
     public class Room
     {

@@ -1,17 +1,23 @@
 ﻿using HotelReservationsWpf.Services.InitializationRoomsProvider;
+using HotelReservationsWpf.Services.ReservationCreators;
+using HotelReservationsWpf.Services.ReservationProviders;
 
 namespace HotelReservationsWpf.Models
 {
+
+
     public class ManagementHotel
     {
+        // File names for the overview of rooms for each type of room in the hotel
         private string _overviewStandardRoomsString = "overviewOfStandardRoomsFile.xml",
                       _overviewDeluxeRoomsString = "overviewOfDeluxeRoomsFile.xml",
                       _overviewSuiteRoomsString = "overviewOfSuiteRoomsFile.xml";
 
-        //
+        // Reservation book for managing reservations in the hotel
         private readonly ReservationsBook _reservationBook;
 
-        //
+        // Lists of rooms for each type of room in the hotel (standard, deluxe, suite) 
+        // with information about rooms in the hotel
         private  List<Room> _standardRooms;
         private  List<Room> _deluxeRooms;
         private  List<Room> _suiteRooms;
@@ -21,15 +27,18 @@ namespace HotelReservationsWpf.Models
         public decimal PricePerNightDeluxeRoom { get; private set; }
         public decimal PricePerNightSuiteRoom { get; private set; }
 
-        public ManagementHotel(int[] countOfRooms, decimal[] pricesPerNightRooms)
+        public ManagementHotel(int[] countOfRooms, decimal[] pricesPerNightRooms, 
+                                    IReservationCreator reservationCreator, IReservationProvider reservationProvider)
         {
-            _reservationBook = new ReservationsBook();
+            _reservationBook = new ReservationsBook(reservationCreator, reservationProvider);
             IInitializationRooms initializationRooms = new InitializationRooms();
 
             CreateRoomsWithPrices(initializationRooms, countOfRooms, pricesPerNightRooms);
-
         }
 
+        // Create rooms with prices per night for each type of room in the hotel
+        // and initialize the list of rooms for each type of room 
+        // with the number of rooms and the price per night ...
         private void CreateRoomsWithPrices(IInitializationRooms initializationRooms, int[] countOfRooms, decimal[] pricesPerNightRoom)
         {
             if(countOfRooms.Length > 3)
@@ -85,14 +94,18 @@ namespace HotelReservationsWpf.Models
                 }
             }
         }
-        public void AddReservation(Reservation reservation)
+
+        // Create a new reservation asynchronously and add it to the reservation book
+        public async Task CreateReservationAsync(Reservation reservation)
         {
-            _reservationBook.MakeReservation(reservation);
+            await _reservationBook.MakeReservationAsync(reservation);
         }
 
-        public IEnumerable<Reservation> GetAllReservations()
-         => _reservationBook.GetAllReservations();
+        // Get all reservations asynchronously from the reservation book
+        public async Task<IEnumerable<Reservation>> GetAllReservationsAsync()
+         => await _reservationBook.GetAllReservationsAsync();
 
+        // Get the status available and occupied for a standard rooms
         public (int, int) GetStatusStandardRooms()
         {
             int available = _standardRooms.Count(r=> r.RoomStatus == RoomStatus.Available);
@@ -102,6 +115,7 @@ namespace HotelReservationsWpf.Models
             return (available, occupied);
         }
 
+        // Get the status available and occupied for a deluxe rooms
         public (int, int) GetStatusDeluxeRooms()
         {
             int available = _deluxeRooms.Count(r => r.RoomStatus == RoomStatus.Available);
@@ -110,6 +124,7 @@ namespace HotelReservationsWpf.Models
             return (available, occupied);
         }
 
+        // Get the status available and occupied for a suite rooms
         public (int, int) GetStatusSuiteRooms()
         {
             int available = _suiteRooms.Count(r => r.RoomStatus == RoomStatus.Available);
@@ -118,6 +133,7 @@ namespace HotelReservationsWpf.Models
             return (available, occupied);
         }
 
+        // Check if there is a room available for the selected room type
         public bool IsAvailablePreferenceRoom(RoomType? roomType)
         {
             if (roomType == null)
@@ -138,6 +154,7 @@ namespace HotelReservationsWpf.Models
             }
         }
 
+        // Get a random room of the selected type that is available for reservation 
         public Room? GetRoomRandom(RoomType? roomType)
         {
             if (roomType == null)

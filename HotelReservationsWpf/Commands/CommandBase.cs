@@ -2,7 +2,6 @@
 
 namespace HotelReservationsWpf.Commands
 {
-    
     public abstract class CommandBase : ICommand
     {
         public event EventHandler? CanExecuteChanged;

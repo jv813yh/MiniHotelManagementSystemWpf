@@ -1,41 +1,51 @@
 ﻿using HotelReservationsWpf.Exceptions;
+using HotelReservationsWpf.Services.ReservationCreators;
+using HotelReservationsWpf.Services.ReservationProviders;
 
 namespace HotelReservationsWpf.Models
 {
+    // Class to manage reservations in the hotel (creating, getting, deleting reservations)
     public class ReservationsBook
     {
-        public List<Reservation> Reservations { get; set; }
+        // Services for loading reservations from the database and creating a reservations
+        private readonly IReservationCreator _reservationCreator;
+        private readonly IReservationProvider _reservationProvider;
 
-        public ReservationsBook()
+        public ReservationsBook(IReservationCreator reservationCreator, IReservationProvider reservationProvider)
         {
-            Reservations = new List<Reservation>();
+            _reservationCreator = reservationCreator;
+            _reservationProvider = reservationProvider;
         }
 
         /// <summary>
-        /// Method to create a new reservation and check for conflicts
+        /// Async method to create a new reservation and check for conflicts
         /// </summary>
         /// <param name="newReservation"></param>
         /// <exception cref="ConflictReservationsException"></exception>
-        public void MakeReservation(Reservation newReservation)
+        public async Task MakeReservationAsync(Reservation newReservation)
         {
+            
             // Check if there is a conflict with the new reservation
-            if (Reservations.Any(r => r.IsConflict(newReservation)))
+            foreach (var reservation in await _reservationProvider.GetAllReservationsAsync())
             {
-                throw new ConflictReservationsException("There is a conflict with the reservation", 
-                    newReservation, Reservations.First(r => r.IsConflict(newReservation)));
+                if (reservation.IsConflict(newReservation))
+                {
+                    throw new ConflictReservationsException("There is a conflict with the reservation", newReservation, reservation);
+                }
             }
-
-            // Add the new reservation 
+            
+            // Change the room status to Occupied
             newReservation.CurrentRoom.RoomStatus = RoomStatus.Occupied;
-            Reservations.Add(newReservation);
+
+            // Create a new reservation in the database async
+            await _reservationCreator.CreateReservationAsync(newReservation);
         }
 
         /// <summary>
-        /// Method to get all reservations 
+        /// Async method to get all reservations 
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Reservation> GetAllReservations()
-            => Reservations;
-
+        public async Task<IEnumerable<Reservation>> GetAllReservationsAsync()
+            => await _reservationProvider.GetAllReservationsAsync();
     }
 }

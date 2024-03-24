@@ -1,11 +1,6 @@
 ﻿using HotelReservationsWpf.Models;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HotelReservationsWpf.DTOs
 {
@@ -18,7 +13,7 @@ namespace HotelReservationsWpf.DTOs
         public int RoomNumber { get; set; }
 
         [Required]
-        public RoomType RoomType { get; set; }
+        public RoomType RoomTypeProperty { get; set; }
 
         [Required]
         public string GuestName { get; set; }

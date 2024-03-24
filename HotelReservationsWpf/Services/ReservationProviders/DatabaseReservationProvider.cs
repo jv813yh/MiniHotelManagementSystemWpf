@@ -7,14 +7,32 @@ namespace HotelReservationsWpf.Services.ReservationProviders
 {
     public class DatabaseReservationProvider : IReservationProvider
     {
-        // Fields
+        // Factory class to create instances of the HotelManagementDbContext class
         private readonly HotelManagementDbContextFactory _dbContextFactory;
-        private readonly Hotel _hotel;
 
-        public DatabaseReservationProvider(HotelManagementDbContextFactory hotelManagementDbContextFactory, Hotel hotel)
+        // Prices per night for the rooms
+        private readonly decimal[] _pricesPerNightRoom;
+
+        // Number of room types
+        private readonly int _numberOfRoomTypes;
+
+        public DatabaseReservationProvider(HotelManagementDbContextFactory hotelManagementDbContextFactory,
+                       decimal[] pricesPerNightRoom, int numberOfRoomTypes)
         {
             _dbContextFactory = hotelManagementDbContextFactory;
-            _hotel = hotel;
+            _pricesPerNightRoom = pricesPerNightRoom;
+            _numberOfRoomTypes = numberOfRoomTypes;
+        }
+
+        public static DatabaseReservationProvider CreateDatabaseReservationProvider(HotelManagementDbContextFactory hotelManagementDbContextFactory,
+                                  decimal[] pricesPerNightRoom, int numberOfRoomTypes)
+        {
+            DatabaseReservationProvider returnReservationProvider = 
+                new DatabaseReservationProvider(hotelManagementDbContextFactory, pricesPerNightRoom, numberOfRoomTypes);
+
+            returnReservationProvider.CheckSettings();
+
+            return returnReservationProvider;
         }
 
         // Get all reservations from the database asynchronously and return them as a collection of Reservation objects
@@ -38,16 +56,16 @@ namespace HotelReservationsWpf.Services.ReservationProviders
             decimal pricePerNight = 0;
 
             // Determine the price per night based on the RoomType
-            switch (reservationDto.RoomType)
+            switch (reservationDto.RoomTypeProperty)
             {
                 case RoomType.Standard:
-                    pricePerNight = _hotel.GetPriceForStandardRoom();
+                    pricePerNight = _pricesPerNightRoom[0];
                     break;
                 case RoomType.Deluxe:
-                    pricePerNight = _hotel.GetPriceForDeluxeRoom();
+                    pricePerNight = _pricesPerNightRoom[1];
                     break;
                 case RoomType.Suite:
-                    pricePerNight = _hotel.GetPriceForSuiteRoom();
+                    pricePerNight = _pricesPerNightRoom[2];
                     break;
                 default:
                     break;
@@ -55,9 +73,17 @@ namespace HotelReservationsWpf.Services.ReservationProviders
             }
 
             // Create a new instance of the Reservation class with the Room, GuestPerson, CheckInDate, and CheckOutDate properties
-            return new Reservation(new Room(reservationDto.RoomNumber, reservationDto.RoomType, RoomStatus.Occupied, pricePerNight),
+            return new Reservation(new Room(reservationDto.RoomNumber, reservationDto.RoomTypeProperty, RoomStatus.Occupied, pricePerNight),
                                         new GuestPerson(reservationDto.GuestName, reservationDto.GuestEmail, reservationDto.PhoneNumber), 
                                                 reservationDto.CheckInDate, reservationDto.CheckOutDate);
+        }
+
+        public void CheckSettings()
+        {
+            if (_pricesPerNightRoom.Length != _numberOfRoomTypes)
+            {
+                throw new ArgumentException("The prices per night for the rooms and number of room types are not set correctly");
+            }
         }
     }
 }
