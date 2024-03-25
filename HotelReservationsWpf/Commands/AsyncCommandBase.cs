@@ -1,7 +1,6 @@
-﻿using System.Windows.Input;
-
-namespace HotelReservationsWpf.Commands
+﻿namespace HotelReservationsWpf.Commands
 {
+    // Base abstract class for implementing asynchronous commands in the application, inherits from CommandBase
     public abstract class AsyncCommandBase : CommandBase
     {
         // Property to check if the command is executing

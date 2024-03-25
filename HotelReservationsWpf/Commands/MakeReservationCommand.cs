@@ -1,5 +1,6 @@
 ﻿using HotelReservationsWpf.Exceptions;
 using HotelReservationsWpf.Models;
+using HotelReservationsWpf.Stores;
 using HotelReservationsWpf.ViewModels;
 using System.ComponentModel;
 using System.Windows;
@@ -8,13 +9,13 @@ namespace HotelReservationsWpf.Commands
 {
     public class MakeReservationCommand : AsyncCommandBase
     {
-        private readonly Hotel _hotel;
+        private readonly HotelStore _hotelStore;
         private readonly MakeReservationViewModel _viewModel;
         private readonly NavigateCommand _navigateCommand;
 
-        public MakeReservationCommand(Hotel hotel, MakeReservationViewModel makeReservationViewModel, NavigateCommand navigateCommand)
+        public MakeReservationCommand(HotelStore hotelStore, MakeReservationViewModel makeReservationViewModel, NavigateCommand navigateCommand)
         {
-            _hotel = hotel;
+            _hotelStore = hotelStore;
             _viewModel = makeReservationViewModel;
             _navigateCommand = navigateCommand;
 
@@ -54,7 +55,7 @@ namespace HotelReservationsWpf.Commands
             }
 
             // Check if the selected room type is available
-            if (_viewModel.Hotel.IsAvailablePreferenceRoom(_viewModel.RoomTypeProperty))
+            if (_hotelStore.IsAvailablePreferenceRoomHotelStore(_viewModel.RoomTypeProperty))
             {
                 isAvailablePreferenceRoom = true;
             }
@@ -69,7 +70,7 @@ namespace HotelReservationsWpf.Commands
             try
             {
                 // Get a random room of the selected type from the hotel 
-                Room? getRoomRandom = _hotel.GetRoomRandomHotel(_viewModel.RoomTypeProperty);
+                Room? getRoomRandom = _hotelStore.GetRoomRandomHotelStore(_viewModel.RoomTypeProperty);
 
                 if (getRoomRandom == null)
                 {
@@ -81,8 +82,13 @@ namespace HotelReservationsWpf.Commands
                     Reservation newReservation = new Reservation(getRoomRandom, new GuestPerson(_viewModel.FirstName + " " + _viewModel.LastName, _viewModel.PhomeNumber, 
                         _viewModel.EmailAddress), DateOnly.FromDateTime(_viewModel.CheckInDate), DateOnly.FromDateTime(_viewModel.CheckOutDate));
 
-                    // Add the reservation to the hotel
-                    await _hotel.CreateReservationAsync(newReservation);  
+                    // Add the reservation to the hotelStore
+                    await _hotelStore.CreateReservationHotelStoreAsync(newReservation);
+
+                    /*
+                    await _hotelStore.CreateReservationHotelStoreAsync(new Reservation(getRoomRandom, new GuestPerson(_viewModel.FirstName + " " + _viewModel.LastName, _viewModel.PhomeNumber,
+                                            _viewModel.EmailAddress), DateOnly.FromDateTime(_viewModel.CheckInDate), DateOnly.FromDateTime(_viewModel.CheckOutDate)));
+                    */
 
                     // Inform the user that the reservation was successfully created
                     MessageBox.Show("The reservation was successfully created.", "Reservation created", 

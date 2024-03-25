@@ -1,6 +1,7 @@
 ﻿using HotelReservationsWpf.Commands;
 using HotelReservationsWpf.Models;
 using HotelReservationsWpf.Services;
+using HotelReservationsWpf.Stores;
 using System.Windows;
 using System.Windows.Input;
 
@@ -8,7 +9,7 @@ namespace HotelReservationsWpf.ViewModels
 {
     public class MakeReservationViewModel : ViewModelBase
     {
-        private readonly Hotel _hotel;
+        private readonly HotelStore _hotelStore;
         private RoomType? _roomType = null;
 
         private string _firstName = string.Empty;
@@ -19,10 +20,7 @@ namespace HotelReservationsWpf.ViewModels
         private DateTime _checkOutDate = DateTime.Now;
         private string _expectedPriceString = string.Empty;
 
-        public Hotel Hotel
-        {
-            get => _hotel;
-        }
+       
         public string FirstName
         {
             get { return _firstName; }
@@ -50,6 +48,8 @@ namespace HotelReservationsWpf.ViewModels
             {
                 _checkInDate = value;
                 OnPropertyChanged(nameof(CheckInDate));
+
+                CalculateExpectedPrice(RoomTypeProperty);
             }
         }
 
@@ -60,12 +60,9 @@ namespace HotelReservationsWpf.ViewModels
             {
                 _checkOutDate = value;
 
-                if(RoomTypeProperty != null && CheckOutDate.DayOfYear > DateTime.Now.DayOfYear)
-                {
-                    CalculateExpectedPrice(RoomTypeProperty);
-                }
-
                 OnPropertyChanged(nameof(CheckOutDate));
+
+                CalculateExpectedPrice(RoomTypeProperty);
             }
         }
 
@@ -95,13 +92,9 @@ namespace HotelReservationsWpf.ViewModels
             set
             {
                 _roomType = value;
-
-                if (CheckOutDate.Day != DateTime.Now.Day)
-                {
-                    CalculateExpectedPrice(RoomTypeProperty);
-                }
-
                 OnPropertyChanged(nameof(RoomTypeProperty));
+
+                CalculateExpectedPrice(RoomTypeProperty);
             }
         }
 
@@ -111,8 +104,18 @@ namespace HotelReservationsWpf.ViewModels
 
             set
             {
-                _expectedPriceString = value;
-                OnPropertyChanged(nameof(ExpectedPriceString));
+                if(CheckOutDate.Day != DateTime.Now.Day && RoomTypeProperty != null
+                    && !(CheckOutDate.DayOfYear < CheckInDate.DayOfYear) 
+                        && !(CheckInDate.Day < DateTime.Now.Day))
+                {
+                    _expectedPriceString = value;
+                    OnPropertyChanged(nameof(ExpectedPriceString));
+                }
+                else if(RoomTypeProperty != null)
+                {
+                    _expectedPriceString = "Unfeasible";
+                    OnPropertyChanged(nameof(ExpectedPriceString));
+                }
             }
         }
 
@@ -121,7 +124,7 @@ namespace HotelReservationsWpf.ViewModels
         {
             get
             {
-                (int available, int occupied) = _hotel.GetStatusStandardRooms();
+                (int available, int occupied) = _hotelStore.GetStatusStandardRoomsHotelStore();
                 return $"Occupied: {occupied} Available: {available}";
             }
         }
@@ -130,7 +133,7 @@ namespace HotelReservationsWpf.ViewModels
         {
             get
             {
-                (int available, int occupied) = _hotel.GetStatusDeluxeRooms();
+                (int available, int occupied) = _hotelStore.GetStatusDeluxeRoomsHotelStore();
                 return $"Occupied: {occupied} Available: {available}";
             }
         }
@@ -139,7 +142,7 @@ namespace HotelReservationsWpf.ViewModels
         {
             get
             {
-                (int available, int occupied) = _hotel.GetStatusSuiteRooms();
+                (int available, int occupied) = _hotelStore.GetStatusSuiteRoomsHotelStore();
                 return $"Occupied: {occupied} Available: {available}";
             }
         }
@@ -153,19 +156,19 @@ namespace HotelReservationsWpf.ViewModels
         //
         public ICommand NavigateCommand { get; }
 
-        public MakeReservationViewModel(Hotel hotel, NavigationServiceWpf navigationServiceToReservationsListingViewModel)
+        public MakeReservationViewModel(HotelStore hotelStore, NavigationServiceWpf navigationServiceToReservationsListingViewModel)
         {
-            _hotel = hotel;
+            _hotelStore = hotelStore;
 
-            SubmitCommand = new MakeReservationCommand(hotel, this, 
+            SubmitCommand = new MakeReservationCommand(hotelStore, this, 
                 new NavigateCommand(navigationServiceToReservationsListingViewModel));
 
-            RoomPreferenceCommand = new RelayCommand<string>(ExecuteRoomType);
+            RoomPreferenceCommand = new RelayCommand<string>(SetRoomType);
            // NavigateCommand = new NavigateCommand();
         }
 
         // Set the room type for the reservation 
-        private void ExecuteRoomType(string type)
+        private void SetRoomType(string type)
         {
             switch (type)
             {
@@ -197,15 +200,15 @@ namespace HotelReservationsWpf.ViewModels
             switch (RoomTypeProperty)
             {
                 case RoomType.Standard:
-                    ExpectedPriceString = (_hotel.GetPriceForStandardRoom() * 
+                    ExpectedPriceString = (_hotelStore.GetPriceForStandardRoomHotelStore() * 
                                                 (CheckOutDate.DayOfYear - CheckInDate.DayOfYear)).ToString("0.00") + " €";
                     break;
                 case RoomType.Deluxe:
-                    ExpectedPriceString = (_hotel.GetPriceForDeluxeRoom() *
+                    ExpectedPriceString = (_hotelStore.GetPriceForDeluxeRoomHotelStore() *
                                                 (CheckOutDate.DayOfYear - CheckInDate.DayOfYear)).ToString("0.00") + " €";
                     break;
                 case RoomType.Suite:
-                    ExpectedPriceString = (_hotel.GetPriceForSuiteRoom() *
+                    ExpectedPriceString = (_hotelStore.GetPriceForSuiteRoomHotelStore() *
                                                 (CheckOutDate.DayOfYear - CheckInDate.DayOfYear)).ToString("0.00") + " €";
                     break;
                 default:

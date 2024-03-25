@@ -67,15 +67,6 @@
         <Image Source="/HotelReservationsWpf;component/Images/roomImage.jpg"
                Stretch="Fill"/>
 
-        <TextBlock Grid.Row="0" 
-                   Text="{Binding Path=Hotel.Name}" 
-                   FontSize="50" 
-                   FontWeight="Bold"
-                   Foreground="OrangeRed"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   Margin="0,60,0,120"/>
-
         <Grid Grid.Row="1"
               Background="GhostWhite">
             <Grid.ColumnDefinitions>

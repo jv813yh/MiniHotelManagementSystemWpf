@@ -19,7 +19,7 @@ namespace HotelReservationsWpf
         // Connection string to the database (Sqlite)
         private static readonly string _connectionString = $"Data Source={Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "hotelManagement.db")}";
 
-
+        // Factory for creating a database context
         HotelManagementDbContextFactory _dbHotelContextFactory;
 
         // Services for connecting to the database based on connectionstring
@@ -30,11 +30,13 @@ namespace HotelReservationsWpf
         // Store for saving the current view model of the application
         private NavigationStore _navigationStore;
 
+        // Hotel is centralized an managed in a single location - HotelStore
+        private readonly HotelStore _hotelStore;
+
         // Fields
         private readonly Hotel _hotel;
         private readonly int[] _countOfRooms = [12, 6, 3];
         private readonly decimal[] _pricesPerNightRoom = [50, 78, 110];
-
 
         public App()
         {
@@ -49,6 +51,8 @@ namespace HotelReservationsWpf
             _hotel = new Hotel("Your Paradise", _countOfRooms, _pricesPerNightRoom,
                                     _reservationCreator, _reservationProvider);
 
+            _hotelStore = new HotelStore(_hotel);
+
             // 
             _navigationStore = new NavigationStore();
         }
@@ -61,7 +65,7 @@ namespace HotelReservationsWpf
                 dbContext.Database.Migrate();
             }
 
-            // Set the current view model of the application
+            // Set the current view model of the initial application
             _navigationStore.CurrentViewModel = CreateEntranceToHotelViewModel();
 
             MainWindow = new MainWindow()
@@ -77,16 +81,16 @@ namespace HotelReservationsWpf
          
         private EntranceToHotelViewModel CreateEntranceToHotelViewModel()
         {
-            return new EntranceToHotelViewModel(_hotel, new NavigationServiceWpf(_navigationStore, CreateMakeReservationViewModel));
+            return new EntranceToHotelViewModel(_hotelStore, new NavigationServiceWpf(_navigationStore, CreateMakeReservationViewModel));
         }
         private MakeReservationViewModel CreateMakeReservationViewModel()
         {
-            return new MakeReservationViewModel(_hotel, new NavigationServiceWpf(_navigationStore, CreateReservationsListingViewModel));
+            return new MakeReservationViewModel(_hotelStore, new NavigationServiceWpf(_navigationStore, CreateReservationsListingViewModel));
         }
 
         private ReservationsListingViewModel CreateReservationsListingViewModel()
         {
-            return ReservationsListingViewModel.CreateReservationsListingViewModel(_hotel, new NavigationServiceWpf(_navigationStore, CreateMakeReservationViewModel), 
+            return ReservationsListingViewModel.CreateReservationsListingViewModel(_hotelStore, new NavigationServiceWpf(_navigationStore, CreateMakeReservationViewModel), 
                                                             _reservationProvider);
         }
     }

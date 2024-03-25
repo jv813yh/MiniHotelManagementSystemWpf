@@ -13,7 +13,7 @@
             <ImageBrush ImageSource="/HotelReservationsWpf;component/Images/welcomeImage.jpg"/>
         </Grid.Background>
 
-        <TextBlock Text="{Binding HotelName}"
+        <TextBlock Text="{Binding HotelName, Mode=OneWay}"
                    FontSize="60"
                    FontWeight="Bold"
                    Foreground="#B5651D"

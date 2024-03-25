@@ -11,6 +11,7 @@ namespace HotelReservationsWpf.Models
         // Business logic of the hotel is handled by ManagementHotel
         private readonly ManagementHotel _managementHotel; 
 
+        // Reservation creator and provider interfaces for creating and getting reservations 
         private readonly IReservationCreator _reservationCreator;
         private readonly IReservationProvider _reservationProvider;
 

@@ -1,5 +1,4 @@
-﻿using HotelReservationsWpf.Models;
-using HotelReservationsWpf.Services.ReservationProviders;
+﻿using HotelReservationsWpf.Stores;
 using HotelReservationsWpf.ViewModels;
 using System.Windows;
 
@@ -7,12 +6,12 @@ namespace HotelReservationsWpf.Commands
 {
     public class LoadReservationsCommand : AsyncCommandBase
     {
-        private readonly IReservationProvider _reservationProvider;
+        private readonly HotelStore _hotelStore;
         private readonly ReservationsListingViewModel _reservationsListingViewModel;
 
-        public LoadReservationsCommand(IReservationProvider reservationProvider, ReservationsListingViewModel reservationsListingViewModel)
+        public LoadReservationsCommand(HotelStore hotelStore, ReservationsListingViewModel reservationsListingViewModel)
         {
-            _reservationProvider = reservationProvider;
+            _hotelStore = hotelStore;
             _reservationsListingViewModel = reservationsListingViewModel;
         }
 
@@ -22,10 +21,10 @@ namespace HotelReservationsWpf.Commands
             try
             {
                 // Get all reservations from the database async
-                IEnumerable<Reservation> reservationsFromDb = await _reservationProvider.GetAllReservationsAsync();
+                await _hotelStore.LoadReservationsHotelStoreAsync();
 
                 // Load reservations to the view model
-                _reservationsListingViewModel.LoadReservationsFromDb(reservationsFromDb);
+                _reservationsListingViewModel.LoadReservationsFromDb(_hotelStore.Reservations);
 
                 //_reservationsListingViewModel.LoadReservationsFromDb(await _reservationProvider.GetAllReservationsAsync());
             }

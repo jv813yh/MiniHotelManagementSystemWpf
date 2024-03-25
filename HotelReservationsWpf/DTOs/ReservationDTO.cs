@@ -16,13 +16,13 @@ namespace HotelReservationsWpf.DTOs
         public RoomType RoomTypeProperty { get; set; }
 
         [Required]
-        public string GuestName { get; set; }
+        public string GuestName { get; set; } = string.Empty;
 
         [Required]
-        public string GuestEmail { get; set; }
+        public string GuestEmail { get; set; } = string.Empty;
 
         [Required]
-        public string PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; } = string.Empty;
 
         [Required]
         public DateOnly CheckInDate { get; set; }

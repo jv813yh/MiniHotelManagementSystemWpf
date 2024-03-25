@@ -3,9 +3,7 @@
     // This class is used to represent a guest person in the hotel
     public class GuestPerson
     {
-        public string GuestName { get; }
-
-        public string LastName { get; }
+        public string GuestName { get; } 
 
         public string Email { get; }
 

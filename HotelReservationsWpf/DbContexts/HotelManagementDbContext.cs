@@ -10,5 +10,7 @@ namespace HotelReservationsWpf.DbContexts
         public HotelManagementDbContext(DbContextOptions options) : base(options)
         {
         }
+
+
     }
 }
