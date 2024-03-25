@@ -1,4 +1,5 @@
 ﻿using HotelReservationsWpf.Models;
+using System.Windows;
 
 namespace HotelReservationsWpf.Stores
 {

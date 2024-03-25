@@ -14,18 +14,14 @@ namespace HotelReservationsWpf.ViewModels
 
         private readonly ObservableCollection<ReservationViewModel> _reservations;
 
-        private readonly IReservationProvider _reservationProvider;
-
         public IEnumerable<ReservationViewModel>? GetAllReservations => _reservations;
 
         public ICommand NavigateMakeReservationCommand { get; }
         public ICommand LoadReservationsCommand { get; }
 
-        public ReservationsListingViewModel(HotelStore hotelStore, NavigationServiceWpf navigationServiceToMakeReservation,
-                            IReservationProvider reservationProvider)
+        public ReservationsListingViewModel(HotelStore hotelStore, NavigationServiceWpf navigationServiceToMakeReservation)
         {
             _hotelStore = hotelStore;
-            _reservationProvider = reservationProvider;
 
             _reservations = new ObservableCollection<ReservationViewModel>();
 
@@ -33,10 +29,9 @@ namespace HotelReservationsWpf.ViewModels
             LoadReservationsCommand = new LoadReservationsCommand(_hotelStore, this);
         }
 
-        public static ReservationsListingViewModel CreateReservationsListingViewModel(HotelStore hotelStore, NavigationServiceWpf navigationServiceToMakeReservation,
-                                                        IReservationProvider reservationProvider)
+        public static ReservationsListingViewModel CreateReservationsListingViewModel(HotelStore hotelStore, NavigationServiceWpf navigationServiceToMakeReservation)
         {
-            ReservationsListingViewModel returnViewModel = new ReservationsListingViewModel(hotelStore, navigationServiceToMakeReservation, reservationProvider);
+            ReservationsListingViewModel returnViewModel = new ReservationsListingViewModel(hotelStore, navigationServiceToMakeReservation);
 
             returnViewModel.LoadReservationsCommand.Execute(null);
 

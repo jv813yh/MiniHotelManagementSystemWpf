@@ -66,7 +66,7 @@ namespace HotelReservationsWpf
             }
 
             // Set the current view model of the initial application
-            _navigationStore.CurrentViewModel = CreateEntranceToHotelViewModel();
+            _navigationStore.CurrentViewModel = CreateReservationsListingViewModel();
 
             MainWindow = new MainWindow()
             {
@@ -90,8 +90,7 @@ namespace HotelReservationsWpf
 
         private ReservationsListingViewModel CreateReservationsListingViewModel()
         {
-            return ReservationsListingViewModel.CreateReservationsListingViewModel(_hotelStore, new NavigationServiceWpf(_navigationStore, CreateMakeReservationViewModel), 
-                                                            _reservationProvider);
+            return ReservationsListingViewModel.CreateReservationsListingViewModel(_hotelStore, new NavigationServiceWpf(_navigationStore, CreateMakeReservationViewModel));
         }
     }
 }

@@ -104,9 +104,9 @@ namespace HotelReservationsWpf.ViewModels
 
             set
             {
-                if(CheckOutDate.Day != DateTime.Now.Day && RoomTypeProperty != null
+                if(CheckOutDate.DayOfYear != DateTime.Now.DayOfYear && RoomTypeProperty != null
                     && !(CheckOutDate.DayOfYear < CheckInDate.DayOfYear) 
-                        && !(CheckInDate.Day < DateTime.Now.Day))
+                        && !(CheckInDate.DayOfYear < DateTime.Now.DayOfYear))
                 {
                     _expectedPriceString = value;
                     OnPropertyChanged(nameof(ExpectedPriceString));
