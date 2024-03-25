@@ -94,6 +94,8 @@ namespace HotelReservationsWpf.Commands
                     MessageBox.Show("The reservation was successfully created.", "Reservation created", 
                         MessageBoxButton.OK, MessageBoxImage.Information);
 
+                    Dispose();
+
                     // Navigate to the ReservationsListingViewModel
                     _navigateCommand.Execute(null);
                 }
@@ -108,6 +110,11 @@ namespace HotelReservationsWpf.Commands
             {
                 throw new Exception("An error occurred while making the reservation", ex);
             }
+        }
+
+        private void Dispose()
+        {
+            _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
         }
     }
 }
