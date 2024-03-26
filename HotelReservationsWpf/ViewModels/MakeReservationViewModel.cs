@@ -49,7 +49,7 @@ namespace HotelReservationsWpf.ViewModels
                 _checkInDate = value;
                 OnPropertyChanged(nameof(CheckInDate));
 
-                CalculateExpectedPrice(RoomTypeProperty);
+                CalculateExpectedPrice(SelectedRoomType);
             }
         }
 
@@ -62,7 +62,7 @@ namespace HotelReservationsWpf.ViewModels
 
                 OnPropertyChanged(nameof(CheckOutDate));
 
-                CalculateExpectedPrice(RoomTypeProperty);
+                CalculateExpectedPrice(SelectedRoomType);
             }
         }
 
@@ -86,15 +86,15 @@ namespace HotelReservationsWpf.ViewModels
             }
         }
 
-        public RoomType? RoomTypeProperty
+        public RoomType? SelectedRoomType
         {
             get { return _roomType; }
             set
             {
                 _roomType = value;
-                OnPropertyChanged(nameof(RoomTypeProperty));
+                OnPropertyChanged(nameof(SelectedRoomType));
 
-                CalculateExpectedPrice(RoomTypeProperty);
+                CalculateExpectedPrice(SelectedRoomType);
             }
         }
 
@@ -104,14 +104,14 @@ namespace HotelReservationsWpf.ViewModels
 
             set
             {
-                if(CheckOutDate.DayOfYear != DateTime.Now.DayOfYear && RoomTypeProperty != null
+                if(CheckOutDate.DayOfYear != DateTime.Now.DayOfYear && SelectedRoomType != null
                     && !(CheckOutDate.DayOfYear < CheckInDate.DayOfYear) 
                         && !(CheckInDate.DayOfYear < DateTime.Now.DayOfYear))
                 {
                     _expectedPriceString = value;
                     OnPropertyChanged(nameof(ExpectedPriceString));
                 }
-                else if(RoomTypeProperty != null)
+                else if(SelectedRoomType != null)
                 {
                     _expectedPriceString = "Unfeasible";
                     OnPropertyChanged(nameof(ExpectedPriceString));
@@ -173,13 +173,13 @@ namespace HotelReservationsWpf.ViewModels
             switch (type)
             {
                 case "Standard":
-                    RoomTypeProperty = RoomType.Standard;
+                    SelectedRoomType = RoomType.Standard;
                     break;
                 case "Deluxe":
-                    RoomTypeProperty = RoomType.Deluxe;
+                    SelectedRoomType = RoomType.Deluxe;
                     break;
                 case "Suite":
-                    RoomTypeProperty = RoomType.Suite;
+                    SelectedRoomType = RoomType.Suite;
                     break;
                 default:
                     MessageBox.Show("Invalid room type", "Wrong room type",
@@ -197,7 +197,7 @@ namespace HotelReservationsWpf.ViewModels
 
             }
 
-            switch (RoomTypeProperty)
+            switch (SelectedRoomType)
             {
                 case RoomType.Standard:
                     ExpectedPriceString = (_hotelStore.GetPriceForStandardRoomHotelStore() * 

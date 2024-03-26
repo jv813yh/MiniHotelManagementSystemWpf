@@ -28,7 +28,7 @@ namespace HotelReservationsWpf.Commands
             if(e.PropertyName == nameof(_viewModel.FirstName) || e.PropertyName == nameof(_viewModel.LastName) 
                     || e.PropertyName == nameof(_viewModel.PhomeNumber) || e.PropertyName == nameof(_viewModel.EmailAddress) 
                         || e.PropertyName == nameof(_viewModel.CheckInDate) || e.PropertyName == nameof(_viewModel.CheckOutDate)
-                            || e.PropertyName == nameof(_viewModel.RoomTypeProperty))
+                            || e.PropertyName == nameof(_viewModel.SelectedRoomType))
             {
                 OnCanExecuteChanged();
             }
@@ -55,7 +55,7 @@ namespace HotelReservationsWpf.Commands
             }
 
             // Check if the selected room type is available
-            if (_hotelStore.IsAvailablePreferenceRoomHotelStore(_viewModel.RoomTypeProperty))
+            if (_hotelStore.IsAvailablePreferenceRoomHotelStore(_viewModel.SelectedRoomType))
             {
                 isAvailablePreferenceRoom = true;
             }
@@ -70,7 +70,7 @@ namespace HotelReservationsWpf.Commands
             try
             {
                 // Get a random room of the selected type from the hotel 
-                Room? getRoomRandom = _hotelStore.GetRoomRandomHotelStore(_viewModel.RoomTypeProperty);
+                Room? getRoomRandom = _hotelStore.GetRoomRandomHotelStore(_viewModel.SelectedRoomType);
 
                 if (getRoomRandom == null)
                 {

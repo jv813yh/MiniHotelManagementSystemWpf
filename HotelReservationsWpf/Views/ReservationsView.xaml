@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:HotelReservationsWpf.Views"
+             xmlns:converters="clr-namespace:HotelReservationsWpf.Converters"
+             xmlns:loadingSpinner="clr-namespace:LoadingSpinnerControl;assembly=LoadingSpinnerControl"
              mc:Ignorable="d" 
              
              HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
@@ -19,7 +21,15 @@
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Foreground" Value="#7e8b5e"/>
         </Style>
+
+        <!-- 
+            My convertor for inverse boolean to visibility
+        -->
+        <converters:InverseToBooleanToVisibilityConverter x:Key="InverseToBooleanToVisibilityConverter"/>
         
+        <!-- WPF converter -->
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    
     </UserControl.Resources>
     
     <Grid>
@@ -127,109 +137,140 @@
                         BorderThickness="3"
                         Margin="4"/>
 
-                <!-- Table of accommodated guests-->
-                <ListView  Background="#f0efde"
-                           Grid.Row="3"
-                           Grid.ColumnSpan="2"
-                           Margin="2"
-                           BorderBrush="Black"
-                           BorderThickness="3"
-                           ItemsSource="{Binding GetAllReservations}">
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                            <Setter Property="VerticalContentAlignment" Value="Center"/>
-                        </Style>
-                    </ListView.ItemContainerStyle>
+                <Grid Grid.Row="3"
+                      Grid.ColumnSpan="2">
 
-                    <ListView.View>
-                        <GridView>
+                    <!--
+                        If there are no reservations, show this message
+                    -->
+                    <TextBlock Text="{Binding ReservationsEmptyMessage}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Margin="0,0,0,250"
+                               Foreground="Red"
+                               Visibility="{Binding IsReservationsEmpty, 
+                               Converter={StaticResource BooleanToVisibilityConverter}}"
+                               FontSize="40"
+                               FontWeight="DemiBold"
+                               FontStyle="Italic"/>
+                    
+                    <!--
+                        If there are many reservations, 
+                        loadingspinner will be displayed during loading
+                    -->
+                    <loadingSpinner:LoadingSpinner IsLoading="{Binding IsLoadingSpinner}"
+                                                   Diameter="150"
+                                                   Thickness="12"
+                                                   Color="Red"/>
+                    
+                    <!-- 
+                        If there are reservations, show the table
+                    -->
+                    <ListView  Background="#f0efde"
+                               Grid.Row="3"
+                               Grid.ColumnSpan="2"
+                               Margin="2"
+                               BorderBrush="Black"
+                               BorderThickness="3"
+                               ItemsSource="{Binding GetAllReservations}"
+                               Visibility="{Binding IsReservationsEmpty, 
+                               Converter={StaticResource InverseToBooleanToVisibilityConverter}}">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
 
-                            <!-- Modified ColumnHeaderContainerStyle -->
-                            <GridView.ColumnHeaderContainerStyle>
-                                <Style TargetType="{x:Type GridViewColumnHeader}">
-                                    <Setter Property="Background" Value="#d6d096"/>
-                                    <Setter Property="BorderThickness" Value="2"/>
-                                    <Setter Property="BorderBrush" Value="Black"/>
-                                    <Setter Property="Height" Value="30"/>
-                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                                    <Setter Property="VerticalContentAlignment" Value="Center"/>
-                                </Style>
-                            </GridView.ColumnHeaderContainerStyle>
+                        <ListView.View>
+                            <GridView>
 
-                            
-                            <!-- Modified styles for individual data columns -->
-                            
-                            <!-- Room Number data column -->
-                            <GridViewColumn Header="Room Number"
-                                            Width="100">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding RoomNumber}"
-                                           Padding="0,0,20,0"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
+                                <!-- Modified ColumnHeaderContainerStyle -->
+                                <GridView.ColumnHeaderContainerStyle>
+                                    <Style TargetType="{x:Type GridViewColumnHeader}">
+                                        <Setter Property="Background" Value="#d6d096"/>
+                                        <Setter Property="BorderThickness" Value="2"/>
+                                        <Setter Property="BorderBrush" Value="Black"/>
+                                        <Setter Property="Height" Value="30"/>
+                                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                    </Style>
+                                </GridView.ColumnHeaderContainerStyle>
 
-                            <!-- Room Type data column -->
-                            <GridViewColumn Header="Room Type"
-                                            Width="100">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding RoomType}"
-                                           Padding="0,0,20,0"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
 
-                            <!-- Guest Name data column -->
-                            <GridViewColumn Header="Guest Name"
-                                            Width="200">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding GuestName}"
-                                           Padding="0,0,20,0"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
+                                <!-- Modified styles for individual data columns -->
 
-                            <!-- Start Date data column -->
-                            <GridViewColumn Header="Start Date"
-                                            Width="150">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding CheckInDate}"
-                                           Padding="0,0,20,0"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
+                                <!-- Room Number data column -->
+                                <GridViewColumn Header="Room Number"
+                                                Width="100">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding RoomNumber}"
+                                               Padding="0,0,20,0"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
 
-                            <!-- End Date data column -->
-                            <GridViewColumn Header="End Date"
-                                            Width="150">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding CheckOutDate}"
-                                           Padding="0,0,20,0"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
+                                <!-- Room Type data column -->
+                                <GridViewColumn Header="Room Type"
+                                                Width="100">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding RoomType}"
+                                               Padding="0,0,20,0"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
 
-                            <!-- Total Price data column -->
-                            <GridViewColumn Header="Total Price"
-                                            Width="80">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding TotalCost}"
-                                           Padding="0,0,20,0"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            
-                        </GridView>
-                    </ListView.View>
+                                <!-- Guest Name data column -->
+                                <GridViewColumn Header="Guest Name"
+                                                Width="200">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding GuestName}"
+                                               Padding="0,0,20,0"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
 
-                </ListView>
+                                <!-- Start Date data column -->
+                                <GridViewColumn Header="Start Date"
+                                                Width="150">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding CheckInDate}"
+                                               Padding="0,0,20,0"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <!-- End Date data column -->
+                                <GridViewColumn Header="End Date"
+                                                Width="150">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding CheckOutDate}"
+                                               Padding="0,0,20,0"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <!-- Total Price data column -->
+                                <GridViewColumn Header="Total Price"
+                                                Width="80">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding TotalCost}"
+                                               Padding="0,0,20,0"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                            </GridView>
+                        </ListView.View>
+
+                    </ListView>
+                </Grid>
 
             </Grid>
 

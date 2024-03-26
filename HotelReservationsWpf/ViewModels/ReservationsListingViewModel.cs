@@ -1,7 +1,6 @@
 ﻿using HotelReservationsWpf.Commands;
 using HotelReservationsWpf.Models;
 using HotelReservationsWpf.Services;
-using HotelReservationsWpf.Services.ReservationProviders;
 using HotelReservationsWpf.Stores;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -16,6 +15,10 @@ namespace HotelReservationsWpf.ViewModels
 
         public IEnumerable<ReservationViewModel>? GetAllReservations => _reservations;
 
+        public bool IsReservationsEmpty => !_reservations.Any();
+        public bool IsLoadingSpinner => !IsReservationsEmpty;
+
+        public string ReservationsEmptyMessage => "No reservations have been made yet";
         public ICommand NavigateMakeReservationCommand { get; }
         public ICommand LoadReservationsCommand { get; }
 

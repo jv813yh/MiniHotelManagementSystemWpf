@@ -62,6 +62,9 @@ namespace HotelReservationsWpf
             // Migration will be created if it does not exist or is out of date
             using (HotelManagementDbContext dbContext = _dbHotelContextFactory.CreateHotelManagementDbContext())
             {
+                // We can use PMC commands to create the database and apply migrations
+                // but I think for simple and small projects, we can also do it this way
+                dbContext.Database.EnsureCreated();
                 dbContext.Database.Migrate();
             }
 
