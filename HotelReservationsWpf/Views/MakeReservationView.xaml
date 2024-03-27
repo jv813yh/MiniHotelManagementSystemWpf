@@ -42,7 +42,7 @@
             <Setter Property="FontFamily" Value="Helvetica"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="FontStyle" Value="Italic"/>
-            <Setter Property="Margin" Value="30,5,0,0"/>
+            <Setter Property="Margin" Value="30,10,0,0"/>
             <Setter Property="Foreground" Value="OrangeRed"/>
         </Style>
 
@@ -103,10 +103,53 @@
                                Margin="10,30,0,10"/>
                 </StackPanel>
 
+                <!-- TextBox for gues first name with implementation INotifyDataErrorInfo -->
                 <TextBox Grid.Row="1"
                          Grid.Column="0"
                          Text="{Binding FirstName, UpdateSourceTrigger=PropertyChanged}"
-                         Style="{StaticResource CustomTextBoxStyle}"/>
+                         Style="{StaticResource CustomTextBoxStyle}">
+
+                    <!-- Error template to display error messages in case of invalid input -->
+                    <Validation.ErrorTemplate>
+                        <ControlTemplate>
+                            <StackPanel>
+                                
+                                <!-- 
+                                     Is used to indicate where to display the content that is associated 
+                                     with the original control 
+                                -->
+                                <AdornedElementPlaceholder x:Name="textBox" />
+                                
+                                <!-- 
+                                     ItemsControl is used to display a collection of items. 
+                                     In this case, it is used to display the error messages
+                                -->
+                                <ItemsControl ItemsSource="{Binding}">
+                                    <ItemsControl.ItemTemplate>
+                                        
+                                        <!-- 
+                                             DataTemplate is used to define the appearance of the data 
+                                             that is bound to the ItemsControl
+                                        -->
+                                        <DataTemplate>
+                                            
+                                            <!-- 
+                                                 TextBlock is used to display text. In this case, it is used 
+                                                 to display the error messages
+                                                 ErrorContent gets error messages from IEnumerable GetErrors(string? propertyName) in viewModel
+                                            -->
+                                            <TextBlock Text="{Binding ErrorContent}" Foreground="Red"
+                                               FontSize="12" FontWeight="Medium"
+                                               FontStyle="Italic"/>
+                                        </DataTemplate>
+                                        
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </ControlTemplate>
+                    </Validation.ErrorTemplate>
+
+                </TextBox>
 
 
                 <StackPanel Orientation="Horizontal"
@@ -123,10 +166,31 @@
                                Margin="10,30,0,10"/>
                 </StackPanel>
 
+
+                <!-- TextBox for guest last name with implementation INotifyDataErrorInfo -->
                 <TextBox Grid.Row="1"
                          Grid.Column="1"
                          Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged}"
-                         Style="{StaticResource CustomTextBoxStyle}"/>
+                         Style="{StaticResource CustomTextBoxStyle}">
+
+                    <Validation.ErrorTemplate>
+                        <ControlTemplate>
+                            <StackPanel>
+                                <AdornedElementPlaceholder x:Name="textBox" />
+                                <ItemsControl ItemsSource="{Binding}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding ErrorContent}" Foreground="Red"
+                                                FontSize="12" FontWeight="Medium"
+                                                FontStyle="Italic"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </ControlTemplate>
+                    </Validation.ErrorTemplate>
+
+                </TextBox>
 
             </Grid>
 
@@ -154,10 +218,30 @@
                         Margin="10,30,0,10"/>
                 </StackPanel>
 
+                <!-- TextBox for guest phone number with implementation INotifyDataErrorInfo -->
                 <TextBox Grid.Row="1"
                         Grid.Column="0"
                         Text="{Binding PhomeNumber, UpdateSourceTrigger=PropertyChanged}"
-                        Style="{StaticResource CustomTextBoxStyle}"/>
+                        Style="{StaticResource CustomTextBoxStyle}">
+
+                    <Validation.ErrorTemplate>
+                        <ControlTemplate>
+                            <StackPanel>
+                                <AdornedElementPlaceholder x:Name="textBox" />
+                                <ItemsControl ItemsSource="{Binding}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding ErrorContent}" Foreground="Red"
+                                                FontSize="12" FontWeight="Medium"
+                                                FontStyle="Italic"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </ControlTemplate>
+                    </Validation.ErrorTemplate>
+
+                </TextBox>
 
 
                 <StackPanel Orientation="Horizontal"
@@ -174,11 +258,32 @@
                             Margin="10,30,0,10"/>
                 </StackPanel>
 
+                <!-- TextBox for guest email address with implementation INotifyDataErrorInfo -->
                 <TextBox Grid.Row="1"
                          Grid.Column="1"
                          Text="{Binding EmailAddress,
                             UpdateSourceTrigger=PropertyChanged}"
-                         Style="{StaticResource CustomTextBoxStyle}"/>
+                         Style="{StaticResource CustomTextBoxStyle}">
+
+
+                    <Validation.ErrorTemplate>
+                        <ControlTemplate>
+                            <StackPanel>
+                                <AdornedElementPlaceholder x:Name="textBox" />
+                                <ItemsControl ItemsSource="{Binding}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding ErrorContent}" Foreground="Red"
+                                                FontSize="12" FontWeight="Medium"
+                                                FontStyle="Italic"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </ControlTemplate>
+                    </Validation.ErrorTemplate>
+
+                </TextBox>
 
             </Grid>
 
@@ -206,11 +311,31 @@
                 </StackPanel>
 
 
+                <!-- DatePicker for check in date with implementation INotifyDataErrorInfo -->
                 <DatePicker Grid.Row="1"
                             Width="240"
                             Height="40"
                             Style="{StaticResource CustomDatePickerStyle}"
-                            SelectedDate="{Binding CheckInDate, UpdateSourceTrigger=PropertyChanged}"/>
+                            SelectedDate="{Binding CheckInDate, UpdateSourceTrigger=PropertyChanged}">
+                    
+                    <Validation.ErrorTemplate>
+                        <ControlTemplate>
+                            <StackPanel>
+                                <AdornedElementPlaceholder x:Name="datePicker" />
+                                <ItemsControl ItemsSource="{Binding}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding ErrorContent}" Foreground="Red"
+                                                       FontSize="12" FontWeight="Medium"
+                                                       FontStyle="Italic"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </ControlTemplate>
+                    </Validation.ErrorTemplate>
+
+                </DatePicker>
                         
 
                 <StackPanel Orientation="Horizontal"
@@ -227,12 +352,32 @@
                                Margin="10,30,0,10"/>
                 </StackPanel>
 
+                <!-- DatePicker for check out date with implementation INotifyDataErrorInfo -->
                 <DatePicker Grid.Row="1"
                             Grid.Column="1"
                             Width="240"
                             Height="40"
                             Style="{StaticResource CustomDatePickerStyle}"
-                            SelectedDate="{Binding CheckOutDate, UpdateSourceTrigger=PropertyChanged}"/>
+                            SelectedDate="{Binding CheckOutDate, UpdateSourceTrigger=PropertyChanged}">
+
+                    <Validation.ErrorTemplate>
+                        <ControlTemplate>
+                            <StackPanel>
+                                <AdornedElementPlaceholder x:Name="datePicker" />
+                                <ItemsControl ItemsSource="{Binding}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding ErrorContent}" Foreground="Red"
+                                                       FontSize="12" FontWeight="Medium"
+                                                       FontStyle="Italic"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </ControlTemplate>
+                    </Validation.ErrorTemplate>
+
+                </DatePicker>
             </Grid>
             
             <Grid Grid.Row="3" Margin="60,0,0,0">
@@ -249,7 +394,7 @@
                             FontSize="20"
                             Grid.Column="1"
                             FontWeight="Bold"
-                            Margin="30,20,0,0"/>
+                            Margin="30,30,0,0"/>
 
                 <TextBlock Text="{Binding Path=ExpectedPriceString,Mode=OneWay,
                             UpdateSourceTrigger=PropertyChanged}"
@@ -263,14 +408,14 @@
                 <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Room Preference"
                                    FontSize="20"
-                                   Margin="20,20,0,0"
+                                   Margin="20,30,0,0"
                                    FontWeight="Bold"/>
 
                         <TextBlock Text="*"
                                     FontSize="20"
                                     Foreground="Red"
                                     FontWeight="Bold"
-                                    Margin="10,20,0,10"/>
+                                    Margin="10,30,0,10"/>
                     </StackPanel>
 
                     <StackPanel Grid.Row="1"
@@ -283,10 +428,10 @@
                                          CommandParameter="Standard"
                                          Style="{StaticResource RoomPreferenceRadioButton}">Standard</RadioButton>
 
-                            <TextBlock Text="{Binding GetStatusStandardRoomsProperty}"
+                            <TextBlock Text="{Binding GetStatusStandardRooms}"
                                        FontSize="13"
                                        FontWeight="Medium"
-                                       Margin="35,0,0,0"/>
+                                       Margin="35,5,0,0"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical">
@@ -295,10 +440,10 @@
                                          CommandParameter="Deluxe"
                                          Style="{StaticResource RoomPreferenceRadioButton}">Deluxe</RadioButton>
 
-                            <TextBlock Text="{Binding GetStatusDeluxeRoomsProperty}"
+                            <TextBlock Text="{Binding GetStatusDeluxeRooms}"
                                        FontSize="13"
                                        FontWeight="Medium"
-                                       Margin="35,0,0,0"/>
+                                       Margin="35,5,0,0"/>
                         </StackPanel>
 
                     <StackPanel Orientation="Vertical">
@@ -307,10 +452,10 @@
                                        CommandParameter="Suite"
                                        Style="{StaticResource RoomPreferenceRadioButton}">Suite</RadioButton>
 
-                        <TextBlock Text="{Binding GetStatusSuiteRoomsProperty}"
+                        <TextBlock Text="{Binding GetStatusSuiteRooms}"
                                        FontSize="13"
                                        FontWeight="Medium"
-                                       Margin="35,0,0,0"/>
+                                       Margin="35,5,0,0"/>
                     </StackPanel>
 
                 </StackPanel>

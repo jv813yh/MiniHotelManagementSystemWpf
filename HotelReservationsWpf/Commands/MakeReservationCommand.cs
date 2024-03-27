@@ -45,16 +45,29 @@ namespace HotelReservationsWpf.Commands
                 return false;
             }
 
-            // Check if the check-in date is not greater than the check-out date
-            // Check if the check-in date and check-out date are not in the past
-            if(_viewModel.CheckInDate.DayOfYear >= _viewModel.CheckOutDate.DayOfYear
-                || _viewModel.CheckInDate.DayOfYear < DateTime.Now.DayOfYear
-                    || _viewModel.CheckOutDate.DayOfYear < DateTime.Now.DayOfYear)
+            
+            //Check properties accoriding to the implementation INotifyDataErrorInfo messages in MakeReservationViewModel 
+            if (_viewModel.FirstName.Length < 3 || _viewModel.LastName.Length < 3
+                || _viewModel.IsNameNoValid(_viewModel.FirstName) || _viewModel.IsNameNoValid(_viewModel.LastName)
+                || _viewModel.PhomeNumber.Length < 10 || !int.TryParse(_viewModel.PhomeNumber, out int temporaryPhoneNumber))
             {
                 return false;
             }
 
-            // Check if the selected room type is available
+            /*
+             * Check properties accoriding to the implementation INotifyDataErrorInfo messages in MakeReservationViewModel 
+             * Check if the check-in date is not greater than the check-out date
+             * Check if the check-in date and check-out date are not in the past
+            */
+            if(_viewModel.CheckInDate.DayOfYear >= _viewModel.CheckOutDate.DayOfYear
+                || _viewModel.CheckInDate.DayOfYear < DateTime.Now.DayOfYear
+                    || _viewModel.CheckOutDate.DayOfYear < DateTime.Now.DayOfYear
+                    || _viewModel.CheckInDate.Year != _viewModel.CheckOutDate.Year)
+            {
+                return false;
+            }
+
+            // Check if the selected room type is available, true if available
             if (_hotelStore.IsAvailablePreferenceRoomHotelStore(_viewModel.SelectedRoomType))
             {
                 isAvailablePreferenceRoom = true;
@@ -69,7 +82,7 @@ namespace HotelReservationsWpf.Commands
         {
             try
             {
-                // Get a random room of the selected type from the hotel 
+                // Get a random room of the selected type from the hotelStore
                 Room? getRoomRandom = _hotelStore.GetRoomRandomHotelStore(_viewModel.SelectedRoomType);
 
                 if (getRoomRandom == null)
@@ -82,7 +95,7 @@ namespace HotelReservationsWpf.Commands
                     Reservation newReservation = new Reservation(getRoomRandom, new GuestPerson(_viewModel.FirstName + " " + _viewModel.LastName, _viewModel.PhomeNumber, 
                         _viewModel.EmailAddress), DateOnly.FromDateTime(_viewModel.CheckInDate), DateOnly.FromDateTime(_viewModel.CheckOutDate));
 
-                    // Add the reservation to the hotelStore
+                    // Make the reservation 
                     await _hotelStore.CreateReservationHotelStoreAsync(newReservation);
 
                     /*
@@ -90,10 +103,11 @@ namespace HotelReservationsWpf.Commands
                                             _viewModel.EmailAddress), DateOnly.FromDateTime(_viewModel.CheckInDate), DateOnly.FromDateTime(_viewModel.CheckOutDate)));
                     */
 
-                    // Inform the user that the reservation was successfully created
-                    MessageBox.Show("The reservation was successfully created.", "Reservation created", 
+            // Inform the user that the reservation was successfully created
+            MessageBox.Show("The reservation was successfully created.", "Reservation created", 
                         MessageBoxButton.OK, MessageBoxImage.Information);
 
+                    // Dispose the _viewModel.PropertyChanged += OnViewModelPropertyChanged
                     Dispose();
 
                     // Navigate to the ReservationsListingViewModel

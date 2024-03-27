@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HotelReservationsWpf.DTOs
 {
+    // Data Transfer Object for Reservations, which are stored in the database (Entity)
     public class ReservationDTO
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity), Key]

@@ -41,4 +41,8 @@
     </Resource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\ReservationRemovers\" />
+  </ItemGroup>
+
 </Project>
