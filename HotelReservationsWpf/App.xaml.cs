@@ -69,7 +69,7 @@ namespace HotelReservationsWpf
             }
 
             // Set the current view model of the initial application
-            _navigationStore.CurrentViewModel = CreateReservationsListingViewModel();
+            _navigationStore.CurrentViewModel = CreateEntranceToHotelViewModel();
 
             MainWindow = new MainWindow()
             {
@@ -81,19 +81,31 @@ namespace HotelReservationsWpf
             base.OnStartup(e);
         }
 
-         
+
         private EntranceToHotelViewModel CreateEntranceToHotelViewModel()
         {
-            return new EntranceToHotelViewModel(_hotelStore, new NavigationServiceWpf(_navigationStore, CreateMakeReservationViewModel));
+            return new EntranceToHotelViewModel(_hotelStore,
+                         new NavigationServiceWpf(_navigationStore, CreateMakeReservationViewModel));
         }
+        
         private MakeReservationViewModel CreateMakeReservationViewModel()
         {
-            return new MakeReservationViewModel(_hotelStore, new NavigationServiceWpf(_navigationStore, CreateReservationsListingViewModel));
+            return new MakeReservationViewModel(_hotelStore,    
+                            new NavigationServiceWpf(_navigationStore, CreateReservationsListingViewModel),
+                            new NavigationServiceWpf(_navigationStore, CreateOverviewViewModel));
         }
 
         private ReservationsListingViewModel CreateReservationsListingViewModel()
         {
-            return ReservationsListingViewModel.CreateReservationsListingViewModel(_hotelStore, new NavigationServiceWpf(_navigationStore, CreateMakeReservationViewModel));
+            return ReservationsListingViewModel.ReservationsListingViewModelBuilder(_hotelStore, 
+                       new NavigationServiceWpf(_navigationStore, CreateMakeReservationViewModel),
+                       new NavigationServiceWpf(_navigationStore, CreateOverviewViewModel));
+        }
+
+        private OverviewViewModel CreateOverviewViewModel()
+        {
+            return new OverviewViewModel(_hotelStore, new NavigationServiceWpf(_navigationStore, CreateMakeReservationViewModel), 
+                            new NavigationServiceWpf(_navigationStore, CreateReservationsListingViewModel));
         }
     }
 }

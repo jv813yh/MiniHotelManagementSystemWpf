@@ -94,12 +94,12 @@ namespace HotelReservationsWpf.ViewModels
 
                 RemoveErrors(nameof(CheckInDate));
 
-                if (CheckInDate.DayOfYear >= CheckOutDate.DayOfYear)
+                if (CheckInDate.DayOfYear >= CheckOutDate.DayOfYear && CheckInDate.Year == CheckOutDate.Year)
                 {
                     HandleErrors(nameof(CheckInDate), "The check in date cannot start before the check out date");
                 }
 
-                if (CheckInDate.DayOfYear < DateTime.Now.DayOfYear)
+                if (CheckInDate.DayOfYear < DateTime.Now.DayOfYear && CheckInDate.Year == CheckOutDate.Year)
                 {
                     HandleErrors(nameof(CheckInDate), "The check in date cannot start before today");
                 }
@@ -109,7 +109,7 @@ namespace HotelReservationsWpf.ViewModels
                     HandleErrors(nameof(CheckInDate), "The reservation must be made in one calendar year :(");
                 }
 
-                if (CheckOutDate.DayOfYear == CheckInDate.DayOfYear)
+                if (CheckOutDate.DayOfYear == CheckInDate.DayOfYear && CheckInDate.Year == CheckOutDate.Year)
                 {
                     HandleErrors(nameof(CheckOutDate), "The check out date cannot be the same as the check in date");
                 }
@@ -135,17 +135,17 @@ namespace HotelReservationsWpf.ViewModels
 
                 RemoveErrors(nameof(CheckOutDate));
 
-                if (CheckOutDate.DayOfYear < DateTime.Now.DayOfYear)
+                if (CheckOutDate.DayOfYear < DateTime.Now.DayOfYear && CheckInDate.Year == CheckOutDate.Year)
                 {
                     HandleErrors(nameof(CheckOutDate), "The check out date cannot start before today");
                 }
 
-                if (CheckOutDate.DayOfYear < CheckInDate.DayOfYear)
+                if (CheckOutDate.DayOfYear < CheckInDate.DayOfYear && CheckInDate.Year == CheckOutDate.Year)
                 {
                     HandleErrors(nameof(CheckOutDate), "The check out date cannot start before the check in date");
                 }
 
-                if (CheckOutDate.DayOfYear == CheckInDate.DayOfYear)
+                if (CheckOutDate.DayOfYear == CheckInDate.DayOfYear && CheckInDate.Year == CheckOutDate.Year)
                 {
                     HandleErrors(nameof(CheckOutDate), "The check out date cannot be the same as the check in date");
                 }
@@ -155,7 +155,9 @@ namespace HotelReservationsWpf.ViewModels
                     HandleErrors(nameof(CheckOutDate), "The reservation must be made in one calendar year :(");
                 }
 
-                if(CheckInDate < CheckOutDate)
+                if(CheckInDate < CheckOutDate && CheckInDate.Year == CheckOutDate.Year 
+                    && CheckInDate.DayOfYear > DateTime.Now.DayOfYear 
+                    && CheckOutDate.DayOfYear > DateTime.Now.DayOfYear)
                 {
                     RemoveErrors(nameof(CheckInDate));
                 }
@@ -284,7 +286,7 @@ namespace HotelReservationsWpf.ViewModels
         public ICommand SubmitCommand { get; }
 
         //
-        public ICommand NavigateCommand { get; }
+        public ICommand NavigateToOverviewCommand { get; }
 
 
         /* 
@@ -338,7 +340,8 @@ namespace HotelReservationsWpf.ViewModels
             OnErrorsChanged(propertyName);
         }
 
-        public MakeReservationViewModel(HotelStore hotelStore, NavigationServiceWpf navigationServiceToReservationsListingViewModel)
+        public MakeReservationViewModel(HotelStore hotelStore, NavigationServiceWpf navigationServiceToReservationsListingViewModel,
+                        NavigationServiceWpf navigationServiceToOverviewViewModel)
         {
             _hotelStore = hotelStore;
 
@@ -349,7 +352,9 @@ namespace HotelReservationsWpf.ViewModels
 
             // Initialize the dictionary for the error messages
             _propertiesErrorsMessages = new Dictionary<string, List<string>>();
-           // NavigateCommand = new NavigateCommand();
+
+            // Initialize the navigation command to the overview view
+            NavigateToOverviewCommand = new NavigateCommand(navigationServiceToOverviewViewModel);
         }
 
         // Set the room type for the reservation 

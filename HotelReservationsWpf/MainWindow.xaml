@@ -48,6 +48,16 @@
                 <views:ReservationsView/>
             </DataTemplate>
 
+
+            <!-- 
+                DataTemplate for OverviewViewModel:
+                View that will be displayed for OverviewView 
+                when using OverviewViewModel
+            -->
+            <DataTemplate DataType="{x:Type viewModels:OverviewViewModel}">
+                <views:OverviewView/>
+            </DataTemplate>
+
         </Grid.Resources>
 
         <!-- 

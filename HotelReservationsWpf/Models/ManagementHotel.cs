@@ -95,6 +95,13 @@ namespace HotelReservationsWpf.Models
             }
         }
 
+        private void SaveRoomsWithPrices()
+        {
+
+        }
+
+
+
         // Create a new reservation asynchronously and add it to the reservation book
         public async Task CreateReservationAsync(Reservation reservation)
         {

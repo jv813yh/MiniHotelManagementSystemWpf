@@ -301,7 +301,7 @@
                     Height="55"
                     Style="{StaticResource ModernButton}"
                     Margin="50,0,0,0"
-                    Command=""/>
+                    Command="{Binding NaviateToOvervieCommand}"/>
             </StackPanel>
         </Border>
 

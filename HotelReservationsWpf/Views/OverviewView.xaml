@@ -8,8 +8,10 @@
              
              HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
              d:DesignHeight="790" d:DesignWidth="800">
-    <Grid>
+    
+    <Grid Background="GhostWhite">
 
+        <!--
         <Rectangle Width="200" Height="200" Fill="LightGray" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <Path Stroke="Black" StrokeThickness="2" VerticalAlignment="Center" HorizontalAlignment="Center">
             <Path.Data>
@@ -19,6 +21,50 @@
                 </GeometryGroup>
             </Path.Data>
         </Path>
+        -->
+
+        <Button Width="50" 
+                Height="50" 
+                VerticalAlignment="Top"
+                Cursor="Hand"
+                Command="{Binding CloseApplicationCommand}"
+                Margin="0,105,0,0">
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Grid>
+                        <Ellipse Stroke="Black" 
+                                 StrokeThickness="4" 
+                                 Width="50" 
+                                 Height="50"/>
+
+                        <Line X1="25" 
+                              Y1="-5" 
+                              X2="25" 
+                              Y2="25" 
+                              Stroke="Black" 
+                              StrokeThickness="4"/>
+                       </Grid>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+
+        <Button Content="Navigate to List of Resv"
+                VerticalAlignment="Stretch"
+                Command="{Binding NavigateToReservationsListingCommand}"
+                FontSize="19"
+                Width="220"
+                Height="55"
+                Style="{StaticResource ModernButton}"/>
+
+        <Button Content="Navigate to Make Resv"
+                Command="{Binding NavigateToMakeReservationCommand}"
+                VerticalAlignment="Bottom"
+                FontSize="19"
+                Width="220"
+                Height="55"
+                Style="{StaticResource ModernButton}"/>
+
+
 
     </Grid>
 </UserControl>

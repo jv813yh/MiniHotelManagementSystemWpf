@@ -9,6 +9,7 @@ namespace HotelReservationsWpf.Commands
 {
     public class MakeReservationCommand : AsyncCommandBase
     {
+        // Fields
         private readonly HotelStore _hotelStore;
         private readonly MakeReservationViewModel _viewModel;
         private readonly NavigateCommand _navigateCommand;
@@ -49,7 +50,8 @@ namespace HotelReservationsWpf.Commands
             //Check properties accoriding to the implementation INotifyDataErrorInfo messages in MakeReservationViewModel 
             if (_viewModel.FirstName.Length < 3 || _viewModel.LastName.Length < 3
                 || _viewModel.IsNameNoValid(_viewModel.FirstName) || _viewModel.IsNameNoValid(_viewModel.LastName)
-                || _viewModel.PhomeNumber.Length < 10 || !int.TryParse(_viewModel.PhomeNumber, out int temporaryPhoneNumber))
+                || _viewModel.PhomeNumber.Length < 10 || !int.TryParse(_viewModel.PhomeNumber, out int temporaryPhoneNumber)
+                || !_viewModel.EmailAddress.Contains('@'))
             {
                 return false;
             }
@@ -62,7 +64,8 @@ namespace HotelReservationsWpf.Commands
             if(_viewModel.CheckInDate.DayOfYear >= _viewModel.CheckOutDate.DayOfYear
                 || _viewModel.CheckInDate.DayOfYear < DateTime.Now.DayOfYear
                     || _viewModel.CheckOutDate.DayOfYear < DateTime.Now.DayOfYear
-                    || _viewModel.CheckInDate.Year != _viewModel.CheckOutDate.Year)
+                    || _viewModel.CheckInDate.Year != _viewModel.CheckOutDate.Year
+                    || _viewModel.CheckInDate.DayOfYear == _viewModel.CheckOutDate.DayOfYear)
             {
                 return false;
             }

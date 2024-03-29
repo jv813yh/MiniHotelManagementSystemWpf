@@ -468,9 +468,9 @@
                 
                 <Button Content="Submit"
                         Command="{Binding SubmitCommand}"
-                        FontSize="40"
-                        Width="190"
-                        Height="80"
+                        FontSize="25"
+                        Width="150"
+                        Height="70"
                         Margin="0,0,20,0"
                         Style="{StaticResource ModernButton}"/>
 
@@ -479,9 +479,10 @@
                            Fill="Red"/>
 
                 <Button Content="Overview"
-                        FontSize="40"
-                        Width="190"
-                        Height="80"
+                        Command="{Binding NavigateToOverviewCommand}"
+                        FontSize="25"
+                        Width="150"
+                        Height="70"
                         Margin="20,0,0,0"
                         Style="{StaticResource ModernButton}"/>
 
