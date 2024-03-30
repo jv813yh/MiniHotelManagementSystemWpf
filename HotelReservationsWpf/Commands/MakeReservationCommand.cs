@@ -39,19 +39,11 @@ namespace HotelReservationsWpf.Commands
         {
             bool isAvailablePreferenceRoom = false;
 
-            // Check if the first name, last name, phone number, and email address are not empty
-            if (string.IsNullOrEmpty(_viewModel.FirstName) || string.IsNullOrEmpty(_viewModel.LastName) 
-                    || string.IsNullOrEmpty(_viewModel.PhomeNumber) || string.IsNullOrEmpty(_viewModel.EmailAddress))
-            {
-                return false;
-            }
-
-            
             //Check properties accoriding to the implementation INotifyDataErrorInfo messages in MakeReservationViewModel 
             if (_viewModel.FirstName.Length < 3 || _viewModel.LastName.Length < 3
                 || _viewModel.IsNameNoValid(_viewModel.FirstName) || _viewModel.IsNameNoValid(_viewModel.LastName)
                 || _viewModel.PhomeNumber.Length < 10 || !int.TryParse(_viewModel.PhomeNumber, out int temporaryPhoneNumber)
-                || !_viewModel.EmailAddress.Contains('@'))
+                || !_viewModel.EmailAddress.Contains('@') ||_viewModel.EmailAddress.Length < 5)
             {
                 return false;
             }

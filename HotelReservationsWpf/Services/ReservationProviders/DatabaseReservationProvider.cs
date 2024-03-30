@@ -35,14 +35,25 @@ namespace HotelReservationsWpf.Services.ReservationProviders
             return returnReservationProvider;
         }
 
-        // Get all reservations from the database asynchronously and return them as a collection of Reservation objects
-        public async Task<IEnumerable<Reservation>> GetAllReservationsAsync()
+        // Get all reservations from the database asynchronously and return them as a read only collection of Reservation objects
+        // with no tracking or as a collection of Reservation objects
+        public async Task<IEnumerable<Reservation>> GetAllReservationsAsync(bool isReadOnly)
         {
             // Create a new instance of the HotelManagementDbContext class 
             using (HotelManagementDbContext dbContext = _dbContextFactory.CreateHotelManagementDbContext())
             {
-                // Get all reservations from the database 
-                IEnumerable<ReservationDTO> reservationsDto = await dbContext.Reservations.ToListAsync();
+                IEnumerable<ReservationDTO>? reservationsDto = null;
+
+                if(isReadOnly)
+                {
+                    // Get all reservations from the database async with no tracking
+                    reservationsDto = await dbContext.Reservations.AsNoTracking().ToListAsync();
+                }
+                else
+                {
+                    // Get all reservations from the database async
+                    reservationsDto = await dbContext.Reservations.ToListAsync();
+                }
 
                 // Mapping ReservationDTO to Reservation and return them as a collection of Reservation objects
                 return reservationsDto.Select(reservationDto => MappingReservationDtoToReservation(reservationDto));

@@ -10,6 +10,14 @@
              d:DesignHeight="790" d:DesignWidth="800">
     
     <Grid Background="GhostWhite">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
         <!--
         <Rectangle Width="200" Height="200" Fill="LightGray" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -23,8 +31,27 @@
         </Path>
         -->
 
+        <StackPanel Orientation="Horizontal">
+
+            <TextBlock Text="{Binding HotelName, Mode=OneWay}"
+                       FontSize="30"
+                       FontWeight="Bold"
+                       Margin="0,0,0,0"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+
+            <TextBlock Text=" Reservations System"
+                       FontSize="30"
+                       FontWeight="Bold"
+                       Margin="0,0,0,0"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+
+        </StackPanel>
+
         <Button Width="50" 
                 Height="50" 
+                Grid.Row="1"
                 VerticalAlignment="Top"
                 Cursor="Hand"
                 Command="{Binding CloseApplicationCommand}"
@@ -48,7 +75,68 @@
             </Button.Template>
         </Button>
 
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Horizontal">
+
+                <TextBlock Text="Room Number: "
+                           FontSize="20"
+                           FontWeight="Bold"
+                           Margin="0,0,0,0"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+
+                <TextBox Text="{Binding RoomNumber,
+                         UpdateSourceTrigger=PropertyChanged}"
+                         FontSize="20"
+                         Width="200"
+                         Height="30"
+                         Margin="0,0,0,0"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center"/>
+
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal"
+                        Grid.Row="1">
+
+                <TextBlock Text="Guest Name: "
+                FontSize="20"
+                FontWeight="Bold"
+                Margin="0,0,0,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"/>
+
+                <TextBox Text="{Binding GuestName,
+                         UpdateSourceTrigger=PropertyChanged}"
+                         FontSize="20"
+                         Width="200"
+                         Height="30"
+                         Margin="0,0,0,0"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center"/>
+
+            </StackPanel>
+
+
+            <Button Content="Remove Resv"
+                    Grid.Row="3"
+                    VerticalAlignment="Stretch"
+                    Command="{Binding RemoveReservationCommand}"
+                    FontSize="19"
+                    Width="220"
+                    Height="55"
+                    Style="{StaticResource ModernButton}"/>
+
+        </Grid>
+
         <Button Content="Navigate to List of Resv"
+                Grid.Row="3"
                 VerticalAlignment="Stretch"
                 Command="{Binding NavigateToReservationsListingCommand}"
                 FontSize="19"
@@ -57,6 +145,7 @@
                 Style="{StaticResource ModernButton}"/>
 
         <Button Content="Navigate to Make Resv"
+                Grid.Row="4"
                 Command="{Binding NavigateToMakeReservationCommand}"
                 VerticalAlignment="Bottom"
                 FontSize="19"

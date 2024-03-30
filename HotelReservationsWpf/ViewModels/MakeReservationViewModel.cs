@@ -63,7 +63,7 @@ namespace HotelReservationsWpf.ViewModels
 
                 RemoveErrors(nameof(LastName));
 
-                if (_firstName.Length < 3)
+                if (LastName.Length < 3)
                 {
                     HandleErrors(nameof(LastName), "Last name must be at least 3 characters long");
                 }
@@ -205,6 +205,11 @@ namespace HotelReservationsWpf.ViewModels
                 if (!EmailAddress.Contains('@'))
                 {
                     HandleErrors(nameof(EmailAddress), "Email address must contain '@'");
+                }
+
+                if(EmailAddress.Length < 5)
+                {
+                    HandleErrors(nameof(EmailAddress), "Email address must be at least 5 characters long");
                 }
             }
         }

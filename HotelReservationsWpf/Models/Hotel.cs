@@ -1,5 +1,8 @@
-﻿using HotelReservationsWpf.Services.ReservationCreators;
+﻿using HotelReservationsWpf.Services.InitializationRoomsProviders;
+using HotelReservationsWpf.Services.ReservationCreators;
 using HotelReservationsWpf.Services.ReservationProviders;
+using HotelReservationsWpf.Services.ReservationRemovers;
+using HotelReservationsWpf.Services.SaveRoomsProviders;
 
 namespace HotelReservationsWpf.Models
 {
@@ -11,32 +14,35 @@ namespace HotelReservationsWpf.Models
         // Business logic of the hotel is handled by ManagementHotel
         private readonly ManagementHotel _managementHotel; 
 
-        // Reservation creator and provider interfaces for creating and getting reservations 
-        private readonly IReservationCreator _reservationCreator;
-        private readonly IReservationProvider _reservationProvider;
-
-
         public Hotel(string name, int[] countOfRooms, decimal[] pricesPerNight,
-                            IReservationCreator reservation, IReservationProvider reservationProvider) 
+                            IReservationCreator reservationCreator, IReservationProvider reservationProvider,
+                            IReservationRemover reservationRemover,
+                            IInitializationRooms initializationRooms, ISaveRoomsProvider saveRooms) 
         {
             Name = name;
 
-            _reservationCreator = reservation;
-            _reservationProvider = reservationProvider;
-
-            _managementHotel = new ManagementHotel(countOfRooms, pricesPerNight, 
-                                                        _reservationCreator, _reservationProvider);
+            _managementHotel = new ManagementHotel(countOfRooms, pricesPerNight,
+                                                  reservationCreator, reservationProvider,
+                                                  reservationRemover,
+                                                  initializationRooms, saveRooms);
         }
 
         // Create a new reservation async and check for conflicts
         public async Task CreateReservationAsync(Reservation reservation)
-        {
-           await _managementHotel.CreateReservationAsync(reservation);
-        }
+            => await _managementHotel.CreateReservationInReservationBookAsync(reservation);
+        
 
         // Get all reservations async
         public async Task<IEnumerable<Reservation>> GetAllReservationsAsync()
-         => await _managementHotel.GetAllReservationsAsync();
+         => await _managementHotel.GetAllReservationsFromReservationBookAsync();
+
+        // Remove a reservation async
+        public async Task<bool> RemoveReservationAsync(int roomNumber, string guestName)
+            => await _managementHotel.RemoveReservationFromReservationBookAsync(roomNumber, guestName);
+
+        // 
+        public void SaveTheCurrentStatusOfTheRoomsToXml()
+            => _managementHotel.SaveRoomsWithPricesToXml();   
 
         // Get the statuses of rooms in the hotel
         public (int, int) GetStatusStandardRooms()

@@ -1,5 +1,4 @@
 ﻿using HotelReservationsWpf.Models;
-using System.Windows;
 
 namespace HotelReservationsWpf.Stores
 {
@@ -10,13 +9,22 @@ namespace HotelReservationsWpf.Stores
     {
         // Hotel instance
         private readonly Hotel _hotel; 
-        private readonly List<Reservation> _reservations;
+
+        // List of reservations that I use for displaying in the UI
+        private List<Reservation> _reservations;
 
         // Lazy initialization of reservations
         private readonly Lazy<Task> _initializeLazy;
 
-        //
-        public IEnumerable<Reservation> Reservations => _reservations;
+        // Reservations that I display in the UI (ReservationsView)
+        public IEnumerable<Reservation> Reservations 
+                    => _reservations;
+
+        // Getter for hotel name
+        public string HotelName
+        {
+            get => _hotel.Name;
+        }
 
         public HotelStore(Hotel hotel)
         {
@@ -63,10 +71,29 @@ namespace HotelReservationsWpf.Stores
             _reservations.AddRange(reservations);
         }
 
-        public string HotelName 
-        { 
-            get => _hotel.Name;
+        /// <summary>
+        /// Remove reservation from the hotel store
+        /// </summary>
+        /// <param name="roomNumber"> Room number </param>
+        /// <param name="guestName"> Guest name </param>
+        /// <returns></returns>
+        public async Task<bool> RemoveReservationHotelStoreAsync(int roomNumber, string guestName)
+        {
+            bool wasRemoved = await _hotel.RemoveReservationAsync(roomNumber, guestName);
+
+            if (wasRemoved)
+            {
+                await RemoveReservationsAsync(roomNumber, guestName);
+            }
+
+            return wasRemoved;
         }
+        
+
+        // Method to save the current status of the rooms in the hotel to the XML file
+        public void SaveTheCurrentStatusOfTheRoomsToXmlHotelStore()
+            => _hotel.SaveTheCurrentStatusOfTheRoomsToXml();
+
 
         // Get the statuses of rooms in the hotel
         public (int, int) GetStatusStandardRoomsHotelStore()
@@ -92,5 +119,17 @@ namespace HotelReservationsWpf.Stores
             => _hotel.GetPriceForDeluxeRoom();
         public decimal GetPriceForSuiteRoomHotelStore()
             => _hotel.GetPriceForSuiteRoom();
+
+        private async Task RemoveReservationsAsync(int roomNumber, string guestName)
+        {
+            var reservationsToRemove = _reservations.Where(r => r.CurrentRoom.RoomNumber == roomNumber
+                     && r.GuestName.GuestName == guestName).ToList();
+
+            foreach (var reservation in reservationsToRemove)
+            {
+                _reservations.Remove(reservation);
+                await Task.Yield(); 
+            }
+        }
     }
 }

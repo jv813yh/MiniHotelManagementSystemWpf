@@ -1,8 +1,11 @@
 ﻿using HotelReservationsWpf.DbContexts;
 using HotelReservationsWpf.Models;
 using HotelReservationsWpf.Services;
+using HotelReservationsWpf.Services.InitializationRoomsProviders;
 using HotelReservationsWpf.Services.ReservationCreators;
 using HotelReservationsWpf.Services.ReservationProviders;
+using HotelReservationsWpf.Services.ReservationRemovers;
+using HotelReservationsWpf.Services.SaveRoomsProviders;
 using HotelReservationsWpf.Stores;
 using HotelReservationsWpf.ViewModels;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +20,8 @@ namespace HotelReservationsWpf
     public partial class App : Application
     {
         // Connection string to the database (Sqlite)
-        private static readonly string _connectionString = $"Data Source={Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "hotelManagement.db")}";
+        private static readonly string _connectionString = 
+            $"Data Source={Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "hotelManagement.db")}";
 
         // Factory for creating a database context
         HotelManagementDbContextFactory _dbHotelContextFactory;
@@ -26,6 +30,11 @@ namespace HotelReservationsWpf
         // and performing work with reservations such as creation, loading, deletion
         private readonly IReservationProvider _reservationProvider;
         private readonly IReservationCreator _reservationCreator;
+        private readonly IReservationRemover _reservationRemover;
+
+        // Services for initializing rooms and saving rooms
+        private readonly IInitializationRooms _initializationRooms;
+        private readonly ISaveRoomsProvider _saveRoomsProvider;
 
         // Store for saving the current view model of the application
         private NavigationStore _navigationStore;
@@ -44,12 +53,20 @@ namespace HotelReservationsWpf
             _dbHotelContextFactory = new HotelManagementDbContextFactory(_connectionString);
 
             //
-            _reservationProvider = DatabaseReservationProvider.CreateDatabaseReservationProvider(_dbHotelContextFactory, _pricesPerNightRoom, _countOfRooms.Length);
+            _reservationProvider = DatabaseReservationProvider.CreateDatabaseReservationProvider(_dbHotelContextFactory, 
+                     _pricesPerNightRoom, _countOfRooms.Length);
+
             _reservationCreator = new DatabaseReservationCreator(_dbHotelContextFactory);
+            _reservationRemover  = new DatabaseReservationRemover(_dbHotelContextFactory);
+
+
+            _initializationRooms = new InitializationRooms();
+            _saveRoomsProvider = new SaveRooms();
 
             // 
             _hotel = new Hotel("Your Paradise", _countOfRooms, _pricesPerNightRoom,
-                                    _reservationCreator, _reservationProvider);
+                                    _reservationCreator, _reservationProvider, _reservationRemover,
+                                    _initializationRooms, _saveRoomsProvider);
 
             _hotelStore = new HotelStore(_hotel);
 

@@ -1,6 +1,7 @@
 ﻿using HotelReservationsWpf.Exceptions;
 using HotelReservationsWpf.Services.ReservationCreators;
 using HotelReservationsWpf.Services.ReservationProviders;
+using HotelReservationsWpf.Services.ReservationRemovers;
 
 namespace HotelReservationsWpf.Models
 {
@@ -10,23 +11,26 @@ namespace HotelReservationsWpf.Models
         // Services for loading reservations from the database and creating a reservations
         private readonly IReservationCreator _reservationCreator;
         private readonly IReservationProvider _reservationProvider;
+        private readonly IReservationRemover _reservationRemover;
 
-        public ReservationsBook(IReservationCreator reservationCreator, IReservationProvider reservationProvider)
+        public ReservationsBook(IReservationCreator reservationCreator, IReservationProvider reservationProvider,
+                    IReservationRemover reservationRemover)
         {
             _reservationCreator = reservationCreator;
             _reservationProvider = reservationProvider;
+            _reservationRemover = reservationRemover;
         }
 
         /// <summary>
         /// Async method to create a new reservation and check for conflicts
         /// </summary>
-        /// <param name="newReservation"></param>
+        /// <param name="newReservation"> New reservation </param>
         /// <exception cref="ConflictReservationsException"></exception>
         public async Task MakeReservationAsync(Reservation newReservation)
         {
             
             // Check if there is a conflict with the new reservation
-            foreach (var reservation in await _reservationProvider.GetAllReservationsAsync())
+            foreach (var reservation in await _reservationProvider.GetAllReservationsAsync(true))
             {
                 if (reservation.IsConflict(newReservation))
                 {
@@ -46,6 +50,16 @@ namespace HotelReservationsWpf.Models
         /// </summary>
         /// <returns></returns>
         public async Task<IEnumerable<Reservation>> GetAllReservationsAsync()
-            => await _reservationProvider.GetAllReservationsAsync();
+            => await _reservationProvider.GetAllReservationsAsync(true);
+
+        /// <summary>
+        /// Async method to remove a reservation
+        /// </summary>
+        /// <param name="roomNumber"> Room number </param>
+        /// <param name="guestName"> Guest name </param>
+        /// <returns></returns>
+        public async Task<bool> RemoveReservationAsync(int roomNumber, string guestName)
+             =>   await _reservationRemover.RemoveReservationAsync(roomNumber, guestName);
+        
     }
 }

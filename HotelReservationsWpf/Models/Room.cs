@@ -16,9 +16,9 @@
     // Room class defines the properties of a room.
     public class Room
     {
-        public int RoomNumber { get; }
+        public int RoomNumber { get; set; }
 
-        public RoomType RoomType { get; }
+        public RoomType RoomType { get; set; }
 
         public RoomStatus RoomStatus { get; set; }
 
@@ -34,12 +34,18 @@
 
         }
 
+        // Due to serialization requirements, a parameterless constructor is required
+        public Room()
+        {
+            
+        }
+
         // Override the Equals method to compare two Room objects based on their RoomNumber and RoomType
         public override bool Equals(object? obj)
             => (obj is Room room) && (RoomNumber == room.RoomNumber)
             && (RoomType == room.RoomType);
 
-        // Override the GetHashCode method to return the hash code of the RoomNumber and RoomType
+        // Override the GetHashCode method to return the hash code of the Room object
         public override int GetHashCode()
             => HashCode.Combine(RoomNumber, RoomType);
         

@@ -1,24 +1,33 @@
-﻿using HotelReservationsWpf.Services.InitializationRoomsProvider;
+﻿using HotelReservationsWpf.Services.InitializationRoomsProviders;
 using HotelReservationsWpf.Services.ReservationCreators;
 using HotelReservationsWpf.Services.ReservationProviders;
+using HotelReservationsWpf.Services.ReservationRemovers;
+using HotelReservationsWpf.Services.SaveRoomsProviders;
+using System.IO;
 
 namespace HotelReservationsWpf.Models
 {
-
-
+    // Class for managing the hotel with the ability to create reservations, get all reservations,
+    // delete reservations, get the status of rooms in the hotel, check if there is a room available for reservation ...
     public class ManagementHotel
     {
         // File names for the overview of rooms for each type of room in the hotel
-        private string _overviewStandardRoomsString = "overviewOfStandardRoomsFile.xml",
-                      _overviewDeluxeRoomsString = "overviewOfDeluxeRoomsFile.xml",
-                      _overviewSuiteRoomsString = "overviewOfSuiteRoomsFile.xml";
+        private string _overviewStandardRoomsString = 
+                       Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "overviewOfStandardRoomsFile.xml"),
+                       _overviewDeluxeRoomsString = 
+                       Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "overviewOfDeluxeRoomsFile.xml"),
+                       _overviewSuiteRoomsString = 
+                       Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "overviewOfSuiteRoomsFile.xml");
 
         // Reservation book for managing reservations in the hotel
         private readonly ReservationsBook _reservationBook;
 
+        // Services for saving rooms
+        private readonly ISaveRoomsProvider _saveRoomsProvider;
+
         // Lists of rooms for each type of room in the hotel (standard, deluxe, suite) 
         // with information about rooms in the hotel
-        private  List<Room> _standardRooms;
+        private List<Room> _standardRooms;
         private  List<Room> _deluxeRooms;
         private  List<Room> _suiteRooms;
 
@@ -28,10 +37,13 @@ namespace HotelReservationsWpf.Models
         public decimal PricePerNightSuiteRoom { get; private set; }
 
         public ManagementHotel(int[] countOfRooms, decimal[] pricesPerNightRooms, 
-                                    IReservationCreator reservationCreator, IReservationProvider reservationProvider)
+                                    IReservationCreator reservationCreator, IReservationProvider reservationProvider,
+                                    IReservationRemover reservationRemover,
+                                    IInitializationRooms initializationRooms, ISaveRoomsProvider saveRooms)
         {
-            _reservationBook = new ReservationsBook(reservationCreator, reservationProvider);
-            IInitializationRooms initializationRooms = new InitializationRooms();
+            _reservationBook = new ReservationsBook(reservationCreator, reservationProvider, reservationRemover);
+
+            _saveRoomsProvider = saveRooms;
 
             CreateRoomsWithPrices(initializationRooms, countOfRooms, pricesPerNightRooms);
         }
@@ -39,27 +51,23 @@ namespace HotelReservationsWpf.Models
         // Create rooms with prices per night for each type of room in the hotel
         // and initialize the list of rooms for each type of room 
         // with the number of rooms and the price per night ...
-        private void CreateRoomsWithPrices(IInitializationRooms initializationRooms, int[] countOfRooms, decimal[] pricesPerNightRoom)
+        public void CreateRoomsWithPrices(IInitializationRooms initializationRooms, int[] countOfRooms, 
+                            decimal[] pricesPerNightRoom)
         {
-            if(countOfRooms.Length > 3)
-            {
-                throw new ArgumentException("The hotel currently offers a maximum of 3 types of rooms");
-            }
-
-            if (pricesPerNightRoom.Length > 3)
+            if(countOfRooms.Length > 3 || pricesPerNightRoom.Length > 3)
             {
                 throw new ArgumentException("The hotel currently offers a maximum of 3 types of rooms");
             }
 
             if(countOfRooms.Length != pricesPerNightRoom.Length)
             {
-                throw new ArgumentException("The number of rooms and prices per night must be the same");
+                throw new ArgumentException("The number type of rooms and prices per night must be the same");
             }
             else
             {
                 for (int i = 0; i < countOfRooms.Length; i++)
                 {
-                    if (countOfRooms[i] < 0)
+                    if (countOfRooms[i] <= 0)
                     {
                         throw new ArgumentException("The number of rooms must be greater than 0");
                     } 
@@ -70,24 +78,21 @@ namespace HotelReservationsWpf.Models
                         {
                             PricePerNightStandardRoom = pricesPerNightRoom[i];
                             // Initialize the list of standard rooms with the number of rooms and the price per night
-                            _standardRooms = new List<Room>();
-                            initializationRooms.ExecuteInitializeRoom(_overviewStandardRoomsString, _standardRooms, 
+                            _standardRooms = initializationRooms.ExecuteInitializeRoomFromXml(_overviewStandardRoomsString, 
                                     RoomType.Standard, countOfRooms[i], PricePerNightStandardRoom);
                         } 
                         else if(i == 1)
                         {
                             PricePerNightDeluxeRoom = pricesPerNightRoom[i];
                             // Initialize the list of standard rooms with the number of rooms and the price per night
-                            _deluxeRooms = new List<Room>();
-                            initializationRooms.ExecuteInitializeRoom(_overviewDeluxeRoomsString, _deluxeRooms, 
+                            _deluxeRooms = initializationRooms.ExecuteInitializeRoomFromXml(_overviewDeluxeRoomsString,
                                     RoomType.Deluxe, countOfRooms[i], PricePerNightDeluxeRoom);
                         }
                         else if(i == 2)
                         {
                             PricePerNightSuiteRoom = pricesPerNightRoom[i];
                             // Initialize the list of standard rooms with the number of rooms and the price per night
-                            _suiteRooms = new List<Room>();
-                            initializationRooms.ExecuteInitializeRoom(_overviewSuiteRoomsString, _suiteRooms,
+                            _suiteRooms = initializationRooms.ExecuteInitializeRoomFromXml(_overviewSuiteRoomsString,
                                     RoomType.Suite, countOfRooms[i], PricePerNightSuiteRoom);
                         }
                     }
@@ -95,22 +100,40 @@ namespace HotelReservationsWpf.Models
             }
         }
 
-        private void SaveRoomsWithPrices()
+        // Save the current status of the rooms in the hotel to the XML file
+        public void SaveRoomsWithPricesToXml()
         {
+            if(_standardRooms.Any(r => r.RoomStatus == RoomStatus.Occupied))
+            {
+                _saveRoomsProvider.ExecuteSaveRoomToXml(_overviewStandardRoomsString, _standardRooms);
+            }
 
+            if(_deluxeRooms.Any(r => r.RoomStatus == RoomStatus.Occupied))
+            {
+                _saveRoomsProvider.ExecuteSaveRoomToXml(_overviewDeluxeRoomsString, _deluxeRooms);
+            }
+
+            if(_suiteRooms.Any(r => r.RoomStatus == RoomStatus.Occupied))
+            {
+                _saveRoomsProvider.ExecuteSaveRoomToXml(_overviewSuiteRoomsString, _suiteRooms);
+            }
         }
 
 
-
         // Create a new reservation asynchronously and add it to the reservation book
-        public async Task CreateReservationAsync(Reservation reservation)
+        public async Task CreateReservationInReservationBookAsync(Reservation reservation)
         {
             await _reservationBook.MakeReservationAsync(reservation);
         }
 
         // Get all reservations asynchronously from the reservation book
-        public async Task<IEnumerable<Reservation>> GetAllReservationsAsync()
+        public async Task<IEnumerable<Reservation>> GetAllReservationsFromReservationBookAsync()
          => await _reservationBook.GetAllReservationsAsync();
+
+        // Remove a reservation asynchronously from the reservation book
+        public async Task<bool> RemoveReservationFromReservationBookAsync(int roomNumber, string guestName)
+            => await _reservationBook.RemoveReservationAsync(roomNumber, guestName);
+        
 
         // Get the status available and occupied for a standard rooms
         public (int, int) GetStatusStandardRooms()

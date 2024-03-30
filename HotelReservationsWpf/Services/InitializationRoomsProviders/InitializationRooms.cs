@@ -1,24 +1,20 @@
 ﻿using HotelReservationsWpf.Models;
-using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Xml.Serialization;
 
-namespace HotelReservationsWpf.Services.InitializationRoomsProvider
+namespace HotelReservationsWpf.Services.InitializationRoomsProviders
 {
     public class InitializationRooms : IInitializationRooms
     {
-        public void ExecuteInitializeRoom(string connectionString, List<Room> roomsList, 
+        public List<Room> ExecuteInitializeRoomFromXml(string connectionString,
                         RoomType roomType, int countOfRooms, decimal pricePerNight)
         {
+            List<Room> returnRoomsList;
+
             if (string.IsNullOrEmpty(connectionString))
             {
                 throw new ArgumentNullException(nameof(connectionString));
-            }
-
-            if (roomsList == null)
-            {
-                throw new ArgumentNullException(nameof(roomsList));
             }
 
             // If the file exists, read the data from the file and deserialize it
@@ -26,11 +22,11 @@ namespace HotelReservationsWpf.Services.InitializationRoomsProvider
             {
                 try
                 {
-                    XmlSerializer serializer = new XmlSerializer(roomsList.GetType());
+                    XmlSerializer serializer = new XmlSerializer(typeof(List<Room>));
 
                     using (StreamReader sr = new StreamReader(connectionString))
                     {
-                        roomsList = (List<Room>)serializer.Deserialize(sr);
+                        returnRoomsList = (List<Room>)serializer.Deserialize(sr);
                     }
 
                 }
@@ -45,10 +41,19 @@ namespace HotelReservationsWpf.Services.InitializationRoomsProvider
             }
             else
             {
+                returnRoomsList = new List<Room>();
                 // Create a new room object and add it to the list according to the room type
                 // and the price per night
-                InsertListWithRoomsSwitch(roomType, countOfRooms, pricePerNight, roomsList);
+                InsertListWithRoomsSwitch(roomType, countOfRooms, pricePerNight, returnRoomsList);
             }
+
+
+            if (returnRoomsList == null)
+            {
+                throw new ArgumentNullException(nameof(returnRoomsList));
+            }
+
+            return returnRoomsList;
         }
 
         // Create a new room object and add it to the list according to the room type
@@ -57,8 +62,7 @@ namespace HotelReservationsWpf.Services.InitializationRoomsProvider
         {
             for(int i = 0; i < countOfRooms; i++)
             {
-                Room room = new Room(i + 1, roomType, RoomStatus.Available, price);
-                roomsList.Add(room);
+                roomsList.Add(new Room(i + 1, roomType, RoomStatus.Available, price));
             }
         }
 
