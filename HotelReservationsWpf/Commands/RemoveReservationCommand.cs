@@ -15,12 +15,19 @@ namespace HotelReservationsWpf.Commands
             _overviewViewModel = overviewViewModel;
         }
 
+        // Async method for removing reservations from the hotel store and displaying a message box
         public override async Task ExecuteAsync(object? parameter)
         {
-            bool wasRemoved = true;
+            bool wasRemoved = false;
+
             try
             {
-                wasRemoved = await _hotelStore.RemoveReservationHotelStoreAsync(_overviewViewModel.RoomNumber, _overviewViewModel.GuestName);
+                int roomNumber = 0;
+
+                if(int.TryParse(_overviewViewModel.RoomNumberString, out roomNumber))
+                {
+                    wasRemoved = await _hotelStore.RemoveReservationHotelStoreAsync(roomNumber, _overviewViewModel.GuestName);
+                }
             }
             catch (Exception)
             {
@@ -29,8 +36,17 @@ namespace HotelReservationsWpf.Commands
 
             if(wasRemoved)
             {
-                MessageBox.Show("Reservation removed", "Information", 
+
+                _overviewViewModel.RoomNumberString = string.Empty;
+                _overviewViewModel.GuestName = string.Empty;
+
+                MessageBox.Show("Reservation successfully removed", "Information", 
                     MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show("Reservation could not be removed", "Error", 
+                                       MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

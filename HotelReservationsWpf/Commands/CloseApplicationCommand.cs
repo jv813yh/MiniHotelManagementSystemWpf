@@ -11,6 +11,8 @@ namespace HotelReservationsWpf.Commands
         {
             _hotelStore = hotelStore;
         }
+
+        // Save the current status of the rooms to .xml and close the application
         public override void Execute(object? parameter)
         {
             try

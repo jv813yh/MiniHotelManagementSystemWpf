@@ -83,12 +83,15 @@ namespace HotelReservationsWpf.Stores
 
             if (wasRemoved)
             {
-                await RemoveReservationsAsync(roomNumber, guestName);
+                //await RemoveReservationsAsync(roomNumber, guestName);
+
+                _reservations.RemoveAll(r => r.CurrentRoom.RoomNumber == roomNumber
+                                    && r.GuestName.GuestName == guestName);
             }
 
             return wasRemoved;
         }
-        
+
 
         // Method to save the current status of the rooms in the hotel to the XML file
         public void SaveTheCurrentStatusOfTheRoomsToXmlHotelStore()
@@ -119,17 +122,5 @@ namespace HotelReservationsWpf.Stores
             => _hotel.GetPriceForDeluxeRoom();
         public decimal GetPriceForSuiteRoomHotelStore()
             => _hotel.GetPriceForSuiteRoom();
-
-        private async Task RemoveReservationsAsync(int roomNumber, string guestName)
-        {
-            var reservationsToRemove = _reservations.Where(r => r.CurrentRoom.RoomNumber == roomNumber
-                     && r.GuestName.GuestName == guestName).ToList();
-
-            foreach (var reservation in reservationsToRemove)
-            {
-                _reservations.Remove(reservation);
-                await Task.Yield(); 
-            }
-        }
     }
 }
