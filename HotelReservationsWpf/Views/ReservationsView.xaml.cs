@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace HotelReservationsWpf.Views
 {
@@ -11,5 +12,13 @@ namespace HotelReservationsWpf.Views
         {
             InitializeComponent();
         }
+
+        public event EventHandler<EventArgs> ListViewLoaded;
+
+        private void GuestsListView_Loaded(object sender, RoutedEventArgs e)
+        {
+            ListViewLoaded?.Invoke(this, EventArgs.Empty);
+        }
+
     }
 }

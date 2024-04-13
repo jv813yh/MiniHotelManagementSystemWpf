@@ -2,7 +2,6 @@
 using HotelReservationsWpf.Models;
 using HotelReservationsWpf.Services;
 using HotelReservationsWpf.Stores;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Collections;
 using System.ComponentModel;
 using System.Windows;
@@ -47,6 +46,11 @@ namespace HotelReservationsWpf.ViewModels
                 {
                     HandleErrors(nameof(FirstName), "First name must contain only letters");
                 }
+
+                if (FirstName.Contains(" "))
+                {
+                    HandleErrors(nameof(LastName), "First name can not contain empty space");
+                }
             }
         }
 
@@ -71,6 +75,11 @@ namespace HotelReservationsWpf.ViewModels
                 if (IsNameNoValid(value))
                 {
                     HandleErrors(nameof(LastName), "Last name must contain only letters");
+                }
+
+                if (LastName.Contains(" "))
+                {
+                    HandleErrors(nameof(LastName), "Last name can not contain empty space");
                 }
             }
         }
@@ -186,6 +195,16 @@ namespace HotelReservationsWpf.ViewModels
                 {
                     HandleErrors(nameof(PhomeNumber), "Phone number must contain only digits");
                 }
+
+                if (_phoneNumber[0] != '0')
+                {
+                    HandleErrors(nameof(PhomeNumber), "Phone number must start with '0'");
+                }
+
+                if (_phoneNumber.Contains(" "))
+                {
+                    HandleErrors(nameof(PhomeNumber), "Phone number can not contain empty space");
+                }
             }
         }
         
@@ -210,6 +229,11 @@ namespace HotelReservationsWpf.ViewModels
                 if(EmailAddress.Length < 5)
                 {
                     HandleErrors(nameof(EmailAddress), "Email address must be at least 5 characters long");
+                }
+
+                if(EmailAddress.Contains(" "))
+                {
+                    HandleErrors(nameof(EmailAddress), "Email address can not contain empty space");
                 }
             }
         }

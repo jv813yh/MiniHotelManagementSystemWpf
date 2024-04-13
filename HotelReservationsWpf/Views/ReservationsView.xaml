@@ -9,7 +9,7 @@
              mc:Ignorable="d" 
              
              HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-             d:DesignHeight="790" d:DesignWidth="650">
+             d:DesignHeight="790" d:DesignWidth="800">
 
     <UserControl.Resources>
 
@@ -51,7 +51,7 @@
 
             <Grid Background="#f0efde">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="180"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -76,16 +76,16 @@
                                 Grid.RowSpan="2"
                                 Grid.Column="1">
 
-                        <RadioButton Command=""
+                        <RadioButton Command="{Binding OrderByCommand}"
                                 Name="DateAscendingRadioButton"
-                                CommandParameter="DateAscending"
+                                CommandParameter="StartDateAscending"
                                 Margin="15,15,0,0"
                                 Style="{StaticResource OrderByRadioButton}">Start Date Asc
                         </RadioButton>
 
-                        <RadioButton Command=""
+                        <RadioButton Command="{Binding OrderByCommand}"
                                 Name="DateDescendingRadioButton"
-                                CommandParameter="DateDescending"
+                                CommandParameter="StartDateDescending"
                                 Margin="15,15,0,0"
                                 Style="{StaticResource OrderByRadioButton}">Start Date Desc</RadioButton>
 
@@ -95,16 +95,16 @@
                                 Grid.RowSpan="2"
                                 Grid.Column="1">
 
-                        <RadioButton Command=""
+                        <RadioButton Command="{Binding OrderByCommand}"
                                 Name="EndDateAscendingRadioButton"
-                                CommandParameter="DateAscending"
+                                CommandParameter="EndDateAscending"
                                 Margin="15,15,0,0"
                                 Style="{StaticResource OrderByRadioButton}">End Date Asc
                         </RadioButton>
 
-                        <RadioButton Command=""
+                        <RadioButton Command="{Binding OrderByCommand}"
                                 Name="EndDateDescendingRadioButton"
-                                CommandParameter="DateDescending"
+                                CommandParameter="EndDateDescending"
                                 Margin="15,15,0,0"
                                 Style="{StaticResource OrderByRadioButton}">End Date Desc</RadioButton>
 
@@ -114,14 +114,14 @@
                                 Grid.RowSpan="2"
                                 Grid.Column="1">
 
-                        <RadioButton Command=""
+                        <RadioButton Command="{Binding OrderByCommand}"
                                      Name="PriceAscendingRadioButton"
                                      CommandParameter="PriceAscending"
                                      Margin="25,15,0,0"
                                      Style="{StaticResource OrderByRadioButton}">Price Asc
                         </RadioButton>
 
-                        <RadioButton Command=""
+                        <RadioButton Command="{Binding OrderByCommand}"
                                      Name="PriceDescendingRadioButton"
                                      CommandParameter="PriceDescending"
                                      Margin="25,15,0,0"
@@ -148,7 +148,7 @@
                                VerticalAlignment="Center"
                                Margin="0,0,0,250"
                                Foreground="Red"
-                               Visibility="{Binding IsReservationsEmpty, 
+                               Visibility="{Binding IsLoadingSpinner, 
                                Converter={StaticResource BooleanToVisibilityConverter}}"
                                FontSize="40"
                                FontWeight="DemiBold"
@@ -172,8 +172,9 @@
                                Margin="2"
                                BorderBrush="Black"
                                BorderThickness="3"
-                               ItemsSource="{Binding GetAllReservations}"
-                               Visibility="{Binding IsReservationsEmpty, 
+                               x:Name="GuestsListView"
+                               ItemsSource="{Binding GuestsCollectionListView}"
+                               Visibility="{Binding IsLoadingSpinner, 
                                Converter={StaticResource InverseToBooleanToVisibilityConverter}}">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">

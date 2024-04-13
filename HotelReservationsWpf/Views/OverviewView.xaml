@@ -17,7 +17,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
             <RowDefinition Height="0.5*"/>
-            <RowDefinition Height="3*"/>
+            <RowDefinition Height="2.5*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -34,6 +34,9 @@
         </Path>
         -->
 
+        <!--
+            Close button for the application
+        -->
         <Button Width="30" 
                 Height="30" 
                 VerticalAlignment="Top"
@@ -60,6 +63,9 @@
             </Button.Template>
         </Button>
 
+        <!--
+            Title of the application
+        -->
         <StackPanel Orientation="Horizontal"
                     Grid.Row="1"
                     HorizontalAlignment="Center"
@@ -67,32 +73,51 @@
 
             <TextBlock Text="{Binding HotelName, Mode=OneWay}"
                        FontSize="30"
-                       FontWeight="Bold"/>
+                       FontWeight="Bold">
+                <TextBlock.Effect>
+                    <DropShadowEffect ShadowDepth="5"
+                                      Color="Black"
+                                      Opacity="0.5"
+                                      BlurRadius="5"/>
+                </TextBlock.Effect>
+            </TextBlock>
 
             <TextBlock Text=" Reservations System"
                        FontSize="30"
-                       FontWeight="Bold"/>
+                       FontWeight="Bold">
+                <TextBlock.Effect>
+                    <DropShadowEffect ShadowDepth="5"
+                                      Color="Black"
+                                      Opacity="0.5"
+                                      BlurRadius="5"/>
+                </TextBlock.Effect>
+            </TextBlock>
 
         </StackPanel>
 
-        <Grid Grid.Row="2">
-           <lvc:CartesianChart Series="{Binding RoomSeries}" 
+        <!--
+            Charts for the number of rooms available and occupied
+            in the hotel by type of room 
+        -->
+        <Grid Grid.Row="2"
+              Margin="10">
+            <lvc:CartesianChart Series="{Binding RoomSeries}" 
                                LegendLocation="Right">
 
                 <lvc:CartesianChart.AxisX>
                     <lvc:Axis Title="Type of rooms" 
                             Margin="10"
                             FontSize="15"
-                            Labels="{Binding RoomTypeString}"
+                            Labels=""
                             Foreground="#000103">
-                        <lvc:Axis.Separator>
-                            <lvc:Separator Step="1"/>
-                        </lvc:Axis.Separator>
                     </lvc:Axis>
                 </lvc:CartesianChart.AxisX>
 
                 <lvc:CartesianChart.AxisY>
-                    <lvc:Axis Title="Number of Rooms"/>
+                    <lvc:Axis Title="Number of Rooms"
+                              Margin="10"
+                              FontSize="15"
+                              Foreground="#000103"/>
                 </lvc:CartesianChart.AxisY>
 
 
@@ -102,33 +127,46 @@
         <!--<Grid Grid.Row="2">
             <local:YourUserControl DataContext="{Binding YourUserControlViewModel}" />
         </Grid>-->
-        <!--<Grid Grid.Row="2">
-            <local:YourUserControl RoomNumberString="{Binding RoomNumberString}" GuestName="{Binding GuestName}" />
-        </Grid>-->
 
+        <!--
+            StackPanel for the remove reservation
+        -->
+        <Grid Grid.Row="3"
+              Margin="10">
 
-        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <StackPanel Orientation="Horizontal"
-                        Grid.RowSpan="2">
+                        Grid.ColumnSpan="2">
 
                 <TextBlock Text="Room Number: "
                            FontSize="20"
                            FontWeight="Bold"
                            Margin="15"
                            HorizontalAlignment="Center"
-                           VerticalAlignment="Center"/>
+                           VerticalAlignment="Center">
+                    <TextBlock.Effect>
+                        <DropShadowEffect ShadowDepth="5"
+                                          Color="Black"
+                                          Opacity="0.5"
+                                          BlurRadius="5"/>
+                    </TextBlock.Effect>
+                </TextBlock>
 
                 <TextBox Text="{Binding RoomNumberString, UpdateSourceTrigger=PropertyChanged}"
                          FontSize="20"
-                         Width="200"
-                         Height="30"
-                         Margin="15"
+                         Width="220"
+                         Height="45"
+                         Margin="5"
+                         Style="{StaticResource CustomTextBoxStyle}"
                          HorizontalAlignment="Center"
                          VerticalAlignment="Center"/>
 
@@ -136,20 +174,28 @@
 
             <StackPanel Orientation="Horizontal"
                         Grid.Row="1"
-                        Grid.RowSpan="2">
+                        Grid.ColumnSpan="2">
 
                 <TextBlock Text="Guest Name: "
                            FontSize="20"
                            FontWeight="Bold"
                            Margin="15"
                            HorizontalAlignment="Center"
-                           VerticalAlignment="Center"/>
+                           VerticalAlignment="Center">
+                    <TextBlock.Effect>
+                        <DropShadowEffect ShadowDepth="5"
+                                          Color="Black"
+                                          Opacity="0.5"
+                                          BlurRadius="5"/>
+                    </TextBlock.Effect>
+                </TextBlock>
 
                 <TextBox Text="{Binding GuestName, UpdateSourceTrigger=PropertyChanged}"
                          FontSize="20"
-                         Width="200"
-                         Height="30"
-                         Margin="15"
+                         Width="220"
+                         Height="45"
+                         Margin="27,15,15,15"
+                         Style="{StaticResource CustomTextBoxStyle}"
                          HorizontalAlignment="Center"
                          VerticalAlignment="Center"/>
 
@@ -157,10 +203,11 @@
 
 
             <Button Content="Remove Resv"
-                    Grid.Row="2"
-                    VerticalAlignment="Stretch"
-                    HorizontalAlignment="Right"
-                    Margin="0,0,150,0"
+                    Grid.Column="1"
+                    Grid.RowSpan="2"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Margin="0,0,25,0"
                     Command="{Binding RemoveReservationCommand}"
                     FontSize="19"
                     Width="220"
@@ -169,6 +216,9 @@
 
         </Grid>
 
+        <!--
+            StackPanel for the navigation buttons
+        -->
         <StackPanel Grid.Row="4"
                     Orientation="Horizontal"
                     HorizontalAlignment="Center"

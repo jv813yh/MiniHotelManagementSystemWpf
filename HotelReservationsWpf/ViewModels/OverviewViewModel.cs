@@ -1,5 +1,4 @@
 ﻿using HotelReservationsWpf.Commands;
-using HotelReservationsWpf.Models;
 using HotelReservationsWpf.Services;
 using HotelReservationsWpf.Stores;
 using LiveCharts;
@@ -37,9 +36,9 @@ namespace HotelReservationsWpf.ViewModels
             }
         }
 
+        //
         public SeriesCollection RoomSeries { get; set; }
 
-        public string[] RoomTypeString  { get; set; }
         public string HotelName
             => _hotelStore.HotelName;
 
@@ -89,7 +88,7 @@ namespace HotelReservationsWpf.ViewModels
                 new ColumnSeries
                 {
                     Title = "Free Deluxe Rooms",
-                    Values = new ChartValues<ObservableValue> { new ObservableValue(_hotelStore.GetStatusDeluxeRoomsHotelStore().Item1) }
+                    Values = new ChartValues<ObservableValue> { new ObservableValue(_hotelStore.GetStatusDeluxeRoomsHotelStore().Item1) },
                 },
                 new ColumnSeries
                 {
@@ -108,8 +107,6 @@ namespace HotelReservationsWpf.ViewModels
                     Values = new ChartValues<ObservableValue> { new ObservableValue(_hotelStore.GetStatusSuiteRoomsHotelStore().Item2) }
                 },
             };
-
-            RoomTypeString = new string[] { "Standard", "Deluxe", "Suite" };
         }
     }
 }
