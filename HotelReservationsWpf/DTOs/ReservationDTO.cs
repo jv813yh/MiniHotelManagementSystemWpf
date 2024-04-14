@@ -14,7 +14,7 @@ namespace HotelReservationsWpf.DTOs
         public int RoomNumber { get; set; }
 
         [Required]
-        public RoomType RoomTypeProperty { get; set; }
+        public RoomType RoomTypeDTO { get; set; }
 
         [Required]
         public string GuestName { get; set; } = string.Empty;

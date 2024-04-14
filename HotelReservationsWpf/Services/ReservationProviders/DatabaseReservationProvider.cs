@@ -67,7 +67,7 @@ namespace HotelReservationsWpf.Services.ReservationProviders
             decimal pricePerNight = 0;
 
             // Determine the price per night based on the RoomType
-            switch (reservationDto.RoomTypeProperty)
+            switch (reservationDto.RoomTypeDTO)
             {
                 case RoomType.Standard:
                     pricePerNight = _pricesPerNightRoom[0];
@@ -84,7 +84,7 @@ namespace HotelReservationsWpf.Services.ReservationProviders
             }
 
             // Create a new instance of the Reservation class with the Room, GuestPerson, CheckInDate, and CheckOutDate properties
-            return new Reservation(new Room(reservationDto.RoomNumber, reservationDto.RoomTypeProperty, RoomStatus.Occupied, pricePerNight),
+            return new Reservation(new Room(reservationDto.RoomNumber, reservationDto.RoomTypeDTO, RoomStatus.Occupied, pricePerNight),
                                         new GuestPerson(reservationDto.GuestName, reservationDto.GuestEmail, reservationDto.PhoneNumber), 
                                                 reservationDto.CheckInDate, reservationDto.CheckOutDate);
         }

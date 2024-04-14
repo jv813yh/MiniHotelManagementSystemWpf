@@ -1,7 +1,9 @@
-﻿namespace HotelReservationsWpf.Services.ReservationRemovers
+﻿using HotelReservationsWpf.Models;
+
+namespace HotelReservationsWpf.Services.ReservationRemovers
 {
     public interface IReservationRemover
     {
-        Task<bool> RemoveReservationAsync(int roomNumber, string guestName);
+        Task<(bool, RoomType)> RemoveReservationAsync(int roomNumber, string guestName);
     }
 }

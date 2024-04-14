@@ -196,11 +196,6 @@ namespace HotelReservationsWpf.ViewModels
                     HandleErrors(nameof(PhomeNumber), "Phone number must contain only digits");
                 }
 
-                if (_phoneNumber[0] != '0')
-                {
-                    HandleErrors(nameof(PhomeNumber), "Phone number must start with '0'");
-                }
-
                 if (_phoneNumber.Contains(" "))
                 {
                     HandleErrors(nameof(PhomeNumber), "Phone number can not contain empty space");

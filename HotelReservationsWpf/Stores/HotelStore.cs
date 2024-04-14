@@ -79,14 +79,22 @@ namespace HotelReservationsWpf.Stores
         /// <returns></returns>
         public async Task<bool> RemoveReservationHotelStoreAsync(int roomNumber, string guestName)
         {
-            bool wasRemoved = await _hotel.RemoveReservationAsync(roomNumber, guestName);
+            bool wasRemoved;
+            RoomType roomType;
+
+            (wasRemoved, roomType)= await _hotel.RemoveReservationAsync(roomNumber, guestName);
 
             if (wasRemoved)
             {
                 //await RemoveReservationsAsync(roomNumber, guestName);
 
+                // Remove the reservation from the list of reservations that
+                // I use as a resource to display in the user interface
                 _reservations.RemoveAll(r => r.CurrentRoom.RoomNumber == roomNumber
                                     && r.GuestName.GuestName == guestName);
+
+                // Update the status of the removed room in the hotel
+                UpdateStatusRoomHotelStore(roomNumber, roomType);
             }
 
             return wasRemoved;
@@ -97,6 +105,8 @@ namespace HotelReservationsWpf.Stores
         public void SaveTheCurrentStatusOfTheRoomsToXmlHotelStore()
             => _hotel.SaveTheCurrentStatusOfTheRoomsToXml();
 
+        private void UpdateStatusRoomHotelStore(int roomNumber, RoomType roomType)
+            => _hotel.UpdateRoomStatus(roomNumber, roomType);
 
         // Get the statuses of rooms in the hotel
         public (int, int) GetStatusStandardRoomsHotelStore()

@@ -44,7 +44,7 @@ namespace HotelReservationsWpf.Services.ReservationCreators
             return new ReservationDTO
             {
                 RoomNumber = reservation.CurrentRoom.RoomNumber,
-                RoomTypeProperty = reservation.CurrentRoom.RoomType,
+                RoomTypeDTO = reservation.CurrentRoom.RoomType,
                 GuestName = reservation.GuestName.GuestName,
                 GuestEmail = reservation.GuestName.Email,
                 PhoneNumber = reservation.GuestName.PhoneNumber,

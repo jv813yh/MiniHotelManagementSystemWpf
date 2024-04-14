@@ -37,12 +37,16 @@ namespace HotelReservationsWpf.Models
          => await _managementHotel.GetAllReservationsFromReservationBookAsync();
 
         // Remove a reservation async
-        public async Task<bool> RemoveReservationAsync(int roomNumber, string guestName)
+        public async Task<(bool, RoomType)> RemoveReservationAsync(int roomNumber, string guestName)
             => await _managementHotel.RemoveReservationFromReservationBookAsync(roomNumber, guestName);
 
         // 
         public void SaveTheCurrentStatusOfTheRoomsToXml()
-            => _managementHotel.SaveRoomsWithPricesToXml();   
+            => _managementHotel.SaveRoomsWithPricesToXml();
+
+        public void UpdateRoomStatus(int roomNumber, RoomType roomType)
+            => _managementHotel.UpdateRoomStatus(roomNumber, roomType);
+
 
         // Get the statuses of rooms in the hotel
         public (int, int) GetStatusStandardRooms()

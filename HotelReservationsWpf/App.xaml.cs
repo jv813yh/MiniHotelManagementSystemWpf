@@ -90,7 +90,7 @@ namespace HotelReservationsWpf
 
             MainWindow = new MainWindow()
             {
-                DataContext = new MainViewModel(_hotel, _navigationStore)
+                DataContext = new MainViewModel(_navigationStore)
             };
 
             MainWindow.Show();

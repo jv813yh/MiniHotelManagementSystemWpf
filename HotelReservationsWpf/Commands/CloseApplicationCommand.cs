@@ -1,4 +1,5 @@
 ﻿using HotelReservationsWpf.Stores;
+using System.Windows;
 
 namespace HotelReservationsWpf.Commands
 {
@@ -19,6 +20,10 @@ namespace HotelReservationsWpf.Commands
             {
                 // Saving room statuses in .xml
                 _hotelStore.SaveTheCurrentStatusOfTheRoomsToXmlHotelStore();
+
+                // Thanks for using
+                MessageBox.Show("Thank you for using the application!", "Hotel Reservations", 
+                    MessageBoxButton.OK, MessageBoxImage.Information);
 
                 // Close the application
                 App.Current.Shutdown();

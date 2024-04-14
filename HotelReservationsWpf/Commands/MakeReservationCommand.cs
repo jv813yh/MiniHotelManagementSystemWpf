@@ -98,8 +98,8 @@ namespace HotelReservationsWpf.Commands
                                             _viewModel.EmailAddress), DateOnly.FromDateTime(_viewModel.CheckInDate), DateOnly.FromDateTime(_viewModel.CheckOutDate)));
                     */
 
-            // Inform the user that the reservation was successfully created
-            MessageBox.Show("The reservation was successfully created.", "Reservation created", 
+                   // Inform the user that the reservation was successfully created
+                   MessageBox.Show("The reservation was successfully created.", "Reservation created", 
                         MessageBoxButton.OK, MessageBoxImage.Information);
 
                     // Dispose the _viewModel.PropertyChanged += OnViewModelPropertyChanged

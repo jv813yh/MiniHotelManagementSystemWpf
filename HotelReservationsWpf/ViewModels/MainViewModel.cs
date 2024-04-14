@@ -9,9 +9,10 @@ namespace HotelReservationsWpf.ViewModels
         private readonly NavigationStore _navigationStore;
 
         // Property that returns the current view model (binding to this property in MainWindow.xaml)
-        public ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;
+        public ViewModelBase CurrentViewModel 
+            => _navigationStore.CurrentViewModel;
 
-        public MainViewModel(Hotel hotel, NavigationStore navigationStore)
+        public MainViewModel(NavigationStore navigationStore)
         {
             // Set the current view model 
             _navigationStore = navigationStore;

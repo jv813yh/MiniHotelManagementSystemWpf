@@ -36,6 +36,8 @@ namespace HotelReservationsWpf.Models
         public decimal PricePerNightDeluxeRoom { get; private set; }
         public decimal PricePerNightSuiteRoom { get; private set; }
 
+        //public decimal TotalIncome { get; set;}
+
         public ManagementHotel(int[] countOfRooms, decimal[] pricesPerNightRooms, 
                                     IReservationCreator reservationCreator, IReservationProvider reservationProvider,
                                     IReservationRemover reservationRemover,
@@ -103,20 +105,25 @@ namespace HotelReservationsWpf.Models
         // Save the current status of the rooms in the hotel to the XML file
         public void SaveRoomsWithPricesToXml()
         {
-            if(_standardRooms.Any(r => r.RoomStatus == RoomStatus.Occupied))
+            if (_standardRooms != null) 
+            { 
+                _saveRoomsProvider.ExecuteSaveRoomToXml(_overviewStandardRoomsString, _standardRooms); 
+            }
+            if (_deluxeRooms != null)
             {
-                _saveRoomsProvider.ExecuteSaveRoomToXml(_overviewStandardRoomsString, _standardRooms);
+                _saveRoomsProvider.ExecuteSaveRoomToXml(_overviewDeluxeRoomsString, _deluxeRooms); 
+            }
+            if (_suiteRooms != null)
+            {
+                _saveRoomsProvider.ExecuteSaveRoomToXml(_overviewSuiteRoomsString, _suiteRooms); 
             }
 
-            if(_deluxeRooms.Any(r => r.RoomStatus == RoomStatus.Occupied))
-            {
-                _saveRoomsProvider.ExecuteSaveRoomToXml(_overviewDeluxeRoomsString, _deluxeRooms);
-            }
+            //if (_standardRooms.Any(r => r.RoomStatus == RoomStatus.Occupied))
+        }
 
-            if(_suiteRooms.Any(r => r.RoomStatus == RoomStatus.Occupied))
-            {
-                _saveRoomsProvider.ExecuteSaveRoomToXml(_overviewSuiteRoomsString, _suiteRooms);
-            }
+        public void UpdateRoomsStatus(IEnumerable<Reservation> reservations)
+        {
+
         }
 
 
@@ -131,9 +138,54 @@ namespace HotelReservationsWpf.Models
          => await _reservationBook.GetAllReservationsAsync();
 
         // Remove a reservation asynchronously from the reservation book
-        public async Task<bool> RemoveReservationFromReservationBookAsync(int roomNumber, string guestName)
+        public async Task<(bool, RoomType)> RemoveReservationFromReservationBookAsync(int roomNumber, string guestName)
             => await _reservationBook.RemoveReservationAsync(roomNumber, guestName);
-        
+
+        // After removing a reservation, update the status of the room to available
+        public void UpdateRoomStatus(int roomNumber, RoomType roomType)
+        {
+            Room? room = null;
+
+            switch (roomType)
+            {
+                case RoomType.Standard:
+
+                    room = _standardRooms.FirstOrDefault(r => r.RoomNumber == roomNumber);
+
+                    if (room != null)
+                    {
+                        room.RoomStatus = RoomStatus.Available;
+                    }
+
+                    break;
+
+                case RoomType.Deluxe:
+
+                    room = _deluxeRooms.FirstOrDefault(r => r.RoomNumber == roomNumber);
+
+                    if (room != null)
+                    {
+                        room.RoomStatus = RoomStatus.Available;
+                    }
+
+                    break;
+
+                case RoomType.Suite:
+
+                    room = _suiteRooms.FirstOrDefault(r => r.RoomNumber == roomNumber);
+
+                    if (room != null)
+                    {
+                        room.RoomStatus = RoomStatus.Available;
+                    }
+
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
 
         // Get the status available and occupied for a standard rooms
         public (int, int) GetStatusStandardRooms()

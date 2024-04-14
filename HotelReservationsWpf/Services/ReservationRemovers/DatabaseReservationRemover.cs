@@ -1,4 +1,5 @@
 ﻿using HotelReservationsWpf.DbContexts;
+using HotelReservationsWpf.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Windows;
 
@@ -15,9 +16,10 @@ namespace HotelReservationsWpf.Services.ReservationRemovers
         }
 
         // Remove a reservation from the database by room number and guest name
-        public async Task<bool> RemoveReservationAsync(int roomNumber, string guestName)
+        public async Task<(bool, RoomType)> RemoveReservationAsync(int roomNumber, string guestName)
         {
             bool canExecute = true;
+            RoomType roomType = RoomType.Standard;
 
             if(roomNumber <= 0)
             {
@@ -61,14 +63,17 @@ namespace HotelReservationsWpf.Services.ReservationRemovers
                     }
                     else
                     {
+                        roomType = reservation.RoomTypeDTO;
+
+                        // If the reservation exists, remove it from the database and save changes
                         dbContext.Reservations.Remove(reservation);
 
-                        dbContext.SaveChanges();
+                        await dbContext.SaveChangesAsync();
                     }
                 }
             }
 
-            return canExecute;
+            return (canExecute, roomType);
         }
 
         private bool IsNoValidName(string name)
