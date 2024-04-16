@@ -22,7 +22,7 @@ namespace HotelReservationsWpf.Commands
                 _hotelStore.SaveTheCurrentStatusOfTheRoomsToXmlHotelStore();
 
                 // Thanks for using
-                MessageBox.Show("Thank you for using the application!", "Hotel Reservations", 
+               MessageBoxResult result = MessageBox.Show("Thank you for using the application!", "Hotel Reservations", 
                     MessageBoxButton.OK, MessageBoxImage.Information);
 
                 // Close the application

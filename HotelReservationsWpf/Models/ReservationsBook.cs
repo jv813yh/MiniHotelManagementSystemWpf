@@ -58,7 +58,7 @@ namespace HotelReservationsWpf.Models
         /// <param name="roomNumber"> Room number </param>
         /// <param name="guestName"> Guest name </param>
         /// <returns></returns>
-        public async Task<(bool, RoomType)> RemoveReservationAsync(int roomNumber, string guestName)
+        public async Task<(bool, RoomType, decimal)> RemoveReservationAsync(int roomNumber, string guestName)
              =>   await _reservationRemover.RemoveReservationAsync(roomNumber, guestName);
         
     }

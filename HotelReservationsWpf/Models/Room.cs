@@ -5,7 +5,8 @@
     {
         Standard,
         Deluxe,
-        Suite
+        Suite,
+        Unused
     }
     public enum RoomStatus
     {

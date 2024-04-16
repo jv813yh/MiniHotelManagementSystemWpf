@@ -16,10 +16,11 @@ namespace HotelReservationsWpf.Services.ReservationRemovers
         }
 
         // Remove a reservation from the database by room number and guest name
-        public async Task<(bool, RoomType)> RemoveReservationAsync(int roomNumber, string guestName)
+        public async Task<(bool, RoomType, decimal)> RemoveReservationAsync(int roomNumber, string guestName)
         {
             bool canExecute = true;
-            RoomType roomType = RoomType.Standard;
+            decimal totalCost = 0;
+            RoomType roomType = RoomType.Unused;
 
             if(roomNumber <= 0)
             {
@@ -63,6 +64,7 @@ namespace HotelReservationsWpf.Services.ReservationRemovers
                     }
                     else
                     {
+                        totalCost = reservation.TotalCost;
                         roomType = reservation.RoomTypeDTO;
 
                         // If the reservation exists, remove it from the database and save changes
@@ -73,20 +75,7 @@ namespace HotelReservationsWpf.Services.ReservationRemovers
                 }
             }
 
-            return (canExecute, roomType);
-        }
-
-        private bool IsNoValidName(string name)
-        {
-            foreach (char c in name)
-            {
-                if (!char.IsLetter(c))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return (canExecute, roomType, totalCost);
         }
     }
 }

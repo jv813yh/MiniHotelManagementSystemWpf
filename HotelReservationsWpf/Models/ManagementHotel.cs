@@ -36,7 +36,8 @@ namespace HotelReservationsWpf.Models
         public decimal PricePerNightDeluxeRoom { get; private set; }
         public decimal PricePerNightSuiteRoom { get; private set; }
 
-        //public decimal TotalIncome { get; set;}
+        // Total income from reservations in the hotel, after removing a reservation
+        public decimal TotalIncome { get; private set;}
 
         public ManagementHotel(int[] countOfRooms, decimal[] pricesPerNightRooms, 
                                     IReservationCreator reservationCreator, IReservationProvider reservationProvider,
@@ -121,12 +122,6 @@ namespace HotelReservationsWpf.Models
             //if (_standardRooms.Any(r => r.RoomStatus == RoomStatus.Occupied))
         }
 
-        public void UpdateRoomsStatus(IEnumerable<Reservation> reservations)
-        {
-
-        }
-
-
         // Create a new reservation asynchronously and add it to the reservation book
         public async Task CreateReservationInReservationBookAsync(Reservation reservation)
         {
@@ -139,7 +134,14 @@ namespace HotelReservationsWpf.Models
 
         // Remove a reservation asynchronously from the reservation book
         public async Task<(bool, RoomType)> RemoveReservationFromReservationBookAsync(int roomNumber, string guestName)
-            => await _reservationBook.RemoveReservationAsync(roomNumber, guestName);
+        {
+            var (wasRemoved, roomType, totalIncome) = await _reservationBook.RemoveReservationAsync(roomNumber, guestName);
+
+            // Update the total income from reservations in the hotel after removing a reservation
+            TotalIncome += totalIncome;
+
+            return (wasRemoved, roomType);
+        }
 
         // After removing a reservation, update the status of the room to available
         public void UpdateRoomStatus(int roomNumber, RoomType roomType)

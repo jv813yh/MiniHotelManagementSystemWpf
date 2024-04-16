@@ -36,8 +36,30 @@ namespace HotelReservationsWpf.ViewModels
             }
         }
 
+        private decimal _totalIncome;
+        public decimal TotalIncome
+        {
+            get => _totalIncome;
+
+            set
+            {
+                _totalIncome = value;
+                OnPropertyChanged(nameof(TotalIncome));
+            }
+        }
+
         //
-        public SeriesCollection RoomSeries { get; set; }
+        private SeriesCollection _roomSeries;
+        public SeriesCollection RoomSeries
+        {
+            get => _roomSeries;
+
+            set
+            {
+                _roomSeries = value;
+                OnPropertyChanged(nameof(RoomSeries));
+            }
+        }
 
         public string HotelName
             => _hotelStore.HotelName;
@@ -67,6 +89,8 @@ namespace HotelReservationsWpf.ViewModels
             CloseApplicationCommand = new CloseApplicationCommand(_hotelStore);
 
             UpdateRoomStatus();
+
+            _hotelStore.ReservationsChanged += OnReservationsChanged;
 
         }
 
@@ -107,6 +131,13 @@ namespace HotelReservationsWpf.ViewModels
                     Values = new ChartValues<ObservableValue> { new ObservableValue(_hotelStore.GetStatusSuiteRoomsHotelStore().Item2) }
                 },
             };
+        }
+
+        private void OnReservationsChanged()
+        {
+            TotalIncome = _hotelStore.TotalIncome;
+
+            UpdateRoomStatus();
         }
     }
 }

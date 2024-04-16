@@ -27,6 +27,9 @@ namespace HotelReservationsWpf.Models
                                                   initializationRooms, saveRooms);
         }
 
+        public decimal TotalIncome
+            => _managementHotel.TotalIncome;
+
         // Create a new reservation async and check for conflicts
         public async Task CreateReservationAsync(Reservation reservation)
             => await _managementHotel.CreateReservationInReservationBookAsync(reservation);

@@ -204,8 +204,9 @@
             <StackPanel Grid.Column="1"
                         Orientation="Horizontal">
                 <TextBlock Text="Total earn:"
+                           FontSize="20"
                            Foreground="Red"
-                           Margin="20,0,0,0"
+                           Margin="30,10,0,0"
                            Width="120">
                     <TextBlock.Effect>
                         <DropShadowEffect ShadowDepth="5"
@@ -214,9 +215,21 @@
                                           BlurRadius="5"/>
                     </TextBlock.Effect>
                 </TextBlock>
-                
-                <TextBlock Text="€"
-                           Width="120"/>
+
+                <TextBlock Width="240"
+                           FontSize="20"
+                           Foreground="Red"
+                           Margin="10,10,0,0">
+                    <TextBlock.Effect>
+                        <DropShadowEffect ShadowDepth="5"
+                            Color="Black"
+                            Opacity="0.5"
+                            BlurRadius="5"/>
+                    </TextBlock.Effect>
+                    
+                    <Run Text="{Binding TotalIncome, UpdateSourceTrigger=PropertyChanged}" />
+                    <Run Text="€" />
+                </TextBlock>
 
             </StackPanel>
 

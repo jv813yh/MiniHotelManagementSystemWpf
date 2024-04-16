@@ -26,6 +26,15 @@ namespace HotelReservationsWpf.Stores
             get => _hotel.Name;
         }
 
+        // Getter for total income
+        public decimal TotalIncome
+            => _hotel.TotalIncome;
+
+        public event Action ReservationsChanged;
+
+        private void OnReservationsChanged()
+            => ReservationsChanged?.Invoke();
+
         public HotelStore(Hotel hotel)
         {
             _hotel = hotel;
@@ -65,8 +74,10 @@ namespace HotelReservationsWpf.Stores
         /// <returns></returns>
         private async Task InitializeLazyLoadReservationsHotelStoreAsync()
         {
+            // Get all reservations from the database async 
             IEnumerable<Reservation> reservations = await _hotel.GetAllReservationsAsync();
 
+            // Clear the list of reservations and add new reservations
             _reservations.Clear();
             _reservations.AddRange(reservations);
         }
@@ -82,7 +93,7 @@ namespace HotelReservationsWpf.Stores
             bool wasRemoved;
             RoomType roomType;
 
-            (wasRemoved, roomType)= await _hotel.RemoveReservationAsync(roomNumber, guestName);
+            (wasRemoved, roomType) = await _hotel.RemoveReservationAsync(roomNumber, guestName);
 
             if (wasRemoved)
             {
@@ -95,6 +106,8 @@ namespace HotelReservationsWpf.Stores
 
                 // Update the status of the removed room in the hotel
                 UpdateStatusRoomHotelStore(roomNumber, roomType);
+
+                OnReservationsChanged();
             }
 
             return wasRemoved;

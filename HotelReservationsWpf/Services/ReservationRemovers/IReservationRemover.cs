@@ -4,6 +4,6 @@ namespace HotelReservationsWpf.Services.ReservationRemovers
 {
     public interface IReservationRemover
     {
-        Task<(bool, RoomType)> RemoveReservationAsync(int roomNumber, string guestName);
+        Task<(bool, RoomType, decimal)> RemoveReservationAsync(int roomNumber, string guestName);
     }
 }
