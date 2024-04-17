@@ -1,6 +1,7 @@
 ﻿using HotelReservationsWpf.DbContexts;
 using HotelReservationsWpf.Models;
 using HotelReservationsWpf.Services;
+using HotelReservationsWpf.Services.EarningsWritingProvider;
 using HotelReservationsWpf.Services.InitializationRoomsProviders;
 using HotelReservationsWpf.Services.ReservationCreators;
 using HotelReservationsWpf.Services.ReservationProviders;
@@ -19,9 +20,15 @@ namespace HotelReservationsWpf
     /// </summary>
     public partial class App : Application
     {
+
+        private static readonly string _nameHotel = "Your Paradise";
+
         // Connection string to the database (Sqlite)
         private static readonly string _connectionString = 
             $"Data Source={Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "hotelManagement.db")}";
+
+        private static readonly string _excelFilePath = 
+            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "monthlyEarnings.xlsx");
 
         // Factory for creating a database context
         HotelManagementDbContextFactory _dbHotelContextFactory;
@@ -35,6 +42,9 @@ namespace HotelReservationsWpf
         // Services for initializing rooms and saving rooms
         private readonly IInitializationRooms _initializationRooms;
         private readonly ISaveRoomsProvider _saveRoomsProvider;
+
+        // Services for writing earnings to an Excel file and reading from excel
+        private readonly IEarningsWritting _earningsWritting;
 
         // Store for saving the current view model of the application
         private NavigationStore _navigationStore;
@@ -63,8 +73,10 @@ namespace HotelReservationsWpf
             _initializationRooms = new InitializationRooms();
             _saveRoomsProvider = new SaveRooms();
 
+            _earningsWritting = new ExcelEarningsWriting(_excelFilePath);
+
             // 
-            _hotel = new Hotel("Your Paradise", _countOfRooms, _pricesPerNightRoom,
+            _hotel = new Hotel(_nameHotel, _countOfRooms, _pricesPerNightRoom,
                                     _reservationCreator, _reservationProvider, _reservationRemover,
                                     _initializationRooms, _saveRoomsProvider);
 
@@ -101,10 +113,10 @@ namespace HotelReservationsWpf
 
         private EntranceToHotelViewModel CreateEntranceToHotelViewModel()
         {
-            return new EntranceToHotelViewModel(_hotelStore,
-                         new NavigationServiceWpf(_navigationStore, CreateMakeReservationViewModel));
+            return EntranceToHotelViewModel.CreateEntranceToHotelViewModel(_hotelStore, 
+                               new NavigationServiceWpf(_navigationStore, CreateMakeReservationViewModel));
         }
-        
+
         private MakeReservationViewModel CreateMakeReservationViewModel()
         {
             return new MakeReservationViewModel(_hotelStore,    

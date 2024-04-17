@@ -1,4 +1,7 @@
-﻿using HotelReservationsWpf.Services.InitializationRoomsProviders;
+﻿using HotelReservationsWpf.DTOs;
+using HotelReservationsWpf.Services.EarningsReadingProvider;
+using HotelReservationsWpf.Services.EarningsWritingProvider;
+using HotelReservationsWpf.Services.InitializationRoomsProviders;
 using HotelReservationsWpf.Services.ReservationCreators;
 using HotelReservationsWpf.Services.ReservationProviders;
 using HotelReservationsWpf.Services.ReservationRemovers;
@@ -39,6 +42,28 @@ namespace HotelReservationsWpf.Models
         // Total income from reservations in the hotel, after removing a reservation
         public decimal TotalIncome { get; private set;}
 
+        public IEarningsWritting EarningsWritting;
+        public IEarningReading EarningReading;
+
+        private List<MontlyEarningsDTO> MontlyEarnings = new List<MontlyEarningsDTO>()
+        {
+            new MontlyEarningsDTO()
+            {
+                Month = "January",
+                Earnings = 1500
+            },
+            new MontlyEarningsDTO()
+            {
+                Month = "February",
+                Earnings = 2000
+            },
+            new MontlyEarningsDTO()
+            {
+                Month = "March",
+                Earnings = 2500
+            },
+        };
+
         public ManagementHotel(int[] countOfRooms, decimal[] pricesPerNightRooms, 
                                     IReservationCreator reservationCreator, IReservationProvider reservationProvider,
                                     IReservationRemover reservationRemover,
@@ -49,6 +74,10 @@ namespace HotelReservationsWpf.Models
             _saveRoomsProvider = saveRooms;
 
             CreateRoomsWithPrices(initializationRooms, countOfRooms, pricesPerNightRooms);
+
+            EarningsWritting = new ExcelEarningsWriting("monthlyEarnings.xlsx");
+
+            EarningReading = new ExcelEarningReading("monthlyEarnings.xlsx");
         }
 
         // Create rooms with prices per night for each type of room in the hotel
@@ -141,6 +170,19 @@ namespace HotelReservationsWpf.Models
             TotalIncome += totalIncome;
 
             return (wasRemoved, roomType);
+        }
+
+        /// <summary>
+        /// Write the earnings to the Excel file
+        /// </summary>
+        public void ExcelWriteEarnings()
+        {
+            EarningsWritting.WriteEarnings(MontlyEarnings);
+        }
+
+        public List<MontlyEarningsDTO> GetMontlyEarnings()
+        {
+            return EarningReading.ReadEarnings();
         }
 
         // After removing a reservation, update the status of the room to available

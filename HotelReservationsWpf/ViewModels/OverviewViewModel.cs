@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace HotelReservationsWpf.ViewModels
 {
-    public class OverviewViewModel : ViewModelBase
+    public class OverviewViewModel : ViewModelBase, IDisposable
     {
         // Fields
         private readonly HotelStore _hotelStore;
@@ -101,34 +101,34 @@ namespace HotelReservationsWpf.ViewModels
                 new ColumnSeries
                 {
                     Title = "Free Standard Rooms",
-                    Values = new ChartValues<ObservableValue> { new ObservableValue(_hotelStore.GetStatusStandardRoomsHotelStore().Item1) } 
+                    Values = new ChartValues<ObservableValue> { new ObservableValue(_hotelStore.GetStatusStandardRoomsByHotelStore().Item1) } 
                 },
                 new ColumnSeries
                 {
                     Title = "Occupied Standard Rooms",
-                    Values = new ChartValues<ObservableValue> { new ObservableValue(_hotelStore.GetStatusStandardRoomsHotelStore().Item2) } 
+                    Values = new ChartValues<ObservableValue> { new ObservableValue(_hotelStore.GetStatusStandardRoomsByHotelStore().Item2) } 
                 },
 
                 new ColumnSeries
                 {
                     Title = "Free Deluxe Rooms",
-                    Values = new ChartValues<ObservableValue> { new ObservableValue(_hotelStore.GetStatusDeluxeRoomsHotelStore().Item1) },
+                    Values = new ChartValues<ObservableValue> { new ObservableValue(_hotelStore.GetStatusDeluxeRoomsByHotelStore().Item1) },
                 },
                 new ColumnSeries
                 {
                     Title = "Occupied Deluxe Rooms",
-                    Values = new ChartValues<ObservableValue> { new ObservableValue(_hotelStore.GetStatusDeluxeRoomsHotelStore().Item2) }
+                    Values = new ChartValues<ObservableValue> { new ObservableValue(_hotelStore.GetStatusDeluxeRoomsByHotelStore().Item2) }
                 },
 
                 new ColumnSeries
                 {
                     Title = "Free Suite Rooms",
-                    Values = new ChartValues<ObservableValue> { new ObservableValue(_hotelStore.GetStatusSuiteRoomsHotelStore().Item1) }
+                    Values = new ChartValues<ObservableValue> { new ObservableValue(_hotelStore.GetStatusSuiteRoomsByHotelStore().Item1) }
                 },
                 new ColumnSeries
                 {
                     Title = "Occupied Suite Rooms",
-                    Values = new ChartValues<ObservableValue> { new ObservableValue(_hotelStore.GetStatusSuiteRoomsHotelStore().Item2) }
+                    Values = new ChartValues<ObservableValue> { new ObservableValue(_hotelStore.GetStatusSuiteRoomsByHotelStore().Item2) }
                 },
             };
         }
@@ -138,6 +138,11 @@ namespace HotelReservationsWpf.ViewModels
             TotalIncome = _hotelStore.TotalIncome;
 
             UpdateRoomStatus();
+        }
+
+        public void Dispose()
+        {
+            _hotelStore.ReservationsChanged -= OnReservationsChanged;
         }
     }
 }

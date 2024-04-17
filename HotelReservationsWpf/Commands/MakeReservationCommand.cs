@@ -63,7 +63,7 @@ namespace HotelReservationsWpf.Commands
             }
 
             // Check if the selected room type is available, true if available
-            if (_hotelStore.IsAvailablePreferenceRoomHotelStore(_viewModel.SelectedRoomType))
+            if (_hotelStore.IsAvailablePreferenceRoomByHotelStore(_viewModel.SelectedRoomType))
             {
                 isAvailablePreferenceRoom = true;
             }
@@ -78,7 +78,7 @@ namespace HotelReservationsWpf.Commands
             try
             {
                 // Get a random room of the selected type from the hotelStore
-                Room? getRoomRandom = _hotelStore.GetRoomRandomHotelStore(_viewModel.SelectedRoomType);
+                Room? getRoomRandom = _hotelStore.GetRoomRandomByHotelStore(_viewModel.SelectedRoomType);
 
                 if (getRoomRandom == null)
                 {
@@ -91,7 +91,7 @@ namespace HotelReservationsWpf.Commands
                         _viewModel.EmailAddress), DateOnly.FromDateTime(_viewModel.CheckInDate), DateOnly.FromDateTime(_viewModel.CheckOutDate));
 
                     // Make the reservation 
-                    await _hotelStore.CreateReservationHotelStoreAsync(newReservation);
+                    await _hotelStore.CreateReservationByHotelStoreAsync(newReservation);
 
                     /*
                     await _hotelStore.CreateReservationHotelStoreAsync(new Reservation(getRoomRandom, new GuestPerson(_viewModel.FirstName + " " + _viewModel.LastName, _viewModel.PhomeNumber,

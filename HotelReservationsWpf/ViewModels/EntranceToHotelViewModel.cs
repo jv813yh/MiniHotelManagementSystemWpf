@@ -17,5 +17,14 @@ namespace HotelReservationsWpf.ViewModels
 
             EntranceToHotelCommand = new NavigateCommand(naviationToMakeReservation);
         }
+
+        public static EntranceToHotelViewModel CreateEntranceToHotelViewModel(HotelStore hotelStore, NavigationServiceWpf naviationToMakeReservation)
+        {
+            EntranceToHotelViewModel returnValue = new EntranceToHotelViewModel(hotelStore, naviationToMakeReservation);
+
+            returnValue._hotelStore.GetMontlyEarningsByHotelStore();
+
+            return returnValue;
+        }
     }
 }

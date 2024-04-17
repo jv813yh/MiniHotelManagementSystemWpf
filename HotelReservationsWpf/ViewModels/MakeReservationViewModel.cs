@@ -276,7 +276,7 @@ namespace HotelReservationsWpf.ViewModels
         {
             get
             {
-                (int available, int occupied) = _hotelStore.GetStatusStandardRoomsHotelStore();
+                (int available, int occupied) = _hotelStore.GetStatusStandardRoomsByHotelStore();
                 return $"Occupied: {occupied} Available: {available}";
             }
         }
@@ -287,7 +287,7 @@ namespace HotelReservationsWpf.ViewModels
         {
             get
             {
-                (int available, int occupied) = _hotelStore.GetStatusDeluxeRoomsHotelStore();
+                (int available, int occupied) = _hotelStore.GetStatusDeluxeRoomsByHotelStore();
                 return $"Occupied: {occupied} Available: {available}";
             }
         }
@@ -298,7 +298,7 @@ namespace HotelReservationsWpf.ViewModels
         {
             get
             {
-                (int available, int occupied) = _hotelStore.GetStatusSuiteRoomsHotelStore();
+                (int available, int occupied) = _hotelStore.GetStatusSuiteRoomsByHotelStore();
                 return $"Occupied: {occupied} Available: {available}";
             }
         }
@@ -414,15 +414,15 @@ namespace HotelReservationsWpf.ViewModels
             switch (SelectedRoomType)
             {
                 case RoomType.Standard:
-                    ExpectedPriceString = (_hotelStore.GetPriceForStandardRoomHotelStore() * 
+                    ExpectedPriceString = (_hotelStore.GetPriceForStandardRoomByHotelStore() * 
                                                 (CheckOutDate.DayOfYear - CheckInDate.DayOfYear)).ToString("0.00") + " €";
                     break;
                 case RoomType.Deluxe:
-                    ExpectedPriceString = (_hotelStore.GetPriceForDeluxeRoomHotelStore() *
+                    ExpectedPriceString = (_hotelStore.GetPriceForDeluxeRoomByHotelStore() *
                                                 (CheckOutDate.DayOfYear - CheckInDate.DayOfYear)).ToString("0.00") + " €";
                     break;
                 case RoomType.Suite:
-                    ExpectedPriceString = (_hotelStore.GetPriceForSuiteRoomHotelStore() *
+                    ExpectedPriceString = (_hotelStore.GetPriceForSuiteRoomByHotelStore() *
                                                 (CheckOutDate.DayOfYear - CheckInDate.DayOfYear)).ToString("0.00") + " €";
                     break;
                 default:

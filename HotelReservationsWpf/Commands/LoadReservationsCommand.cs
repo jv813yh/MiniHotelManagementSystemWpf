@@ -21,7 +21,7 @@ namespace HotelReservationsWpf.Commands
             try
             {
                 // Get all reservations from the database async
-                await _hotelStore.LoadReservationsHotelStoreAsync();
+                await _hotelStore.LoadReservationsByHotelStoreAsync();
 
                 // Load reservations to the view model
                 _reservationsListingViewModel.LoadReservationsFromDb(_hotelStore.Reservations);

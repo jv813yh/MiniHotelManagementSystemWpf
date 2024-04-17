@@ -1,4 +1,5 @@
-﻿using HotelReservationsWpf.Models;
+﻿using HotelReservationsWpf.DTOs;
+using HotelReservationsWpf.Models;
 
 namespace HotelReservationsWpf.Stores
 {
@@ -35,13 +36,16 @@ namespace HotelReservationsWpf.Stores
         private void OnReservationsChanged()
             => ReservationsChanged?.Invoke();
 
+        private List<MontlyEarningsDTO> _list;
+
         public HotelStore(Hotel hotel)
         {
             _hotel = hotel;
 
             _reservations = new List<Reservation>();
 
-            _initializeLazy = new Lazy<Task>(InitializeLazyLoadReservationsHotelStoreAsync);
+            _initializeLazy = new Lazy<Task>(InitializeLazyLoadReservationsByHotelStoreAsync);
+
         }
 
         /// <summary>
@@ -50,7 +54,7 @@ namespace HotelReservationsWpf.Stores
         /// </summary>
         /// <param name="reservation"></param>
         /// <returns></returns>
-        public async Task CreateReservationHotelStoreAsync(Reservation reservation)
+        public async Task CreateReservationByHotelStoreAsync(Reservation reservation)
         {
             await _hotel.CreateReservationAsync(reservation);    
 
@@ -62,7 +66,7 @@ namespace HotelReservationsWpf.Stores
         /// Initializes only once, when its value is first requested
         /// </summary>
         /// <returns></returns>
-        public async Task LoadReservationsHotelStoreAsync()
+        public async Task LoadReservationsByHotelStoreAsync()
         {
             // Initializes only once, when its value is first requested
             await _initializeLazy.Value;
@@ -72,7 +76,7 @@ namespace HotelReservationsWpf.Stores
         /// Impelementation of lazy load reservations
         /// </summary>
         /// <returns></returns>
-        private async Task InitializeLazyLoadReservationsHotelStoreAsync()
+        private async Task InitializeLazyLoadReservationsByHotelStoreAsync()
         {
             // Get all reservations from the database async 
             IEnumerable<Reservation> reservations = await _hotel.GetAllReservationsAsync();
@@ -88,7 +92,7 @@ namespace HotelReservationsWpf.Stores
         /// <param name="roomNumber"> Room number </param>
         /// <param name="guestName"> Guest name </param>
         /// <returns></returns>
-        public async Task<bool> RemoveReservationHotelStoreAsync(int roomNumber, string guestName)
+        public async Task<bool> RemoveReservationByHotelStoreAsync(int roomNumber, string guestName)
         {
             bool wasRemoved;
             RoomType roomType;
@@ -105,8 +109,9 @@ namespace HotelReservationsWpf.Stores
                                     && r.GuestName.GuestName == guestName);
 
                 // Update the status of the removed room in the hotel
-                UpdateStatusRoomHotelStore(roomNumber, roomType);
+                UpdateStatusRoomByHotelStore(roomNumber, roomType);
 
+                // Notify that the reservations have changed
                 OnReservationsChanged();
             }
 
@@ -115,35 +120,43 @@ namespace HotelReservationsWpf.Stores
 
 
         // Method to save the current status of the rooms in the hotel to the XML file
-        public void SaveTheCurrentStatusOfTheRoomsToXmlHotelStore()
+        public void SaveTheCurrentStatusOfTheRoomsToXmlByHotelStore()
             => _hotel.SaveTheCurrentStatusOfTheRoomsToXml();
 
-        private void UpdateStatusRoomHotelStore(int roomNumber, RoomType roomType)
+        public void SaveTheMonthlyEarningsToExcelByHotelStore()
+            => _hotel.WriteEarnings();
+
+        public void GetMontlyEarningsByHotelStore()
+        {
+            _list = _hotel.GetMontlyEarnings();
+        }
+
+        private void UpdateStatusRoomByHotelStore(int roomNumber, RoomType roomType)
             => _hotel.UpdateRoomStatus(roomNumber, roomType);
 
         // Get the statuses of rooms in the hotel
-        public (int, int) GetStatusStandardRoomsHotelStore()
+        public (int, int) GetStatusStandardRoomsByHotelStore()
             => _hotel.GetStatusStandardRooms();
 
-        public (int, int) GetStatusDeluxeRoomsHotelStore()
+        public (int, int) GetStatusDeluxeRoomsByHotelStore()
             => _hotel.GetStatusDeluxeRooms();
-        public (int, int) GetStatusSuiteRoomsHotelStore()
+        public (int, int) GetStatusSuiteRoomsByHotelStore()
             => _hotel.GetStatusSuiteRooms();
 
         // Check if there is a room available in the hotel for the selected room type
-        public bool IsAvailablePreferenceRoomHotelStore(RoomType? roomType)
+        public bool IsAvailablePreferenceRoomByHotelStore(RoomType? roomType)
             => _hotel.IsAvailablePreferenceRoom(roomType);
 
         // Get a room randomly from the hotel for the selected room type
-        public Room? GetRoomRandomHotelStore(RoomType? roomType)
+        public Room? GetRoomRandomByHotelStore(RoomType? roomType)
             => _hotel.GetRoomRandomHotel(roomType);
 
         // Prices for individual rooms per night according to room type
-        public decimal GetPriceForStandardRoomHotelStore()
+        public decimal GetPriceForStandardRoomByHotelStore()
             => _hotel.GetPriceForStandardRoom(); 
-        public decimal GetPriceForDeluxeRoomHotelStore()
+        public decimal GetPriceForDeluxeRoomByHotelStore()
             => _hotel.GetPriceForDeluxeRoom();
-        public decimal GetPriceForSuiteRoomHotelStore()
+        public decimal GetPriceForSuiteRoomByHotelStore()
             => _hotel.GetPriceForSuiteRoom();
     }
 }

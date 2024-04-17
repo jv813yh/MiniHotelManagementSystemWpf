@@ -51,7 +51,7 @@ namespace HotelReservationsWpf.Commands
                 if(int.TryParse(_overviewViewModel.RoomNumberString, out roomNumber))
                 {
                     // Remove the reservation from the hotel store and get the result
-                    wasRemoved = await _hotelStore.RemoveReservationHotelStoreAsync(roomNumber, _overviewViewModel.GuestName);
+                    wasRemoved = await _hotelStore.RemoveReservationByHotelStoreAsync(roomNumber, _overviewViewModel.GuestName);
                 }
             }
             catch (Exception)
@@ -67,13 +67,14 @@ namespace HotelReservationsWpf.Commands
 
                 // Update the current status of the rooms 
               
-
                 // Display a message box with information about the removal of the reservation - successful
                 MessageBox.Show("Reservation successfully removed", "Information", 
                     MessageBoxButton.OK, MessageBoxImage.Information);
 
                 // Dispose the command after the reservation has been removed
                 Dispose();
+
+                _overviewViewModel.Dispose();
             }
             else
             {

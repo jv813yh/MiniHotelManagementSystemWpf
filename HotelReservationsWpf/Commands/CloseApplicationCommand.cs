@@ -19,7 +19,10 @@ namespace HotelReservationsWpf.Commands
             try
             {
                 // Saving room statuses in .xml
-                _hotelStore.SaveTheCurrentStatusOfTheRoomsToXmlHotelStore();
+                _hotelStore.SaveTheCurrentStatusOfTheRoomsToXmlByHotelStore();
+
+                // Save the earnings to .xlsx
+                _hotelStore.SaveTheMonthlyEarningsToExcelByHotelStore();
 
                 // Thanks for using
                MessageBoxResult result = MessageBox.Show("Thank you for using the application!", "Hotel Reservations", 

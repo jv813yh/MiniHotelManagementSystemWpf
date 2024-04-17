@@ -1,4 +1,5 @@
-﻿using HotelReservationsWpf.Services.InitializationRoomsProviders;
+﻿using HotelReservationsWpf.DTOs;
+using HotelReservationsWpf.Services.InitializationRoomsProviders;
 using HotelReservationsWpf.Services.ReservationCreators;
 using HotelReservationsWpf.Services.ReservationProviders;
 using HotelReservationsWpf.Services.ReservationRemovers;
@@ -46,6 +47,12 @@ namespace HotelReservationsWpf.Models
         // 
         public void SaveTheCurrentStatusOfTheRoomsToXml()
             => _managementHotel.SaveRoomsWithPricesToXml();
+
+        public void WriteEarnings()
+            => _managementHotel.ExcelWriteEarnings();
+
+        public List<MontlyEarningsDTO> GetMontlyEarnings()
+            => _managementHotel.GetMontlyEarnings();
 
         public void UpdateRoomStatus(int roomNumber, RoomType roomType)
             => _managementHotel.UpdateRoomStatus(roomNumber, roomType);
