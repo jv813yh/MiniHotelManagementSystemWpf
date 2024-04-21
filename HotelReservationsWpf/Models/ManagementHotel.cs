@@ -6,7 +6,9 @@ using HotelReservationsWpf.Services.ReservationCreators;
 using HotelReservationsWpf.Services.ReservationProviders;
 using HotelReservationsWpf.Services.ReservationRemovers;
 using HotelReservationsWpf.Services.SaveRoomsProviders;
+using System.Collections.Generic;
 using System.IO;
+using System.Windows;
 
 namespace HotelReservationsWpf.Models
 {
@@ -15,12 +17,15 @@ namespace HotelReservationsWpf.Models
     public class ManagementHotel
     {
         // File names for the overview of rooms for each type of room in the hotel
-        private string _overviewStandardRoomsString = 
+        private readonly string _overviewStandardRoomsString = 
                        Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "overviewOfStandardRoomsFile.xml"),
                        _overviewDeluxeRoomsString = 
                        Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "overviewOfDeluxeRoomsFile.xml"),
                        _overviewSuiteRoomsString = 
                        Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "overviewOfSuiteRoomsFile.xml");
+
+        private readonly string _monthlyEarningsString = 
+                       Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "monthlyEarnings.xlsx");
 
         // Reservation book for managing reservations in the hotel
         private readonly ReservationsBook _reservationBook;
@@ -30,7 +35,7 @@ namespace HotelReservationsWpf.Models
 
         // Lists of rooms for each type of room in the hotel (standard, deluxe, suite) 
         // with information about rooms in the hotel
-        private List<Room> _standardRooms;
+        private  List<Room> _standardRooms;
         private  List<Room> _deluxeRooms;
         private  List<Room> _suiteRooms;
 
@@ -42,32 +47,16 @@ namespace HotelReservationsWpf.Models
         // Total income from reservations in the hotel, after removing a reservation
         public decimal TotalIncome { get; private set;}
 
-        public IEarningsWritting EarningsWritting;
-        public IEarningReading EarningReading;
+        public IEarningsWritting EarningsWritting { get; private set; }
+        public IEarningReading EarningReading { get; private set; }
 
-        private List<MontlyEarningsDTO> MontlyEarnings = new List<MontlyEarningsDTO>()
-        {
-            new MontlyEarningsDTO()
-            {
-                Month = "January",
-                Earnings = 1500
-            },
-            new MontlyEarningsDTO()
-            {
-                Month = "February",
-                Earnings = 2000
-            },
-            new MontlyEarningsDTO()
-            {
-                Month = "March",
-                Earnings = 2500
-            },
-        };
+        public List<MontlyEarningsDTO> MontlyEarnings { get; private set; }
 
         public ManagementHotel(int[] countOfRooms, decimal[] pricesPerNightRooms, 
                                     IReservationCreator reservationCreator, IReservationProvider reservationProvider,
                                     IReservationRemover reservationRemover,
-                                    IInitializationRooms initializationRooms, ISaveRoomsProvider saveRooms)
+                                    IInitializationRooms initializationRooms, ISaveRoomsProvider saveRooms,
+                                    IEarningsWritting earningsWritting, IEarningReading earningReading)
         {
             _reservationBook = new ReservationsBook(reservationCreator, reservationProvider, reservationRemover);
 
@@ -75,9 +64,12 @@ namespace HotelReservationsWpf.Models
 
             CreateRoomsWithPrices(initializationRooms, countOfRooms, pricesPerNightRooms);
 
-            EarningsWritting = new ExcelEarningsWriting("monthlyEarnings.xlsx");
+            MontlyEarnings = new List<MontlyEarningsDTO>();
 
-            EarningReading = new ExcelEarningReading("monthlyEarnings.xlsx");
+            EarningsWritting = earningsWritting;
+
+            EarningReading = earningReading;
+
         }
 
         // Create rooms with prices per night for each type of room in the hotel
@@ -177,12 +169,47 @@ namespace HotelReservationsWpf.Models
         /// </summary>
         public void ExcelWriteEarnings()
         {
+            try
+            {
+                // If the earnings for the current month are already in the list, update the earnings
+                if (MontlyEarnings[MontlyEarnings.Count - 1].Month == DateTime.Now.ToString("MMMM"))
+                {
+                    MontlyEarnings[MontlyEarnings.Count - 1].Earnings = TotalIncome;
+                }
+            }
+            catch (Exception)
+            {
+
+                MessageBox.Show("Error writting data to Excel", "Error",
+                                      MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
+            // Write the earnings to the Excel file
             EarningsWritting.WriteEarnings(MontlyEarnings);
         }
 
-        public List<MontlyEarningsDTO> GetMontlyEarnings()
+        // Get the monthly earnings from the Excel file and update the total income for the current month
+        public void GetMontlyEarnings()
         {
-            return EarningReading.ReadEarnings();
+            // Read the earnings from the Excel file
+            MontlyEarnings = EarningReading.ReadEarnings();
+
+            try
+            {
+                if (MontlyEarnings.Count > 0)
+                {
+                    if (MontlyEarnings[MontlyEarnings.Count - 1].Month == DateTime.Now.ToString("MMMM"))
+                    {
+                        TotalIncome += MontlyEarnings[MontlyEarnings.Count - 1].Earnings;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                MessageBox.Show("Error reading data from Excel", "Error",
+                                       MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         // After removing a reservation, update the status of the room to available

@@ -1,4 +1,6 @@
 ﻿using HotelReservationsWpf.DTOs;
+using HotelReservationsWpf.Services.EarningsReadingProvider;
+using HotelReservationsWpf.Services.EarningsWritingProvider;
 using HotelReservationsWpf.Services.InitializationRoomsProviders;
 using HotelReservationsWpf.Services.ReservationCreators;
 using HotelReservationsWpf.Services.ReservationProviders;
@@ -18,14 +20,16 @@ namespace HotelReservationsWpf.Models
         public Hotel(string name, int[] countOfRooms, decimal[] pricesPerNight,
                             IReservationCreator reservationCreator, IReservationProvider reservationProvider,
                             IReservationRemover reservationRemover,
-                            IInitializationRooms initializationRooms, ISaveRoomsProvider saveRooms) 
+                            IInitializationRooms initializationRooms, ISaveRoomsProvider saveRooms,
+                            IEarningsWritting earningsWritting, IEarningReading earningReading) 
         {
             Name = name;
 
             _managementHotel = new ManagementHotel(countOfRooms, pricesPerNight,
                                                   reservationCreator, reservationProvider,
                                                   reservationRemover,
-                                                  initializationRooms, saveRooms);
+                                                  initializationRooms, saveRooms,
+                                                  earningsWritting, earningReading);
         }
 
         public decimal TotalIncome
@@ -51,7 +55,7 @@ namespace HotelReservationsWpf.Models
         public void WriteEarnings()
             => _managementHotel.ExcelWriteEarnings();
 
-        public List<MontlyEarningsDTO> GetMontlyEarnings()
+        public void GetMontlyEarnings()
             => _managementHotel.GetMontlyEarnings();
 
         public void UpdateRoomStatus(int roomNumber, RoomType roomType)

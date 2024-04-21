@@ -26,7 +26,6 @@ namespace HotelReservationsWpf.Commands
                 // Load reservations to the view model
                 _reservationsListingViewModel.LoadReservationsFromDb(_hotelStore.Reservations);
 
-                //_reservationsListingViewModel.LoadReservationsFromDb(await _reservationProvider.GetAllReservationsAsync());
             }
             catch (Exception)
             {

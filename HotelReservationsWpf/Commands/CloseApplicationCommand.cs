@@ -1,4 +1,5 @@
 ﻿using HotelReservationsWpf.Stores;
+using HotelReservationsWpf.ViewModels;
 using System.Windows;
 
 namespace HotelReservationsWpf.Commands
@@ -7,10 +8,12 @@ namespace HotelReservationsWpf.Commands
     {
         // Fields
         private readonly HotelStore _hotelStore;
+        private readonly OverviewViewModel _vieModel;
 
-        public CloseApplicationCommand(HotelStore hotelStore)
+        public CloseApplicationCommand(HotelStore hotelStore, OverviewViewModel overviewViewModel)
         {
             _hotelStore = hotelStore;
+            _vieModel = overviewViewModel;
         }
 
         // Save the current status of the rooms to .xml and close the application
@@ -27,6 +30,8 @@ namespace HotelReservationsWpf.Commands
                 // Thanks for using
                MessageBoxResult result = MessageBox.Show("Thank you for using the application!", "Hotel Reservations", 
                     MessageBoxButton.OK, MessageBoxImage.Information);
+
+                _vieModel.Dispose();
 
                 // Close the application
                 App.Current.Shutdown();

@@ -81,12 +81,14 @@ namespace HotelReservationsWpf.ViewModels
         {
             _hotelStore = hotelStore;
 
+            _totalIncome = _hotelStore.TotalIncome;
+
             NavigateToMakeReservationCommand = new NavigateCommand(navigateServiceMakeResv);
             NavigateToReservationsListingCommand = new NavigateCommand(navigateServiceToResvListing);
 
             RemoveReservationCommand = new RemoveReservationCommand(_hotelStore, this);
 
-            CloseApplicationCommand = new CloseApplicationCommand(_hotelStore);
+            CloseApplicationCommand = new CloseApplicationCommand(_hotelStore, this);
 
             UpdateRoomStatus();
 
@@ -136,7 +138,6 @@ namespace HotelReservationsWpf.ViewModels
         private void OnReservationsChanged()
         {
             TotalIncome = _hotelStore.TotalIncome;
-
             UpdateRoomStatus();
         }
 

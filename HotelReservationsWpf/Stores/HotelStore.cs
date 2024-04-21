@@ -36,8 +36,6 @@ namespace HotelReservationsWpf.Stores
         private void OnReservationsChanged()
             => ReservationsChanged?.Invoke();
 
-        private List<MontlyEarningsDTO> _list;
-
         public HotelStore(Hotel hotel)
         {
             _hotel = hotel;
@@ -123,13 +121,13 @@ namespace HotelReservationsWpf.Stores
         public void SaveTheCurrentStatusOfTheRoomsToXmlByHotelStore()
             => _hotel.SaveTheCurrentStatusOfTheRoomsToXml();
 
+        // Method to save the monthly earnings to the Excel file
         public void SaveTheMonthlyEarningsToExcelByHotelStore()
             => _hotel.WriteEarnings();
 
+        // Method to get the monthly earnings from the Excel file
         public void GetMontlyEarningsByHotelStore()
-        {
-            _list = _hotel.GetMontlyEarnings();
-        }
+         => _hotel.GetMontlyEarnings();
 
         private void UpdateStatusRoomByHotelStore(int roomNumber, RoomType roomType)
             => _hotel.UpdateRoomStatus(roomNumber, roomType);

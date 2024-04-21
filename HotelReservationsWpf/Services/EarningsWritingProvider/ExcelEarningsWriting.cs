@@ -50,7 +50,7 @@ namespace HotelReservationsWpf.Services.EarningsWritingProvider
                 {
                     workSheet.Cell(row, 1).Value = earnings.Month;
                     workSheet.Cell(row, 1).Style.DateFormat.Format = "MMMM";  
-                    workSheet.Cell(row, 2).Value = earnings.Earnings + "€";
+                    workSheet.Cell(row, 2).Value = earnings.Earnings;
 
                     row++;
                 }

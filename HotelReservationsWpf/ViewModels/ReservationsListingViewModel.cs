@@ -30,7 +30,7 @@ namespace HotelReservationsWpf.ViewModels
         // If the reservations collection is empty, show the message
         public string ReservationsEmptyMessage 
             => "No reservations have been made yet";
-
+    
         // Commands
         public ICommand NavigateMakeReservationCommand { get; }
         public ICommand NaviateToOvervieCommand { get; }

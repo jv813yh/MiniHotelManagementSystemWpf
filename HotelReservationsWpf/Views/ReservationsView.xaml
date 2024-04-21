@@ -158,10 +158,10 @@
                         If there are many reservations, 
                         loadingspinner will be displayed during loading
                     -->
-                    <loadingSpinner:LoadingSpinner IsLoading="{Binding IsLoadingSpinner}"
+                    <!--<loadingSpinner:LoadingSpinner IsLoading="{Binding IsLoadingSpinner}"
                                                    Diameter="150"
                                                    Thickness="12"
-                                                   Color="Red"/>
+                                                   Color="Red"/>-->
                     
                     <!-- 
                         If there are reservations, show the table

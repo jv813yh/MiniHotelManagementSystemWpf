@@ -1,6 +1,7 @@
 ﻿using HotelReservationsWpf.DbContexts;
 using HotelReservationsWpf.Models;
 using HotelReservationsWpf.Services;
+using HotelReservationsWpf.Services.EarningsReadingProvider;
 using HotelReservationsWpf.Services.EarningsWritingProvider;
 using HotelReservationsWpf.Services.InitializationRoomsProviders;
 using HotelReservationsWpf.Services.ReservationCreators;
@@ -45,6 +46,7 @@ namespace HotelReservationsWpf
 
         // Services for writing earnings to an Excel file and reading from excel
         private readonly IEarningsWritting _earningsWritting;
+        private readonly IEarningReading _earningReading;
 
         // Store for saving the current view model of the application
         private NavigationStore _navigationStore;
@@ -74,11 +76,13 @@ namespace HotelReservationsWpf
             _saveRoomsProvider = new SaveRooms();
 
             _earningsWritting = new ExcelEarningsWriting(_excelFilePath);
+            _earningReading = new ExcelEarningReading(_excelFilePath);
 
             // 
             _hotel = new Hotel(_nameHotel, _countOfRooms, _pricesPerNightRoom,
                                     _reservationCreator, _reservationProvider, _reservationRemover,
-                                    _initializationRooms, _saveRoomsProvider);
+                                    _initializationRooms, _saveRoomsProvider,
+                                    _earningsWritting, _earningReading);
 
             _hotelStore = new HotelStore(_hotel);
 

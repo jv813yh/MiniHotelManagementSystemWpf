@@ -27,14 +27,14 @@ namespace HotelReservationsWpf.Services.EarningsReadingProvider
 
                     int rowCount = worksheet.RowsUsed().Count();
 
-                    for (int i = rowCount - 3; i <= rowCount; i++) 
+                    for (int i = 4; i < rowCount + 2; i++) 
                     {
                         // Value in the first column
-                        string month = worksheet.Cell(i, 1).Value.ToString(); 
+                        string month = worksheet.Cell(i, 1).Value.ToString();
 
                         // Value in the second column
-                        string[] incomeArray = worksheet.Cell(i, 2).Value.ToString().Split("€");
-                        decimal earnings = Convert.ToDecimal(incomeArray[0]);
+                        //string earningString = worksheet.Cell(i, 2).Value.ToString();
+                        Decimal.TryParse(worksheet.Cell(i, 2).Value.ToString(), out decimal earnings);
 
                         // Add the data to the list
                         monthlyEarnings.Add(new MontlyEarningsDTO { Month = month, Earnings = earnings });
