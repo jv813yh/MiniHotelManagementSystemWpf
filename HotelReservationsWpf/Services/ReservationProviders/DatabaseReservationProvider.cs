@@ -55,6 +55,9 @@ namespace HotelReservationsWpf.Services.ReservationProviders
                     reservationsDto = await dbContext.Reservations.ToListAsync();
                 }
 
+                //await Task.Delay(2000);
+
+
                 // Mapping ReservationDTO to Reservation and return them as a collection of Reservation objects
                 return reservationsDto.Select(reservationDto => MappingReservationDtoToReservation(reservationDto));
             }

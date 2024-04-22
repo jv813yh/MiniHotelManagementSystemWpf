@@ -9,7 +9,7 @@ namespace HotelReservationsWpf.Converters
         {
             if (value is bool boolValue)
             {
-                return boolValue ? Visibility.Collapsed : Visibility.Visible;
+                return boolValue ? Visibility.Collapsed: Visibility.Visible;
             }
 
             return Visibility.Collapsed;

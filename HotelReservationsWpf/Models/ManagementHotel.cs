@@ -6,7 +6,6 @@ using HotelReservationsWpf.Services.ReservationCreators;
 using HotelReservationsWpf.Services.ReservationProviders;
 using HotelReservationsWpf.Services.ReservationRemovers;
 using HotelReservationsWpf.Services.SaveRoomsProviders;
-using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 
@@ -176,6 +175,11 @@ namespace HotelReservationsWpf.Models
                 {
                     MontlyEarnings[MontlyEarnings.Count - 1].Earnings = TotalIncome;
                 }
+                else
+                {
+                    // If the earnings for the current month are not in the list, add the earnings
+                    MontlyEarnings.Add(new MontlyEarningsDTO { Month = DateTime.Now.ToString("MMMM"), Earnings = TotalIncome });
+                }
             }
             catch (Exception)
             {
@@ -200,7 +204,11 @@ namespace HotelReservationsWpf.Models
                 {
                     if (MontlyEarnings[MontlyEarnings.Count - 1].Month == DateTime.Now.ToString("MMMM"))
                     {
-                        TotalIncome += MontlyEarnings[MontlyEarnings.Count - 1].Earnings;
+                        TotalIncome = MontlyEarnings[MontlyEarnings.Count - 1].Earnings;
+                    }
+                    else
+                    {
+                        TotalIncome = 0;
                     }
                 }
             }

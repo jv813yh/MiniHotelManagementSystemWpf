@@ -20,6 +20,7 @@ namespace HotelReservationsWpf.Commands
         {
             try
             {
+
                 // Get all reservations from the database async
                 await _hotelStore.LoadReservationsByHotelStoreAsync();
 
@@ -33,6 +34,17 @@ namespace HotelReservationsWpf.Commands
                 MessageBox.Show("Error loading reservations from the database", "Error", 
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
+
+            await Task.Delay(2000);
+
+            // Check if the reservations collection is empty
+            _reservationsListingViewModel.IsReservationsEmpty = !_hotelStore.Reservations.Any();
+
+            _reservationsListingViewModel.IsNeededListView = !_reservationsListingViewModel.IsReservationsEmpty;
+
+            // Set the loading spinner to false
+            _reservationsListingViewModel.IsLoadingSpinner = false;
+
         }
     }
 }
