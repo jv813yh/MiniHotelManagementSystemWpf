@@ -76,16 +76,16 @@ namespace HotelReservationsWpf.ViewModels
         public ICommand LoadReservationsCommand { get; }
         public ICommand OrderByCommand { get; }
 
-        public ReservationsListingViewModel(HotelStore hotelStore, NavigationServiceWpf navigationServiceToMakeReservation,
-                    NavigationServiceWpf navigationServiceToOverview)
+        public ReservationsListingViewModel(HotelStore hotelStore, NavigationServiceWpf<MakeReservationViewModel> navigationServiceToMakeReservation,
+                    NavigationServiceWpf<OverviewViewModel> navigationServiceToOverview)
         {
             _hotelStore = hotelStore;
 
             _reservations = new ObservableCollection<ReservationViewModel>();
             
             // Commands 
-            NavigateMakeReservationCommand = new NavigateCommand(navigationServiceToMakeReservation);
-            NaviateToOvervieCommand = new NavigateCommand(navigationServiceToOverview);
+            NavigateMakeReservationCommand = new NavigateCommand<MakeReservationViewModel>(navigationServiceToMakeReservation);
+            NaviateToOvervieCommand = new NavigateCommand<OverviewViewModel>(navigationServiceToOverview);
             LoadReservationsCommand = new LoadReservationsCommand(_hotelStore, this);
 
             // Get the default view of the reservations collection
@@ -96,8 +96,8 @@ namespace HotelReservationsWpf.ViewModels
 
         // Builder method for the ReservationsListingViewModel
         public static ReservationsListingViewModel ReservationsListingViewModelBuilder(HotelStore hotelStore, 
-                        NavigationServiceWpf navigationServiceToMakeReservation,
-                        NavigationServiceWpf navigationServiceToOverview)
+                        NavigationServiceWpf<MakeReservationViewModel> navigationServiceToMakeReservation,
+                        NavigationServiceWpf<OverviewViewModel> navigationServiceToOverview)
         {
             ReservationsListingViewModel returnViewModel = new ReservationsListingViewModel(hotelStore, 
                                                                     navigationServiceToMakeReservation, navigationServiceToOverview);

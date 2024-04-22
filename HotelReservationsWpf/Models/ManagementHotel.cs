@@ -189,14 +189,14 @@ namespace HotelReservationsWpf.Models
             }
 
             // Write the earnings to the Excel file
-            EarningsWritting.WriteEarnings(MontlyEarnings);
+            EarningsWritting.WriteEarnings(MontlyEarnings, _monthlyEarningsString);
         }
 
         // Get the monthly earnings from the Excel file and update the total income for the current month
         public void GetMontlyEarnings()
         {
             // Read the earnings from the Excel file
-            MontlyEarnings = EarningReading.ReadEarnings();
+            MontlyEarnings = EarningReading.ReadEarnings(_monthlyEarningsString);
 
             try
             {

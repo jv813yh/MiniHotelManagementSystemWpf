@@ -7,20 +7,14 @@ namespace HotelReservationsWpf.Services.EarningsReadingProvider
     // Class to read earnings from an Excel file 
     public class ExcelEarningReading : IEarningReading
     {
-        private readonly string _filePath;
-
-        public ExcelEarningReading(string filePath)
-        {
-            _filePath = filePath;
-        }
-        public List<MontlyEarningsDTO> ReadEarnings()
+        public List<MontlyEarningsDTO> ReadEarnings(string filePath)
         {
 
             List<MontlyEarningsDTO> monthlyEarnings = new List<MontlyEarningsDTO>();
 
             try
             {
-                using (XLWorkbook workbook = new XLWorkbook(_filePath))
+                using (XLWorkbook workbook = new XLWorkbook(filePath))
                 {
                     // First worksheet in the Excel file
                     IXLWorksheet worksheet = workbook.Worksheet(1);

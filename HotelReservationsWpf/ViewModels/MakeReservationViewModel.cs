@@ -364,13 +364,13 @@ namespace HotelReservationsWpf.ViewModels
             OnErrorsChanged(propertyName);
         }
 
-        public MakeReservationViewModel(HotelStore hotelStore, NavigationServiceWpf navigationServiceToReservationsListingViewModel,
-                        NavigationServiceWpf navigationServiceToOverviewViewModel)
+        public MakeReservationViewModel(HotelStore hotelStore, NavigationServiceWpf<ReservationsListingViewModel> navigationServiceToReservationsListingViewModel,
+                        NavigationServiceWpf<OverviewViewModel> navigationServiceToOverviewViewModel)
         {
             _hotelStore = hotelStore;
 
             SubmitCommand = new MakeReservationCommand(hotelStore, this, 
-                new NavigateCommand(navigationServiceToReservationsListingViewModel));
+                new NavigateCommand<ReservationsListingViewModel>(navigationServiceToReservationsListingViewModel));
             
             RoomPreferenceCommand = new RelayCommand<string>(SetRoomType);
 
@@ -378,7 +378,7 @@ namespace HotelReservationsWpf.ViewModels
             _propertiesErrorsMessages = new Dictionary<string, List<string>>();
 
             // Initialize the navigation command to the overview view
-            NavigateToOverviewCommand = new NavigateCommand(navigationServiceToOverviewViewModel);
+            NavigateToOverviewCommand = new NavigateCommand<OverviewViewModel>(navigationServiceToOverviewViewModel);
         }
 
         // Set the room type for the reservation 

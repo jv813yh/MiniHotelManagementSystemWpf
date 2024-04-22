@@ -76,15 +76,15 @@ namespace HotelReservationsWpf.ViewModels
 
 
         // Constructor
-        public OverviewViewModel(HotelStore hotelStore, NavigationServiceWpf navigateServiceMakeResv,
-                    NavigationServiceWpf navigateServiceToResvListing)
+        public OverviewViewModel(HotelStore hotelStore, NavigationServiceWpf<MakeReservationViewModel> navigateServiceMakeResv,
+                    NavigationServiceWpf<ReservationsListingViewModel> navigateServiceToResvListing)
         {
             _hotelStore = hotelStore;
 
             _totalIncome = _hotelStore.TotalIncome;
 
-            NavigateToMakeReservationCommand = new NavigateCommand(navigateServiceMakeResv);
-            NavigateToReservationsListingCommand = new NavigateCommand(navigateServiceToResvListing);
+            NavigateToMakeReservationCommand = new NavigateCommand<MakeReservationViewModel>(navigateServiceMakeResv);
+            NavigateToReservationsListingCommand = new NavigateCommand<ReservationsListingViewModel>(navigateServiceToResvListing);
 
             RemoveReservationCommand = new RemoveReservationCommand(_hotelStore, this);
 

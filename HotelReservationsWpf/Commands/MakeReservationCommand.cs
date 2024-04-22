@@ -12,9 +12,9 @@ namespace HotelReservationsWpf.Commands
         // Fields
         private readonly HotelStore _hotelStore;
         private readonly MakeReservationViewModel _viewModel;
-        private readonly NavigateCommand _navigateCommand;
+        private readonly NavigateCommand<ReservationsListingViewModel> _navigateCommand;
 
-        public MakeReservationCommand(HotelStore hotelStore, MakeReservationViewModel makeReservationViewModel, NavigateCommand navigateCommand)
+        public MakeReservationCommand(HotelStore hotelStore, MakeReservationViewModel makeReservationViewModel, NavigateCommand<ReservationsListingViewModel> navigateCommand)
         {
             _hotelStore = hotelStore;
             _viewModel = makeReservationViewModel;

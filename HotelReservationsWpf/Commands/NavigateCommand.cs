@@ -1,13 +1,14 @@
 ﻿using HotelReservationsWpf.Services;
+using HotelReservationsWpf.ViewModels;
 
 namespace HotelReservationsWpf.Commands
 {
-    public class NavigateCommand : CommandBase
+    public class NavigateCommand<TViewModel> : CommandBase where TViewModel : ViewModelBase
     {
         // NavigationServiceWpf calls Navigate() function to navigation to the next view model
-        private readonly NavigationServiceWpf _navigationService;
+        private readonly NavigationServiceWpf<TViewModel> _navigationService;
 
-        public NavigateCommand(NavigationServiceWpf navigationService)
+        public NavigateCommand(NavigationServiceWpf<TViewModel> navigationService)
         {
             _navigationService = navigationService;
         }

@@ -6,18 +6,12 @@ namespace HotelReservationsWpf.Services.EarningsWritingProvider
     // Class for writing earnings to an Excel file 
     public class ExcelEarningsWriting : IEarningsWritting
     {
-        private readonly string _path;
-
-        public ExcelEarningsWriting(string path)
-        {
-            _path = path;
-        }
 
         /// <summary>
         /// Writes earnings to an Excel file 
         /// </summary>
         /// <param name="montlyEarnings"></param>
-        public void WriteEarnings(List<MontlyEarningsDTO> montlyEarnings)
+        public void WriteEarnings(List<MontlyEarningsDTO> montlyEarnings, string filePath)
         {
             // Represents a workbook in an Excel 
             using (var workBook = new XLWorkbook())
@@ -56,7 +50,7 @@ namespace HotelReservationsWpf.Services.EarningsWritingProvider
                 }
 
                 // Save the Excel file
-                workBook.SaveAs(_path);
+                workBook.SaveAs(filePath);
             }
         }
     }

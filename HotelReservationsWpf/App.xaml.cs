@@ -11,8 +11,12 @@ using HotelReservationsWpf.Services.SaveRoomsProviders;
 using HotelReservationsWpf.Stores;
 using HotelReservationsWpf.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System.IO;
 using System.Windows;
+using System.Windows.Navigation;
 
 namespace HotelReservationsWpf
 {
@@ -20,80 +24,120 @@ namespace HotelReservationsWpf
     /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application
-    {
-
-        private static readonly string _nameHotel = "Your Paradise";
-
-        // Connection string to the database (Sqlite)
-        private static readonly string _connectionString = 
-            $"Data Source={Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "hotelManagement.db")}";
-
-        private static readonly string _excelFilePath = 
-            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "monthlyEarnings.xlsx");
-
-        // Factory for creating a database context
-        HotelManagementDbContextFactory _dbHotelContextFactory;
-
-        // Services for connecting to the database based on connectionstring
-        // and performing work with reservations such as creation, loading, deletion
-        private readonly IReservationProvider _reservationProvider;
-        private readonly IReservationCreator _reservationCreator;
-        private readonly IReservationRemover _reservationRemover;
-
-        // Services for initializing rooms and saving rooms
-        private readonly IInitializationRooms _initializationRooms;
-        private readonly ISaveRoomsProvider _saveRoomsProvider;
-
-        // Services for writing earnings to an Excel file and reading from excel
-        private readonly IEarningsWritting _earningsWritting;
-        private readonly IEarningReading _earningReading;
-
-        // Store for saving the current view model of the application
-        private NavigationStore _navigationStore;
-
-        // Hotel is centralized an managed in a single location - HotelStore
-        private readonly HotelStore _hotelStore;
-
+    { 
         // Fields
-        private readonly Hotel _hotel;
+        //private readonly Hotel _hotel;
         private readonly int[] _countOfRooms = [12, 6, 3];
         private readonly decimal[] _pricesPerNightRoom = [50, 78, 110];
 
+        private IHost _host;
+
         public App()
         {
-            //
-            _dbHotelContextFactory = new HotelManagementDbContextFactory(_connectionString);
+            _host = Host.CreateDefaultBuilder()
+                .ConfigureServices((hostContext,services) =>
+                {
+                    string hotelName = hostContext.Configuration.GetValue<string>("HotelName");
+                    string connectionString = hostContext.Configuration.GetConnectionString("DefaultConnection");
+                    // Factory for creating a database context
+                    services.AddSingleton(new HotelManagementDbContextFactory(connectionString));
 
-            //
-            _reservationProvider = DatabaseReservationProvider.CreateDatabaseReservationProvider(_dbHotelContextFactory, 
-                     _pricesPerNightRoom, _countOfRooms.Length);
+                    // Services for connecting to the database based on connectionstring
+                    // and performing work with reservations such as creation, loading, deletion
+                    services.AddSingleton<IReservationCreator, DatabaseReservationCreator>();
+                    services.AddSingleton<IReservationRemover, DatabaseReservationRemover>();
+                    services.AddSingleton<IReservationProvider>(sp =>
+                    {
+                        var dbContextFactory = sp.GetRequiredService<HotelManagementDbContextFactory>();
+                        return DatabaseReservationProvider.CreateDatabaseReservationProvider(dbContextFactory, _pricesPerNightRoom, _countOfRooms.Length);
+                    });
 
-            _reservationCreator = new DatabaseReservationCreator(_dbHotelContextFactory);
-            _reservationRemover  = new DatabaseReservationRemover(_dbHotelContextFactory);
+                    services.AddSingleton<NavigationStore>();
+
+                    // Services for initializing rooms and saving rooms
+                    services.AddSingleton<IInitializationRooms, InitializationRooms>();
+                    services.AddSingleton<ISaveRoomsProvider, SaveRooms>();
+
+                    // Services for writing earnings to an Excel file and reading from excel
+                    services.AddSingleton<IEarningsWritting, ExcelEarningsWriting>();
+                    services.AddSingleton<IEarningReading, ExcelEarningReading>();
+
+                    //
+                    services.AddTransient((sp) => CreateEntranceToHotelViewModelInService(sp));
+                    services.AddSingleton<NavigationServiceWpf<EntranceToHotelViewModel>>();
+                    services.AddSingleton<Func<EntranceToHotelViewModel>>(sp => () => sp.GetRequiredService<EntranceToHotelViewModel>());
+
+                    //
+                    services.AddTransient<MakeReservationViewModel>();
+                    services.AddSingleton<Func<MakeReservationViewModel>> ((sp) => () => sp.GetRequiredService<MakeReservationViewModel>());
+                    services.AddSingleton<NavigationServiceWpf<MakeReservationViewModel>>();
+
+                    //
+                    services.AddTransient<OverviewViewModel>();
+                    services.AddSingleton<Func<OverviewViewModel>>((sp) => () => sp.GetRequiredService<OverviewViewModel>());
+                    services.AddSingleton<NavigationServiceWpf<OverviewViewModel>>();
+
+                    //
+                    services.AddTransient((sp) => CreateReservationsListingViewModelInService(sp));
+                    services.AddSingleton<Func<ReservationsListingViewModel>>((sp) => () => sp.GetRequiredService<ReservationsListingViewModel>());
+                    services.AddSingleton<NavigationServiceWpf<ReservationsListingViewModel>>();
 
 
-            _initializationRooms = new InitializationRooms();
-            _saveRoomsProvider = new SaveRooms();
 
-            _earningsWritting = new ExcelEarningsWriting(_excelFilePath);
-            _earningReading = new ExcelEarningReading(_excelFilePath);
+                    services.AddSingleton(sp =>
+                    {
+                        return new Hotel(hotelName,
+                            _countOfRooms,
+                            _pricesPerNightRoom,
+                            sp.GetRequiredService<IReservationCreator>(),
+                            sp.GetRequiredService<IReservationProvider>(),
+                            sp.GetRequiredService<IReservationRemover>(),
+                            sp.GetRequiredService<IInitializationRooms>(),
+                            sp.GetRequiredService<ISaveRoomsProvider>(),
+                            sp.GetRequiredService<IEarningsWritting>(),
+                            sp.GetRequiredService<IEarningReading>());
+                    });
+
+                    // Hotel is centralized an managed in a single location - HotelStore
+                    services.AddSingleton(sp =>
+                    {
+                        return new HotelStore(sp.GetRequiredService<Hotel>());
+                    });
+
+
+                    services.AddSingleton<MainViewModel>();
+                    services.AddSingleton(sp => new MainWindow()
+                    {
+                       DataContext = sp.GetRequiredService<MainViewModel>()
+                    }); 
+
+                }).Build();
 
             // 
-            _hotel = new Hotel(_nameHotel, _countOfRooms, _pricesPerNightRoom,
-                                    _reservationCreator, _reservationProvider, _reservationRemover,
-                                    _initializationRooms, _saveRoomsProvider,
-                                    _earningsWritting, _earningReading);
+            //_navigationStore = new NavigationStore();
+        }
 
-            _hotelStore = new HotelStore(_hotel);
+        private ReservationsListingViewModel CreateReservationsListingViewModelInService(IServiceProvider sp)
+        {
+            return ReservationsListingViewModel.ReservationsListingViewModelBuilder(sp.GetRequiredService<HotelStore>(),
+                                       sp.GetRequiredService<NavigationServiceWpf<MakeReservationViewModel>>(),
+                                                              sp.GetRequiredService<NavigationServiceWpf<OverviewViewModel>>());
+        }
 
-            // 
-            _navigationStore = new NavigationStore();
+        private EntranceToHotelViewModel CreateEntranceToHotelViewModelInService(IServiceProvider sp)
+        {
+           return EntranceToHotelViewModel.CreateEntranceToHotelViewModel(sp.GetRequiredService<HotelStore>(), 
+                                     sp.GetRequiredService<NavigationServiceWpf<MakeReservationViewModel>>());
         }
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            // Start the host
+            _host.Start();
+
+            HotelManagementDbContextFactory hotelManagementDbContext = _host.Services.GetRequiredService<HotelManagementDbContextFactory>();
             // Migration will be created if it does not exist or is out of date
-            using (HotelManagementDbContext dbContext = _dbHotelContextFactory.CreateHotelManagementDbContext())
+            using (HotelManagementDbContext dbContext = hotelManagementDbContext.CreateHotelManagementDbContext())
             {
                 // We can use PMC commands to create the database and apply migrations
                 // but I think for simple and small projects, we can also do it this way
@@ -101,44 +145,22 @@ namespace HotelReservationsWpf
                 dbContext.Database.Migrate();
             }
 
-            // Set the current view model of the initial application
-            _navigationStore.CurrentViewModel = CreateEntranceToHotelViewModel();
+            // Get the first view model and navigate to it
+            NavigationServiceWpf<EntranceToHotelViewModel> navigationService = _host.Services.GetRequiredService<NavigationServiceWpf<EntranceToHotelViewModel>>();
+            navigationService.Navigate();
 
-            MainWindow = new MainWindow()
-            {
-                DataContext = new MainViewModel(_navigationStore)
-            };
+            MainWindow = _host.Services.GetRequiredService<MainWindow>();
 
             MainWindow.Show();
 
             base.OnStartup(e);
         }
 
-
-        private EntranceToHotelViewModel CreateEntranceToHotelViewModel()
+        protected override void OnExit(ExitEventArgs e)
         {
-            return EntranceToHotelViewModel.CreateEntranceToHotelViewModel(_hotelStore, 
-                               new NavigationServiceWpf(_navigationStore, CreateMakeReservationViewModel));
-        }
+            _host.Dispose();
 
-        private MakeReservationViewModel CreateMakeReservationViewModel()
-        {
-            return new MakeReservationViewModel(_hotelStore,    
-                            new NavigationServiceWpf(_navigationStore, CreateReservationsListingViewModel),
-                            new NavigationServiceWpf(_navigationStore, CreateOverviewViewModel));
-        }
-
-        private ReservationsListingViewModel CreateReservationsListingViewModel()
-        {
-            return ReservationsListingViewModel.ReservationsListingViewModelBuilder(_hotelStore, 
-                       new NavigationServiceWpf(_navigationStore, CreateMakeReservationViewModel),
-                       new NavigationServiceWpf(_navigationStore, CreateOverviewViewModel));
-        }
-
-        private OverviewViewModel CreateOverviewViewModel()
-        {
-            return new OverviewViewModel(_hotelStore, new NavigationServiceWpf(_navigationStore, CreateMakeReservationViewModel), 
-                            new NavigationServiceWpf(_navigationStore, CreateReservationsListingViewModel));
+            base.OnExit(e);
         }
     }
 }
